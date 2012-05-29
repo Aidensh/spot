@@ -17,13 +17,6 @@ classdef opFoG < opSpot
 %   http://www.cs.ubc.ca/labs/scl/spot
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Properties
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    properties (SetAccess = private)
-        operators = {}; % List of preprocessed operators
-    end % Properties
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Methods
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
@@ -65,32 +58,47 @@ classdef opFoG < opSpot
           
           % Construct operator
           op = op@opSpot('FoG', m, n);
-          op.cflag    = A.cflag  | B.cflag;
-          op.linear   = A.linear | B.linear;
-          op.sweepflag= A.sweepflag & B.sweepflag;
-          op.children = {A, B};
+          op.cflag      = A.cflag  | B.cflag;
+          op.linear     = A.linear | B.linear;
+          op.sweepflag  = A.sweepflag & B.sweepflag;
+          op.children   = {A, B};
           op.precedence = 3;
+          op.ms         = A.ms;
+          op.ns         = B.ns;
 
-          % Preprocess operators
-          op.operators = {A,B};
-          if isscalar(A), op.operators{1} = opMatrix(double(A)); end
-          if isscalar(B), op.operators{2} = opMatrix(double(B)); end
+          % Preprocess children
+          if isscalar(A), op.children{1} = opMatrix(double(A)); end
+          if isscalar(B), op.children{2} = opMatrix(double(B)); end
        end % Constructor
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % double
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function A = double(op)
-          C1 = op.operators{1};
-          C2 = op.operators{2};
+          C1 = op.children{1};
+          C2 = op.children{2};
           A  = double(C1)*double(C2);
+       end
+       
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % drandn
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       function A = drandn(op,varargin)
+           A = drandn(op.children{2},varargin{:});
+       end
+       
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % rrandn
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       function A = rrandn(op,varargin)
+           A = rrandn(op.children{1},varargin{:});
        end
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Display
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function str = char(op)
-          % Get operators
+          % Get children
           op1 = op.children{1};
           op2 = op.children{2};
           
@@ -118,11 +126,11 @@ classdef opFoG < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function z = multiply(op,x,mode)
            if mode == 1
-              y = applyMultiply(op.operators{2},x,mode);
-              z = applyMultiply(op.operators{1},y,mode);
+              y = applyMultiply(op.children{2},x,mode);
+              z = applyMultiply(op.children{1},y,mode);
            else
-              y = applyMultiply(op.operators{1},x,mode);
-              z = applyMultiply(op.operators{2},y,mode);
+              y = applyMultiply(op.children{1},x,mode);
+              z = applyMultiply(op.children{2},y,mode);
            end
         end % Multiply
        

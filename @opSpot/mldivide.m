@@ -36,13 +36,17 @@ function x = mldivide(A,B)
 % 4) C\C (where both are Spot classes)
 % TODO: What if one of the classes in 5 is not a Spot class?
 
+% dataContainer preprocessing
+if isa(B,'dataContainer') % Please see DataContainerInfo.md
+    x = mldivide(B,A,'swap');
+else
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mode 1: M\C
 % Mode 3: s\C - Here we also handle the special case where C is 1-by-M.
 %               If so, then we recast this as (C'*s)', which results in
 %               a call to the "usual" matrix-vector product.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if isnumeric(A)
+if ~isa(A,'opSpot')
    if isscalar(A)
       % s\C (mode 3).  NOTE: if B is a row vector, then the mtimes
       % routine will ensure that the following product evaluates to a
@@ -69,7 +73,7 @@ if isnumeric(A)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mode 2: C\M
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-elseif isnumeric(B)
+elseif ~isa(B,'opSpot')
    if size(A,1) ~= size(B,1)
       error('Matrix dimensions must agree.');
    end
@@ -86,4 +90,5 @@ elseif isnumeric(B)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 else
    x = pinv(A) * B;
+end
 end
