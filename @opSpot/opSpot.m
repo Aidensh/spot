@@ -30,6 +30,7 @@ classdef opSpot
         precedence = 1;
         sweepflag  = false; % whether we can do a sweep multiply, A*B
         isDirac    = false; % Whether we can skip this operator
+        weights;            % weights for dictionary-like operators
     end
     
     properties( Dependent = true, SetAccess = private )
