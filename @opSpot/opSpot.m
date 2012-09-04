@@ -119,10 +119,6 @@ classdef opSpot
             end
         end
         
-        function y = applyDivide(op,x,mode)
-            y = op.divide(x,mode);
-        end
-        
         % Signature of external protected functions (In class folder)
         y = divide(op,x,mode);
     end % methods - protected
