@@ -62,26 +62,26 @@ classdef opImag < opSpot
           if mode == 1
              if isreal(x)
                 % Purely real
-                y = imag(applyMultiply(opA,x,mode));
+                y = imag(multiply(opA,x,mode));
              elseif isreal(sqrt(-1)*x)
                 % Purely imaginary
-                y = imag(applyMultiply(opA,imag(x),mode)) * sqrt(-1);
+                y = imag(multiply(opA,imag(x),mode)) * sqrt(-1);
              else
                 % Mixed
-                y = imag(applyMultiply(opA,real(x),mode)) + ...
-                    imag(applyMultiply(opA,imag(x),mode)) * sqrt(-1);
+                y = imag(multiply(opA,real(x),mode)) + ...
+                    imag(multiply(opA,imag(x),mode)) * sqrt(-1);
              end
           else
              if isreal(x)
                 % Purely real
-                y = imag(applyMultiply(opA,x,mode)) * -1;
+                y = imag(multiply(opA,x,mode)) * -1;
              elseif isreal(sqrt(-1)*x)
                 % Purely imaginary
-                y = imag(applyMultiply(opA,imag(x),mode)) * sqrt(-1) * -1;
+                y = imag(multiply(opA,imag(x),mode)) * sqrt(-1) * -1;
              else
                 % Mixed
-                y = imag(applyMultiply(opA,real(x),mode)) * -1 + ...
-                    imag(applyMultiply(opA,imag(x),mode)) * sqrt(-1) * -1;
+                y = imag(multiply(opA,real(x),mode)) * -1 + ...
+                    imag(multiply(opA,imag(x),mode)) * sqrt(-1) * -1;
              end
           end
        end % Multiply

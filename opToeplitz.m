@@ -154,12 +154,23 @@ classdef opToeplitz < opSpot
        
  
     methods ( Access = protected )
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Multiply
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
-          y = op.funHandle(x,mode);
-       end % Multiply          
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function y = multiply(op,x,mode)
+            x_n = size(x,2);
+        
+            % Preallocate y
+            if mode == 1
+                y = zeros(op.m, x_n);
+            else
+                y = zeros(op.n, x_n);
+            end
+            
+            for u = 1:x_n
+                y(:,u) = op.funHandle(x(:,u),mode);
+            end
+        end % function multiply
 
     end % Methods
    

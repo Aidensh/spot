@@ -37,7 +37,7 @@ if (isnumeric(A) || isa(A, 'opMatrix')) && isa(B, 'opMatrix')
 %               If so, then we recast this as (C'*s)', which results in
 %               a call to the "usual" matrix-vector product.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-elseif ~isa(A,'opSpot')
+elseif ~isa(A,'opSpot') % A is not spot
     if isscalar(A) && (B.m ~= 1)
        % s*C (mode 3)
        y = opFoG(A,B);
@@ -52,33 +52,31 @@ elseif ~isa(A,'opSpot')
 %               If so, then we recast this as (C'*s)', which results in
 %               a call to the "usual" matrix-vector product.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-elseif ~isa(B,'opSpot')
-    if isscalar(B)
-        if A.n ~= 1
+elseif ~isa(B,'opSpot') % A is spot, B isnt
+        p = size(B,1);
+        
+        if isscalar(B) && A.n ~= 1
             % C*s (mode 4)
             y = opFoG(A,B);
-        else
-            y = applyMultiply(A,B,1);  % A is a column "vector".
-        end
-    else
-        p = size(B,1);
-
+        
+        elseif A.n ~= p && ~isscalar(A)
         % Raise an error when the matrices do not commute. We make an
         % exception for 1-by-1 operators.
-        if A.n ~= p && ~isscalar(A)
             sizB = ['Matrix[' num2str(size(B)) ']'];
             error('Matrix dimensions must agree when multiplying by %s and %s.',...
             char(A), sizB);
-        end
-
-        % Perform operator*matrix
-        if isempty(A)
-            y = zeros(A.m,size(B,2));
+        
         else
-            y = A.applyMultiply(B,1);
+        % Perform operator*matrix
+            if isempty(A)
+                y = zeros(A.m,size(B,2));
+            elseif isempty(B)
+                y = zeros(A.m,0);
+            else
+                y = multiply(A,B,1);
+            end
         end
-
-    end   
+        
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Both args are Spot ops.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -117,19 +117,30 @@ end % methods public
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 methods(Access = protected)
    
-   function y = multiply(op,x,mode)
-      if mode == 1
-         Xmat = reshape(x, op.p, op.q);
-         Xmat = op.Rc*Xmat;
-         Xmat = (op.Rr*Xmat')';
-      else
-         Xmat = reshape(x, op.pext, op.qext);
-         Xmat = op.Rc'*Xmat;
-         Xmat = (op.Rr'*Xmat')';
-      end
-      y = full(Xmat(:));  % need full because op.Rx is sparse
-   end % function multiply
-   
+    function y = multiply(op,x,mode)
+        
+        x_n = size(x,2);
+        
+        % Preallocate y
+        if mode == 1
+            y = zeros(op.m, x_n);
+        else
+            y = zeros(op.n, x_n);
+        end
+        
+        for u = 1:x_n
+            if mode == 1
+                Xmat = reshape(x(:,u), op.p, op.q);
+                Xmat = op.Rc*Xmat;
+                Xmat = (op.Rr*Xmat')';
+            else
+                Xmat = reshape(x(:,u), op.pext, op.qext);
+                Xmat = op.Rc'*Xmat;
+                Xmat = (op.Rr'*Xmat')';
+            end
+            y(:,u) = full(Xmat(:));  % need full because op.Rx is sparse
+        end
+    end % function multiply   
 end % methods protected
 
 end

@@ -126,11 +126,11 @@ classdef opFoG < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function z = multiply(op,x,mode)
            if mode == 1
-              y = applyMultiply(op.children{2},x,mode);
-              z = applyMultiply(op.children{1},y,mode);
+              y = multiply(op.children{2},x,mode);
+              z = multiply(op.children{1},y,mode);
            else
-              y = applyMultiply(op.children{1},x,mode);
-              z = applyMultiply(op.children{2},y,mode);
+              y = multiply(op.children{1},x,mode);
+              z = multiply(op.children{2},y,mode);
            end
         end % Multiply
        

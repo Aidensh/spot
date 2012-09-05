@@ -227,7 +227,7 @@ classdef opSubsAsgn < opSpot
        % Multiply
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function y = multiply(op,x,mode)
-          y = applyMultiply(op.opIntrnl,x,mode);
+          y = multiply(op.opIntrnl,x,mode);
        end % Multiply
 
     end % Methods

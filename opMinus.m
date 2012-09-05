@@ -85,8 +85,8 @@ classdef opMinus < opSpot
        % Multiply
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function y = multiply(op,x,mode)
-           y =     applyMultiply(op.children{1},x,mode);
-           y = y - applyMultiply(op.children{2},x,mode);
+           y =     multiply(op.children{1},x,mode);
+           y = y - multiply(op.children{2},x,mode);
         end % Multiply
        
     end % Methods

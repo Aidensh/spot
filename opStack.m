@@ -122,32 +122,35 @@ classdef opStack < opSpot
        
  
     methods ( Access = protected )
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Multiply
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
-          if mode == 1
-             y = zeros(op.m,1);
-             k = 0;
-             for i=1:length(op.children)
-                child      = op.children{i};
-                s          = size(child,1);
-                y(k+(1:s)) = op.weights(i) * applyMultiply(child, x, 1);
-                k          = k + s;
-             end
-          else
-             y = zeros(op.n,1);
-             k = 0;
-             for i=1:length(op.children)
-                child = op.children{i};
-                s     = size(child,1);
-                xd    = x(k+1:k+s) * conj(op.weights(i));
-                y     = y + applyMultiply(child,xd,2);
-                k     = k + s;
-             end
-          end
-       end % Multiply          
-
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function y = multiply(op,x,mode)
+            q = size(x,2);
+            if mode == 1
+                y = zeros(op.m,q);
+                for u = 1:q
+                    k = 0;
+                    for i=1:length(op.children)
+                        child      = op.children{i};
+                        s          = size(child,1);
+                        y(k+(1:s),u) = op.weights(i)*multiply(child,x(:,u),1);
+                        k          = k + s;
+                    end
+                end
+            else
+                y = zeros(op.n,q);
+                for u = 1:q
+                    k = 0;
+                    for i=1:length(op.children)
+                        child = op.children{i};
+                        s     = size(child,1);
+                        xd    = x(k+1:k+s,u) * conj(op.weights(i));
+                        y(:,u) = y(:,u) + multiply(child,xd,2);
+                        k     = k + s;
+                    end
+                end
+            end
+        end % Multiply  
     end % Methods
-   
 end % Classdef

@@ -82,12 +82,26 @@ classdef opRestriction < opSpot
        
  
     methods ( Access = protected )
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Multiply
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
-          y = op.funHandle(x,mode);
-       end % Multiply          
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function y = multiply(op,x,mode)
+            
+            x_n = size(x,2);
+            
+            % Preallocate y
+            if mode == 1
+                y = zeros(op.m, x_n);
+            else
+                y = zeros(op.n, x_n);
+            end
+            
+            % Loop through multivec
+            for u = 1:x_n
+                y(:,u) = op.funHandle(x(:,u),mode);
+            end
+            
+        end % Multiply          
 
     end % Methods
    
@@ -98,20 +112,20 @@ end % Classdef
 
 
 function y = opRestriction_intrnl(n,idx,x,mode)
-if mode == 1
-   y = x(idx);
-else
-   y = zeros(n,1);
-   y(idx) = x;
-end
+    if mode == 1
+       y = x(idx);
+    else
+       y = zeros(n,1);
+       y(idx) = x;
+    end
 end
 
 %======================================================================
 
 function y = opRestrictionP_intrnl(n,idx,P,x,mode)
-if mode == 1
-   y = x(idx);
-else
-   y = P * x;
-end
+    if mode == 1
+       y = x(idx);
+    else
+       y = P * x;
+    end
 end

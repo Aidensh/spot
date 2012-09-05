@@ -135,12 +135,12 @@ classdef opWavelet2 < opSpot
          
       end % function opWavelet
       
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      % Divide
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function y = mldivide(op,x)
-         y = op.funHandle2(op,x);
-      end % function multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function y = mldivide(op,x)
+            y = op.funHandle2(op,x);
+        end % function mldivide
       
    end % methods - public
    
@@ -310,19 +310,30 @@ classdef opWavelet2 < opSpot
          
    end % methods - private
    
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   % Methods - protected
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   methods( Access = protected )
-      
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      % Multiply
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function y = multiply(op,x,mode)
-         y = op.funHandle(op,x,mode);
-      end % function multiply
-      
-   end % methods - protected
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - protected
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods( Access = protected )
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function y = multiply(op,x,mode)
+            x_n = size(x,2);
+        
+            % Preallocate y
+            if mode == 1
+                y = zeros(op.m, x_n);
+            else
+                y = zeros(op.n, x_n);
+            end
+            
+            for u = 1:x_n
+                y(:,u) = op.funHandle(op,x(:,u),mode);
+            end
+        end % function multiply
+
+    end % methods - protected
    
 end % classdef
 

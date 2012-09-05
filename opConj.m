@@ -85,9 +85,9 @@ classdef opConj < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function y = multiply(op,x,mode)
            if mode == 1
-              y = conj(applyMultiply(op.children{1},conj(x),1));
+              y = conj(multiply(op.children{1},conj(x),1));
            else
-              y = conj(applyMultiply(op.children{1},conj(x),2));
+              y = conj(multiply(op.children{1},conj(x),2));
            end
        end % function multiply
 

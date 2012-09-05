@@ -59,15 +59,22 @@ classdef opRomberg < opSpot
             dims = op.dimensions;
             phs  = op.phases;
             sgn  = op.signs;
+            x_n  = size(x,2);
             
             if mode == 1
-                x = reshape(x,dims);
-                y = sgn.*ifftn(phs.*fftn(full(x)));
-                y = y(:);
+                y = zeros(op.m,x_n);
+                for u = 1:x_n
+                    x_tmp  = reshape(x(:,u),dims);
+                    y_tmp  = sgn.*ifftn(phs.*fftn(full(x_tmp)));
+                    y(:,u) = y_tmp(:);
+                end
             else
-                x = reshape(x,dims);
-                y = ifftn(conj(phs).*fftn(sgn.*full(x)));
-                y = y(:);
+                y = zeros(op.n,x_n);
+                for u = 1:x_n
+                    x_tmp  = reshape(x(:,u),dims);
+                    y_tmp  = ifftn(conj(phs).*fftn(sgn.*full(x_tmp)));
+                    y(:,u) = y_tmp(:);
+                end
             end
             
         end % Multiply
