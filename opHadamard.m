@@ -50,27 +50,34 @@ classdef opHadamard < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-           y = x;
-           n = op.n;
-           k = round(log2(n));
-           b = 1;     % Blocks on current level
-           s = n / 2; % Stride
-           for i=1:k  % Level
-              for j=0:b-1  % Blocks
-                 for k=1:s   % Elements within block
-                    i1 = j*n + k;
-                    i2 = i1 + s;
-                    t1 = y(i1);
-                    t2 = y(i2);
-                    y(i1) = t1 + t2;
-                    y(i2) = t1 - t2;
-                 end
-              end
-              b = b * 2; s = s / 2; n = n / 2;
-           end
-           if op.normalized
-              y = y / sqrt(op.n);
-           end
+            
+            x_n = size(x,2);
+            y = zeros(op.m,x_n);
+            for u = 1:x_n
+               y_tmp = x(:,u);
+               n = op.n;
+               k = round(log2(n));
+               b = 1;     % Blocks on current level
+               s = n / 2; % Stride
+               for i=1:k  % Level
+                  for j=0:b-1  % Blocks
+                     for k=1:s   % Elements within block
+                        i1 = j*n + k;
+                        i2 = i1 + s;
+                        t1 = y_tmp(i1);
+                        t2 = y_tmp(i2);
+                        y_tmp(i1) = t1 + t2;
+                        y_tmp(i2) = t1 - t2;
+                     end
+                  end
+                  b = b * 2; s = s / 2; n = n / 2;
+               end
+               if op.normalized
+                  y_tmp = y_tmp / sqrt(op.n);
+               end
+               
+               y(:,u) = y_tmp;
+            end
         end % Multiply
     
     end % Methods

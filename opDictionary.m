@@ -134,23 +134,31 @@ classdef opDictionary < opSpot
        % Multiply
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function y = multiply(op,x,mode)
+           x_n = size(x,2);
           if mode == 1
-             y = zeros(op.m,1);
-             k = 0;
-             for i=1:length(op.children)
-                child = op.children{i};
-                s = size(child,2);
-                y = y + op.weights(i) * multiply(child, x(k+1:k+s), 1);
-                k = k + s;
+             y = zeros(op.m,x_n);
+             for u = 1:x_n
+                k = 0;
+                 x_tmp = x(:,u);
+                 for i=1:length(op.children)
+                    child = op.children{i};
+                    s = size(child,2);
+                    y(:,u) = y(:,u) + op.weights(i) * multiply(child, x_tmp(k+1:k+s), 1);
+                    k = k + s;
+                 end
              end
           else
-             y = zeros(op.n,1);
-             k = 0;
-             for i=1:length(op.children)
-                child = op.children{i};
-                s          = size(child,2);
-                y(k+1:k+s) = conj(op.weights(i)) * multiply(child, x, 2);
-                k          = k + s;
+             y = zeros(op.n,x_n);
+             for u = 1:x_n
+                k = 0;
+                 y_tmp = y(:,u);
+                 for i=1:length(op.children)
+                    child = op.children{i};
+                    s          = size(child,2);
+                    y_tmp(k+1:k+s) = conj(op.weights(i)) * multiply(child, x(:,u), 2);
+                    k          = k + s;
+                 end
+                 y(:,u) = y_tmp;
              end
           end
        end % Multiply          

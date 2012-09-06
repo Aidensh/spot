@@ -82,14 +82,21 @@ classdef opDCT2 < opOrthogonal
       function y = multiply(op,x,mode)
          m = op.inputdims(1);
          n = op.inputdims(2);
+         q = size(x,2);
          if mode == 1
-            y = spot.utils.dct(full(reshape(x,m,n)));
-            y = spot.utils.dct(y')';
-            y = y(:);
+             y = zeros(op.m,q);
+             for u = 1:q
+                y_tmp  = spot.utils.dct(full(reshape(x(:,u),m,n)));
+                y_tmp  = spot.utils.dct(y_tmp')';
+                y(:,u) = y_tmp(:);
+             end
          else
-            y = spot.utils.idct(full(reshape(x,m,n)));
-            y = spot.utils.idct(y')';
-            y = y(:);
+             y = zeros(op.n,q);
+             for u = 1:q
+                y_tmp = spot.utils.idct(full(reshape(x(:,u),m,n)));
+                y_tmp = spot.utils.idct(y_tmp')';
+                y(:,u) = y_tmp(:);
+             end
          end
       end % function multiply
       

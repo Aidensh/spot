@@ -102,28 +102,40 @@ classdef opBinary < opSpot
                 y = op.matrix' * x;
              end
           else
-             % Store current random number generator state
-             seed0 = rng;
-             rng(op.seed);
-             m = op.m; n = op.n;
+              x_n = size(x,2);
+              if mode == 1
+                  y = zeros(op.m,x_n);
+              else
+                  y = zeros(op.n,x_n);
+              end
+              
+              for u = 1:x_n
+                 % Store current random number generator state
+                 seed0 = rng;
+                 rng(op.seed);
+                 m = op.m; n = op.n;
+                 x_tmp = x(:,u);
 
-             % Multiply
-             if mode == 1
-                y = zeros(m,1);
-                for i=1:n
-                   v = 1.0 * (randn(m,1) < 0);
-                   y = y + v * x(i);
-                end
-             else
-                y = zeros(n,1);
-                for i=1:n
-                   v    = 1.0 * (randn(1,m) < 0);
-                   y(i) = v * x;
-                end
-             end
+                 % Multiply
+                 if mode == 1
+                    y_tmp = zeros(m,1);
+                    for i=1:n
+                       v = 1.0 * (randn(m,1) < 0);
+                       y_tmp = y_tmp + v * x_tmp(i);
+                    end
+                 else
+                    y_tmp = zeros(n,1);
+                    for i=1:n
+                       v    = 1.0 * (randn(1,m) < 0);
+                       y_tmp(i) = v * x_tmp;
+                    end
+                 end
+                 
+                 y(:,u) = y_tmp;
 
-             % Restore original random number generator state
-             rng(seed0);
+                 % Restore original rwandom number generator state
+                 rng(seed0);
+              end
           end
        end % Multiply
 
