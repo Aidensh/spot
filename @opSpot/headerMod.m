@@ -5,4 +5,5 @@ function h = headerMod(op,header,mode)
 %   to the actions the spot operator would have on the metadata of the
 %   SeisDataContainer.
 
-h = [];
+% By default this does nothing whatsoever.
+h = header;
