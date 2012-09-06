@@ -79,36 +79,6 @@ classdef opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods( Access = protected )
         
-%         function y = applyMultiply(op,x,mode)
-%             op.counter.plus1(mode);
-%             
-%             if op.sweepflag
-%                 y = op.multiply(x,mode);
-%             else
-%                 q = size(x,2);
-%                 
-%                 % Preallocate y
-%                 if q > 1
-%                     if isscalar(op)
-%                         % special case: allocate result size of x
-%                         y = zeros(size(x));
-%                     elseif mode==1
-%                         y = zeros(op.m,q);
-%                     else
-%                         y = zeros(op.n,q);
-%                     end
-%                 end
-%                 
-%                 if q == 1
-%                     y = op.multiply(x,mode);
-%                 else
-%                     for i=1:q
-%                         y(:,i) = op.multiply(x(:,i),mode);
-%                     end
-%                 end
-%             end
-%         end % end applyMultiply
-        
         % Signature of external protected functions (In class folder)
         y = divide(op,x,mode);
     end % methods - protected

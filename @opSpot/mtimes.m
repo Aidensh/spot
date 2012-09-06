@@ -21,6 +21,17 @@ function y = mtimes(A,B)
 % 3) s*C
 % 4) C*s
 % 5) C*C, either of which can be a foreign class
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SeisDataContainer Proprocessing
+% Always strip the data at the highest level possible(mtimes)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if isa(B,'SeisDataContainer')
+    
+    y_data = mtimes(A,double(B));
+    y = datacon(y_data);
+    return;
+end
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mode: Explicit opFog Saver
