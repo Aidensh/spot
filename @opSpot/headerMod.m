@@ -9,9 +9,16 @@ function h = headerMod(op,xmeta,header,mode)
 %   xmeta = explicit metadata stored on the datacon
 %   header = header of the
 
-% By default this does nothing to the header whatsoever.
+% By default this only changes the implicit header size
+
+% Extract explicit size indices
+exsize = xmeta.exsize;
+
 if mode == 1
-    h = header;
+    h = header; % Copy header
+    % Replace old first (collapsed) dimensional sizes with operator sizes.
+    h.header.size(exsize(1,1):exsize(2,1)) = op.ms;
 else
     h = header;
+    h.header.size(exsize(1,1):exsize(2,1)) = op.ns;
 end

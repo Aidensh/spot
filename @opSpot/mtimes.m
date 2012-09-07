@@ -26,7 +26,7 @@ function y = mtimes(A,B)
 % SeisDataContainer Proprocessing
 % Always strip the data at the highest level possible(mtimes)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if isa(B,'SeisDataContainer')
+if isa(B,'SeisDataContainer') && isa(A,'opSpot')
     y = applyOp(B,A); % Let the datacontainer itself handle the stripping
     return;
 end

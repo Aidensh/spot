@@ -117,54 +117,72 @@ classdef opCurvelet < opSpot
        
  
     methods ( Access = protected )
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Multiply
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function x = multiply(op,x,mode)
-         if mode == 1
-            % Analysis mode
-            if strcmp(op.ttype,'ME')
-               x = mefcv2(reshape(x,op.dims(1),op.dims(2)),...
-                  op.dims(1),op.dims(2),op.nbscales,op.nbangles);
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = multiply(op,x,mode)
+            
+            % Multivec preprocessing
+            x_n = size(x,2);
+            
+            if mode == 1
+                % Preallocate y
+                y = zeros(op.m,x_n);
+                
+                % Loop over multivec dimension
+                for u = 1:x_n
+                    x_tmp = x(:,u);
+                    % Analysis mode
+                    if strcmp(op.ttype,'ME')
+                        x_tmp = mefcv2(reshape(x_tmp,op.dims(1),op.dims(2)),...
+                        op.dims(1),op.dims(2),op.nbscales,op.nbangles);
+                    else
+                        x_tmp = fdct_wrapping_mex(op.dims(1),op.dims(2),op.nbscales,...
+                        op.nbangles,logical(op.finest),reshape(x_tmp,op.dims(1),op.dims(2)));
+                        if op.finest == 2, zero_finest_scale; end
+                        if ~op.cflag % real transforms have redundancy 
+                            x_tmp = fdct_wrapping_c2r(x_tmp);
+                        end
+                    end
+                    y(:,u) = spot.utils.fdct_c2v(x_tmp,op.nbcoeffs);
+                end
+                x = y;
             else
-               x = fdct_wrapping_mex(op.dims(1),op.dims(2),op.nbscales,...
-                  op.nbangles,logical(op.finest),reshape(x,op.dims(1),op.dims(2)));
-               if op.finest == 2, zero_finest_scale; end
-               if ~op.cflag % real transforms have redundancy 
-                  x = fdct_wrapping_c2r(x);
-               end
+                % Preallocate y
+                y = zeros(op.m,x_n);
+                
+                % Loop over multivec dimension
+                for u = 1:x_n
+                    x_tmp = x(:,u);
+                    % Synthesis mode  
+                    if strcmp(op.ttype,'ME')
+                        x_tmp = spot.utils.mefdct_v2c(x_tmp,op.header,op.nbangles);
+                        x_tmp = meicv2(x_tmp,op.dims(1),op.dims(2),op.nbscales,op.nbangles);
+                    else
+                        x_tmp = spot.utils.fdct_v2c(x_tmp,op.header);
+                        if op.finest == 2, zero_finest_scale; end
+                        if ~op.cflag
+                            x_tmp = fdct_wrapping_r2c(x);
+                        end
+                        x_tmp = ifdct_wrapping_mex(op.dims(1),op.dims(2),op.nbscales,...
+                        op.nbangles,logical(op.finest),x_tmp);
+                    end
+                    if ~op.cflag % real transforms don't have complex numbers for 
+                        x_tmp = real(x_tmp);  %the inverse transform
+                    end
+                    y(:,u) = x_tmp(:);
+                end
             end
-            x = spot.utils.fdct_c2v(x,op.nbcoeffs);
-         else
-            % Synthesis mode  
-            if strcmp(op.ttype,'ME')
-               x = spot.utils.mefdct_v2c(x,op.header,op.nbangles);
-               x = meicv2(x,op.dims(1),op.dims(2),op.nbscales,op.nbangles);
-            else
-               x = spot.utils.fdct_v2c(x,op.header);
-               if op.finest == 2, zero_finest_scale; end
-               if ~op.cflag
-                  x = fdct_wrapping_r2c(x);
-               end
-               x = ifdct_wrapping_mex(op.dims(1),op.dims(2),op.nbscales,...
-               op.nbangles,logical(op.finest),x);
+
+            %%% Nested Function
+            function zero_finest_scale
+                for i = 1:length(x_tmp{end})
+                    x_tmp{end}{i} = zeros( size( x_tmp{end}{i} ) );
+                end
             end
-            if ~op.cflag % real transforms don't have complex numbers for 
-                  x = real(x);  %the inverse transform
-            end
-            x = x(:);
-         end
-         
-         
-         %%% Nested Function
-           function zero_finest_scale
-               for i = 1:length(x{end})
-                   x{end}{i} = zeros( size( x{end}{i} ) );
-               end
-           end
-         
-       end % Multiply
-       
+
+        end % Multiply
+
     end % Methods
-   
+
 end % Classdef
