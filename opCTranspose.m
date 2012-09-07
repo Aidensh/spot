@@ -77,6 +77,18 @@ classdef opCTranspose < opSpot
           opOut = conj(op.children{1});
        end
        
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % headerMod
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       function h = headerMod(op,~,header,mode)
+           A = op.children{1};
+           if mode == 1
+              h = headerMod(A,header,2);
+           else
+              h = headerMod(A,header,1);
+           end
+       end % headerMod
+       
     end % methods - public
 
     methods( Access = protected )
@@ -91,7 +103,7 @@ classdef opCTranspose < opSpot
               y = multiply(A,x,1);
            end
        end % function multiply
-
+       
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Divide
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

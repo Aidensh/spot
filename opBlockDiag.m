@@ -181,6 +181,13 @@ classdef opBlockDiag < opSpot
           
           str = [str, ')'];
        end % Display
+       
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % headerMod
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       function h = headerMod(op,xmeta,header,mode)
+           h = header;
+       end
 
     end % Methods
        

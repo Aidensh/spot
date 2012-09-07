@@ -83,7 +83,14 @@ classdef opTranspose < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function opOut = transpose(op)
           opOut = op.children{1};
-       end % function transpose
+       end % function transpose       
+       
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % headerMod
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       function h = headerMod(op,~,header,mode)
+           h = headerMod(op.opIntrnl,header,mode);
+       end % function multiply
     
     end % methods - public
 
@@ -95,7 +102,7 @@ classdef opTranspose < opSpot
        function y = multiply(op,x,mode)
           y = multiply(op.opIntrnl,x,mode);
        end % function multiply
-
+       
     end % methods - protected
    
 end % classdef

@@ -117,6 +117,20 @@ classdef opFoG < opSpot
           % Combine
           str = [str1, ' * ', str2];
        end
+       
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % headerMod
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function h = headerMod(op,~,header,mode)
+            if mode == 1
+                g = headerMod(op.children{2},header,mode);
+                h = headerMod(op.children{1},g,mode);
+            else
+                g = headerMod(op.children{1},header,mode);
+                h = headerMod(op.children{2},g,mode);
+            end
+        end % headerMod
+       
     end % Methods
        
  
@@ -133,7 +147,7 @@ classdef opFoG < opSpot
               z = multiply(op.children{2},y,mode);
            end
         end % Multiply
-       
+        
     end % Methods
    
 end % Classdef
