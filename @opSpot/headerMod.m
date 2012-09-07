@@ -10,4 +10,8 @@ function h = headerMod(op,xmeta,header,mode)
 %   header = header of the
 
 % By default this does nothing to the header whatsoever.
-h = header;
+if mode == 1
+    h = header;
+else
+    h = header;
+end
