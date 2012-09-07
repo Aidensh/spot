@@ -101,7 +101,7 @@ classdef opCurvelet < opSpot
           op.nbcoeffs  = cn;
           op.dims      = [m,n];
           op.ttype     = ttype;
-          op.ns        = [m,n];
+          op.ns        = {[m n]};
        end % Constructor
 
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

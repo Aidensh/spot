@@ -78,7 +78,7 @@ classdef opCurvelet3d < opSpot
           op.header   = hdr;
           op.nbcoeffs = cn;
           op.dims     = [m,n,p];
-          op.ns       = [m,n,p];
+          op.ns       = {[m n p]};
        end % Constructor
 
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

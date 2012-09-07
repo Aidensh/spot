@@ -82,9 +82,10 @@ classdef opKron < opSpot
             end
             
             % Setting up implicit dimensions of output vector
-            op.ms = fliplr(cellfun(@(x) {x.ms},varargin,'UniformOutput',false)); % Flipped
+            % Flipped
+            op.ms = cellfun(@(x) x.ms,fliplr(varargin),'UniformOutput',false); 
             op.ms = [op.ms{:}];
-            op.ns = fliplr(cellfun(@(x) {x.ns},varargin,'UniformOutput',false));
+            op.ns = cellfun(@(x) x.ns,fliplr(varargin),'UniformOutput',false);
             op.ns = [op.ns{:}];
                 
         end % Constructor
