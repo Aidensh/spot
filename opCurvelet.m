@@ -149,7 +149,7 @@ classdef opCurvelet < opSpot
                 x = y;
             else
                 % Preallocate y
-                y = zeros(op.m,x_n);
+                y = zeros(op.n,x_n);
                 
                 % Loop over multivec dimension
                 for u = 1:x_n
@@ -162,7 +162,7 @@ classdef opCurvelet < opSpot
                         x_tmp = spot.utils.fdct_v2c(x_tmp,op.header);
                         if op.finest == 2, zero_finest_scale; end
                         if ~op.cflag
-                            x_tmp = fdct_wrapping_r2c(x);
+                            x_tmp = fdct_wrapping_r2c(x_tmp);
                         end
                         x_tmp = ifdct_wrapping_mex(op.dims(1),op.dims(2),op.nbscales,...
                         op.nbangles,logical(op.finest),x_tmp);
@@ -172,6 +172,7 @@ classdef opCurvelet < opSpot
                     end
                     y(:,u) = x_tmp(:);
                 end
+                x = y;
             end
 
             %%% Nested Function
