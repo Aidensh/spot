@@ -109,11 +109,40 @@ classdef opKron < opSpot
         function h = headerMod(op,xmeta,header,mode)
             % Extract explicit size indices
             exsize = xmeta.exsize;
+            href   = @spot.data.headerRef; % Used function handles because its shorter
+            hasg   = @spot.data.headerAsgn;
 
             if mode == 1
+                
+                % Setup variables
                 h = header; % Copy header
+                opList = fliplr(op.children); % Last op applied first
+                % Number of output dimensions
+                n_out_dims = length(spot.utils.uncell(op.ms));
+                
+                % Preallocate and setup header
+                header_out        = header;
+                header_out.dims   = n_out_dims;
+                header_out.size   = zeros(1,n_out_dims);
+                header_out.origin = zeros(1,n_out_dims);
+                header_out.delta  = zeros(1,n_out_dims);
+                header_out.unit   = zeros(1,n_out_dims);
+                header_out.label  = zeros(1,n_out_dims);
+                
                 % Replace old first (collapsed) dimensional sizes with operator sizes.
                 % h.header.size(exsize(1,1):exsize(2,1)) = op.ms;
+                i = 1;
+                for u = 1:length(op.children)
+                    % Input header (including collapsed)
+                    in_header    = href(header,exsize(1,u):exsize(2,u));
+                    % child header
+                    child_header = headerMod(opList{u},xmeta,in_header,mode);
+                    % Assignment indices
+                    j            = length(spot.utils.uncell(op.ms{u}));
+                    out_ind      = i:j;
+                    h            = hasg(header_out,child_header,out_ind);
+                    i            = j+1;
+                end
             else
                 h = header;
                 % h.header.size(exsize(1,1):exsize(2,1)) = op.ns;
