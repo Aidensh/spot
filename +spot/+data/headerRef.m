@@ -18,7 +18,7 @@ label   = header.label;
 assert(length(origin) > 1, 'dims have to be at least 2');
 
 % Check index range
-assert(index(1) >= 1 && index(end) < length(origin), 'index out of bounds');
+assert(index(1) >= 1 && index(end) <= length(size), 'index out of bounds');
 
 % Update dims
 dims = length(size(index));

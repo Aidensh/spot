@@ -132,16 +132,19 @@ classdef opKron < opSpot
                 % Replace old first (collapsed) dimensional sizes with operator sizes.
                 % h.header.size(exsize(1,1):exsize(2,1)) = op.ms;
                 i = 1;
+                x = 1;
                 for u = 1:length(op.children)
                     % Input header (including collapsed)
-                    in_header    = href(header,exsize(1,u):exsize(2,u));
+                    y            = length(spot.utils.uncell(op.ns{u}));
+                    in_header    = href(header,x:y);
                     % child header
                     child_header = headerMod(opList{u},xmeta,in_header,mode);
                     % Assignment indices
                     j            = length(spot.utils.uncell(op.ms{u}));
-                    out_ind      = i:j;
-                    h            = hasg(header_out,child_header,out_ind);
+                    h            = hasg(header_out,child_header,i:j);
+                    header_out   = h;
                     i            = j+1;
+                    x            = y+1;
                 end
             else
                 h = header;

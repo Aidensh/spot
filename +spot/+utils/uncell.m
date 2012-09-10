@@ -7,9 +7,9 @@ function y = uncell(x)
 y = [];
 
 for i = 1:length(x)
-    if iscell(x{i})
-        y = [y uncell(x{i})];
+    if iscell(x(i))
+        y = [y spot.utils.uncell(x{i})];
     else
-        y = [y x{i}];
+        y = [y x(i)];
     end
 end

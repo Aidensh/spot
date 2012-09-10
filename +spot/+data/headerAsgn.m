@@ -12,7 +12,7 @@ assert(isvector(index), 'index must be a vector!');
 assert(length(h.origin) > 1, 'dims have to be at least 2');
 
 % Check index range
-assert(index(1) >= 1 && index(end) < length(h.origin), 'index out of bounds');
+assert(index(1) >= 1 && index(end) <= length(h.size), 'index out of bounds');
 assert(length(index) == length(header.origin),...
     'header chunk must be same length as index');
 
