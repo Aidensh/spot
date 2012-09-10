@@ -17,8 +17,8 @@ exsize = xmeta.exsize;
 if mode == 1
     h = header; % Copy header
     % Replace old first (collapsed) dimensional sizes with operator sizes.
-    h.header.size(exsize(1,1):exsize(2,1)) = op.ms;
+    h.header.size(exsize(1,1):exsize(2,1)) = [op.ms{:}];
 else
     h = header;
-    h.header.size(exsize(1,1):exsize(2,1)) = op.ns;
+    h.header.size(exsize(1,1):exsize(2,1)) = [op.ns{:}];
 end

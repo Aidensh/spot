@@ -102,6 +102,24 @@ classdef opKron < opSpot
             end
             str=strcat(str,')');
         end % Char
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % headerMod
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function h = headerMod(op,xmeta,header,mode)
+            % Extract explicit size indices
+            exsize = xmeta.exsize;
+
+            if mode == 1
+                h = header; % Copy header
+                % Replace old first (collapsed) dimensional sizes with operator sizes.
+                % h.header.size(exsize(1,1):exsize(2,1)) = op.ms;
+            else
+                h = header;
+                % h.header.size(exsize(1,1):exsize(2,1)) = op.ns;
+            end
+            
+        end % headerMod
     end % Methods
     
     
