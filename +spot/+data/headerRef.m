@@ -16,20 +16,9 @@ label   = header.label;
 
 % Check and remove singleton dimension
 assert(length(origin) > 1, 'dims have to be at least 2');
-if length(size) == length(origin) + 1
-    assert(size(end) == 1, 'ERROR: sizes dimension mismatch check header');
-    size = size(1:end-1);
-else
-    assert(length(size) == length(origin), 'ERROR: sizes mismatch check header');
-end
 
 % Check index range
 assert(index(1) >= 1 && index(end) < length(origin), 'index out of bounds');
-
-% Fill in singleton dimension for vec case
-if isscalar(size)
-    size = [size 1];
-end
 
 % Update dims
 dims = length(size(index));
