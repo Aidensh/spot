@@ -133,10 +133,12 @@ classdef opKron < opSpot
                 % h.header.size(exsize(1,1):exsize(2,1)) = op.ms;
                 i = 1;
                 x = 1;
+                % Extract collapsed first dims from header.
+                first_header = href(header,1:exsize(1,2));
                 for u = 1:length(op.children)
                     % Input header (including collapsed)
                     y            = length(spot.utils.uncell(op.ns{u}));
-                    in_header    = href(header,x:y);
+                    in_header    = href(first_header,x:y);
                     % child header
                     child_header = headerMod(opList{u},xmeta,in_header,mode);
                     % Assignment indices

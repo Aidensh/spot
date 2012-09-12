@@ -14,9 +14,6 @@ delta   = header.delta;
 unit    = header.unit;
 label   = header.label;
 
-% Check and remove singleton dimension
-assert(length(origin) > 1, 'dims have to be at least 2');
-
 % Check index range
 assert(index(1) >= 1 && index(end) <= length(size), 'index out of bounds');
 
