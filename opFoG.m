@@ -121,13 +121,13 @@ classdef opFoG < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % headerMod
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function h = headerMod(op,~,header,mode)
+        function h = headerMod(op,xmeta,header,mode)
             if mode == 1
-                g = headerMod(op.children{2},header,mode);
-                h = headerMod(op.children{1},g,mode);
+                g = headerMod(op.children{2},xmeta,header,mode);
+                h = headerMod(op.children{1},xmeta,g,mode);
             else
-                g = headerMod(op.children{1},header,mode);
-                h = headerMod(op.children{2},g,mode);
+                g = headerMod(op.children{1},xmeta,header,mode);
+                h = headerMod(op.children{2},xmeta,g,mode);
             end
         end % headerMod
        

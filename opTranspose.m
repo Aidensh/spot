@@ -88,8 +88,8 @@ classdef opTranspose < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % headerMod
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function h = headerMod(op,~,header,mode)
-           h = headerMod(op.opIntrnl,header,mode);
+       function h = headerMod(op,xmeta,header,mode)
+           h = headerMod(op.opIntrnl,xmeta,header,mode);
        end % function multiply
     
     end % methods - public
