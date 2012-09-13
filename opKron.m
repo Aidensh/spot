@@ -134,7 +134,7 @@ classdef opKron < opSpot
                 i = 1;
                 x = 1;
                 % Extract collapsed first dims from header.
-                first_header = href(header,1:exsize(2,1));
+                first_header = href(header,exsize(:,1));
                 for u = 1:length(op.children)
                     % Input header (including collapsed)
                     y            = length(spot.utils.uncell(op.ns{u})) + x - 1;
@@ -146,10 +146,11 @@ classdef opKron < opSpot
                     % Assignment indices
                     j            = length(spot.utils.uncell(op.ms{u})) + i - 1;
                     % header assignment
-                    h            = hasg(header_out,child_header,i:j);
-                    header_out   = h;
-                    i            = j+1;
-                    x            = y+1;
+                    oldsize      = length(header_out.size);
+                    header_out   = hasg(header_out,child_header,i:j);
+                    newsize      = length(header_out.size);
+                    i            = i + 1 + oldsize - newsize;
+                    x            = y + 1;
                 end
             else
                 h = header;

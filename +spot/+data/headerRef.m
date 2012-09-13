@@ -5,6 +5,7 @@ function h = headerRef(header,index)
 %   range (in the dimensional sense) of its header entities
 
 % Index checking
+index = index(1):index(end);
 assert(isnumeric(index), 'index must be numeric!');
 assert(isvector(index), 'index must be a vector!');
 
