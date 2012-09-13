@@ -140,7 +140,7 @@ classdef opKron < opSpot
                     y            = length(spot.utils.uncell(op.ns{u})) + x - 1;
                     in_header    = href(first_header,x:y);
                     tmp_meta     = xmeta;
-                    tmp_meta.exsize = [x;y];
+                    tmp_meta.exsize = [1;y-x+1];
                     % child header
                     child_header = headerMod(opList{u},tmp_meta,in_header,mode);
                     % Assignment indices
@@ -152,6 +152,7 @@ classdef opKron < opSpot
                     i            = i + 1 + oldsize - newsize;
                     x            = y + 1;
                 end
+                h = header_out;                
             else
                 h = header;
                 % h.header.size(exsize(1,1):exsize(2,1)) = op.ns;
