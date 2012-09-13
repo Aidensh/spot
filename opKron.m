@@ -83,9 +83,9 @@ classdef opKron < opSpot
             
             % Setting up implicit dimensions of output vector
             % Flipped
-            op.ms = cellfun(@(x) x.ms,fliplr(varargin),'UniformOutput',false); 
+            op.ms = cellfun(@(x) {x.ms},fliplr(varargin),'UniformOutput',false); 
             op.ms = [op.ms{:}];
-            op.ns = cellfun(@(x) x.ns,fliplr(varargin),'UniformOutput',false);
+            op.ns = cellfun(@(x) {x.ns},fliplr(varargin),'UniformOutput',false);
             op.ns = [op.ns{:}];
                 
         end % Constructor
@@ -134,15 +134,18 @@ classdef opKron < opSpot
                 i = 1;
                 x = 1;
                 % Extract collapsed first dims from header.
-                first_header = href(header,1:exsize(1,2));
+                first_header = href(header,1:exsize(2,1));
                 for u = 1:length(op.children)
                     % Input header (including collapsed)
-                    y            = length(spot.utils.uncell(op.ns{u}));
+                    y            = length(spot.utils.uncell(op.ns{u})) + x - 1;
                     in_header    = href(first_header,x:y);
+                    tmp_meta     = xmeta;
+                    tmp_meta.exsize = [x;y];
                     % child header
-                    child_header = headerMod(opList{u},xmeta,in_header,mode);
+                    child_header = headerMod(opList{u},tmp_meta,in_header,mode);
                     % Assignment indices
-                    j            = length(spot.utils.uncell(op.ms{u}));
+                    j            = length(spot.utils.uncell(op.ms{u})) + i - 1;
+                    % header assignment
                     h            = hasg(header_out,child_header,i:j);
                     header_out   = h;
                     i            = j+1;
