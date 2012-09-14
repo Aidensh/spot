@@ -185,7 +185,7 @@ classdef opBlockDiag < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % headerMod
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function h = headerMod(op,xmeta,header,mode)
+       function h = headerMod(op,header,mode)
            h = header;
        end
 

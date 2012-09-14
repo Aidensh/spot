@@ -106,16 +106,15 @@ classdef opKron < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % headerMod
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function h = headerMod(op,xmeta,header,mode)
+        function h = headerMod(op,header,mode)
             % Extract explicit size indices
-            exsize = xmeta.exsize;
+            exsize = header.exsize;
             href   = @spot.data.headerRef; % Used function handles because its shorter
             hasg   = @spot.data.headerAsgn;
 
             if mode == 1
                 
                 % Setup variables
-                h = header; % Copy header
                 opList = fliplr(op.children); % Last op applied first
                 % Number of output dimensions
                 n_out_dims = length(spot.utils.uncell(op.ms));
@@ -139,17 +138,16 @@ classdef opKron < opSpot
                     % Input header (including collapsed)
                     y            = length(spot.utils.uncell(op.ns{u})) + x - 1;
                     in_header    = href(first_header,x:y);
-                    tmp_meta     = xmeta;
-                    tmp_meta.exsize = [1;y-x+1];
+                    in_header.exsize = [1;y-x+1];
                     % child header
-                    child_header = headerMod(opList{u},tmp_meta,in_header,mode);
+                    child_header = headerMod(opList{u},in_header,mode);
                     % Assignment indices
                     j            = length(spot.utils.uncell(op.ms{u})) + i - 1;
                     % header assignment
                     oldsize      = length(header_out.size);
                     header_out   = hasg(header_out,child_header,i:j);
                     newsize      = length(header_out.size);
-                    i            = i + 1 + oldsize - newsize;
+                    i            = i + 1 + newsize - oldsize;
                     x            = y + 1;
                 end
                 h = header_out;                

@@ -80,12 +80,12 @@ classdef opCTranspose < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % headerMod
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function h = headerMod(op,xmeta,header,mode)
+       function h = headerMod(op,header,mode)
            A = op.children{1};
            if mode == 1
-              h = headerMod(A,xmeta,header,2);
+              h = headerMod(A,header,2);
            else
-              h = headerMod(A,xmeta,header,1);
+              h = headerMod(A,header,1);
            end
        end % headerMod
        

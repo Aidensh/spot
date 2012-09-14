@@ -1,4 +1,4 @@
-function h = headerMod(op,xmeta,header,mode)
+function h = headerMod(op,header,mode)
 %HEADERMOD  Header Modifying Function for SeisDataContainer compatibility
 %
 %   h = headerMod(op,xmeta,header,mode) returns a modified header 
@@ -12,7 +12,7 @@ function h = headerMod(op,xmeta,header,mode)
 % By default this only changes the implicit header size
 
 % Extract explicit size indices
-exsize = xmeta.exsize;
+exsize = header.exsize;
 
 if mode == 1
     h = header; % Copy header
