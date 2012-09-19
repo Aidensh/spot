@@ -160,10 +160,13 @@ classdef opKron < opSpot
                     oldsize      = length(header_out.size);
                     header_out   = hasg(header_out,child_header,i:j);
                     newsize      = length(header_out.size);
-                    i            = i + 1 + newsize - oldsize;
+                    i            = j + 1 + newsize - oldsize;
                     x            = y + 1;
                 end
-                h = header_out;                
+                exsize_out = 1:length(header_out.size);
+                exsize_out = [exsize_out;exsize_out];
+                h = header_out;
+                h.exsize = exsize_out;
             else
                 h = header;
                 % h.header.size(exsize(1,1):exsize(2,1)) = op.ns;

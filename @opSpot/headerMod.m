@@ -24,3 +24,7 @@ else
     h.size(exsize(1,1):exsize(2,1)) = [];
     h.size = [op.ns{:} h.size];
 end
+
+exsize_out = 1:length(h.size);
+exsize_out = [exsize_out;exsize_out];
+h.exsize   = exsize_out;
