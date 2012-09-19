@@ -100,10 +100,6 @@ classdef opKron < opSpot
                     op.ns{u} = [op.ns{u} child_op.ns{:}];
                 end
             end
-%             op.ms = cellfun(@(x) {x.ms},fliplr(varargin),'UniformOutput',false); 
-%             op.ms = [op.ms{:}];
-%             op.ns = cellfun(@(x) {x.ns},fliplr(varargin),'UniformOutput',false);
-%             op.ns = [op.ns{:}];
                 
         end % Constructor
         

@@ -113,6 +113,24 @@ classdef opCurvelet < opSpot
           y = multiply(op,y,1);
        end
        
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % headerMod             
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % overloaded to modify metadata correctly
+       function h = headerMod(op,header,mode)
+       exsize = header.exsize;
+
+        if mode == 1
+            h = header; % Copy header
+            % Replace old first (collapsed) dimensional sizes with operator sizes.
+            h.size = [h.size(1:exsize(1,1)-1) [op.ms{:}] h.size(exsize(2,1)+1:end)];
+        else
+            h = header;
+            h.size = [h.size(1:exsize(1,1)-1) [op.ns{:}] h.size(exsize(2,1)+1:end)];
+        end
+        
+       end % headerMod
+       
     end % Methods
        
  
