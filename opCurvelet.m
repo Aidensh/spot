@@ -128,17 +128,31 @@ classdef opCurvelet < opSpot
             h.origin(exsize(1,1):exsize(2,1)) = [];
             h.origin = [0 h.origin];
             h.delta(exsize(1,1):exsize(2,1)) = [];
-            h.delta = [0 h.delta];
+            h.delta = [1 h.delta];
             h.label(exsize(1,1):exsize(2,1)) = [];
-            h.label = ['lc' h.label];
+            h.label = ['lcurvelet' h.label];
             h.unit(exsize(1,1):exsize(2,1)) = [];
-            h.unit = ['lu' h.unit];
+            h.unit = ['ucurvelet' h.unit];
             
-        else
+        else % mode == 2
             h = header;
             h.size(exsize(1,1):exsize(2,1)) = [];
             h.size = [op.ns{:} h.size];
+            h.origin(exsize(1,1):exsize(2,1)) = [];
+            h.origin = [0 0 h.origin];
+            h.delta(exsize(1,1):exsize(2,1)) = [];
+            h.delta = [1 1 h.delta];
+            h.label(exsize(1,1):exsize(2,1)) = [];
+            h.label = ['l1' 'l2' h.label];
+            h.unit(exsize(1,1):exsize(2,1)) = [];
+            h.unit = ['u1' 'u2' h.unit];
+            
         end
+        
+        % Re-append correct exsize
+        exsize_out = 1:length(h.size);
+        exsize_out = [exsize_out;exsize_out];
+        h.exsize   = exsize_out;
         
        end % headerMod
        
