@@ -142,7 +142,6 @@ classdef opKron < opSpot
                 header_out.label  = zeros(1,n_out_dims);
                 
                 % Replace old first (collapsed) dimensional sizes with operator sizes.
-                % h.header.size(exsize(1,1):exsize(2,1)) = op.ms;
                 i = 1;
                 x = 1;
                 % Extract collapsed first dims from header.
@@ -168,8 +167,45 @@ classdef opKron < opSpot
                 h = header_out;
                 h.exsize = exsize_out;
             else
-                h = header;
-                % h.header.size(exsize(1,1):exsize(2,1)) = op.ns;
+                % Setup variables
+                opList = fliplr(op.children); % Last op applied first
+                % Number of output dimensions
+                n_out_dims = length(spot.utils.uncell(op.ns));
+                
+                % Preallocate and setup header
+                header_out        = header;
+                header_out.dims   = n_out_dims;
+                header_out.size   = zeros(1,n_out_dims);
+                header_out.origin = zeros(1,n_out_dims);
+                header_out.delta  = zeros(1,n_out_dims);
+                header_out.unit   = zeros(1,n_out_dims);
+                header_out.label  = zeros(1,n_out_dims);
+                
+                % Replace old first (collapsed) dimensional sizes with operator sizes.
+                i = 1;
+                x = 1;
+                % Extract collapsed first dims from header.
+                first_header = href(header,exsize(:,1));
+                for u = 1:length(op.children)
+                    % Input header (including collapsed)
+                    y            = length(spot.utils.uncell(op.ms{u})) + x - 1;
+                    in_header    = href(first_header,x:y);
+                    in_header.exsize = [1;y-x+1];
+                    % child header
+                    child_header = headerMod(opList{u},in_header,mode);
+                    % Assignment indices
+                    j            = length(spot.utils.uncell(op.ns{u})) + i - 1;
+                    % header assignment
+                    oldsize      = length(header_out.size);
+                    header_out   = hasg(header_out,child_header,i:j);
+                    newsize      = length(header_out.size);
+                    i            = j + 1 + newsize - oldsize;
+                    x            = y + 1;
+                end
+                exsize_out = 1:length(header_out.size);
+                exsize_out = [exsize_out;exsize_out];
+                h = header_out;
+                h.exsize = exsize_out;
             end
             
         end % headerMod
