@@ -17,8 +17,10 @@ exsize = header.exsize;
 if mode == 1
     h = header; % Copy header
     % Replace old first (collapsed) dimensional sizes with operator sizes.
-    h.size = [h.size(1:exsize(1,1)-1) [op.ms{:}] h.size(exsize(2,1)+1:end)];
+    h.size(exsize(1,1):exsize(2,1)) = [];
+    h.size = [op.ms{:} h.size];
 else
     h = header;
-    h.size = [h.size(1:exsize(1,1)-1) [op.ns{:}] h.size(exsize(2,1)+1:end)];
+    h.size(exsize(1,1):exsize(2,1)) = [];
+    h.size = [op.ns{:} h.size];
 end
