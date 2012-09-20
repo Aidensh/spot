@@ -107,9 +107,9 @@ classdef opCurvelet3d < opSpot
             h.delta(exsize(1,1):exsize(2,1)) = [];
             h.delta = [1 h.delta];
             h.label(exsize(1,1):exsize(2,1)) = [];
-            h.label = ['lcurvelet' h.label];
+            h.label = ['lcurvelet3d' h.label];
             h.unit(exsize(1,1):exsize(2,1)) = [];
-            h.unit = ['ucurvelet' h.unit];
+            h.unit = ['ucurvelet3d' h.unit];
             
         else % mode == 2
             h = header;
