@@ -90,6 +90,49 @@ classdef opCurvelet3d < opSpot
           y = multiply(op,y,1);
        end
        
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % headerMod             
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % overloaded to modify metadata correctly
+       function h = headerMod(op,header,mode)
+       exsize = header.exsize;
+
+        if mode == 1
+            h = header; % Copy header
+            % Replace old first (collapsed) dimensional sizes with operator sizes.
+            h.size(exsize(1,1):exsize(2,1)) = [];
+            h.size = [op.ms{:} h.size];
+            h.origin(exsize(1,1):exsize(2,1)) = [];
+            h.origin = [0 h.origin];
+            h.delta(exsize(1,1):exsize(2,1)) = [];
+            h.delta = [1 h.delta];
+            h.label(exsize(1,1):exsize(2,1)) = [];
+            h.label = ['lcurvelet' h.label];
+            h.unit(exsize(1,1):exsize(2,1)) = [];
+            h.unit = ['ucurvelet' h.unit];
+            
+        else % mode == 2
+            h = header;
+            h.size(exsize(1,1):exsize(2,1)) = [];
+            h.size = [op.ns{:} h.size];
+            h.origin(exsize(1,1):exsize(2,1)) = [];
+            h.origin = [0 0 0 h.origin];
+            h.delta(exsize(1,1):exsize(2,1)) = [];
+            h.delta = [1 1 1 h.delta];
+            h.label(exsize(1,1):exsize(2,1)) = [];
+            h.label = ['l1' 'l2' 'l3' h.label];
+            h.unit(exsize(1,1):exsize(2,1)) = [];
+            h.unit = ['u1' 'u2' 'u3' h.unit];
+            
+        end
+        
+        % Re-append correct exsize
+        exsize_out = 1:length(h.size);
+        exsize_out = [exsize_out;exsize_out];
+        h.exsize   = exsize_out;
+        
+       end % headerMod
+       
     end % Methods
        
  
