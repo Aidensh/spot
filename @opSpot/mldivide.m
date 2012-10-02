@@ -37,6 +37,14 @@ function x = mldivide(A,B)
 % TODO: What if one of the classes in 5 is not a Spot class?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SeisDataContainer catch
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if isa(B,'SeisDataContainer')
+    x = applyDivide(B,A);
+    return;
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mode 1: M\C
 % Mode 3: s\C - Here we also handle the special case where C is 1-by-M.
 %               If so, then we recast this as (C'*s)', which results in
