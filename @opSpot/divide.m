@@ -20,18 +20,14 @@ function x = divide(op,b,mode)
 
 if op.sweepflag
     if mode == 1
-        A = op;
+        x = matldivide(op,b);
     else
-        A = op';
+        x = matldivide(op',b);
     end
-    x = matldivide(A,b);
 else
-    for j=1:size(b,2)
-        if mode == 1
-            A = op;
-        else
-            A = op';
-        end
-        x(:,j) = lsqrdivide(A,b(:,j));
+    if mode == 1
+        x = lsqrdivide(op,b);
+    else
+        x = lsqrdivide(op',b);
     end
 end

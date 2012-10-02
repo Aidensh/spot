@@ -5,10 +5,4 @@ function x = matldivide(op,b)
 %   except that op is always a Spot operator, and b is always a numeric column
 %   vector.
 
-if isa(op, 'opSpot')
-    A = op.double();
-end
-x = builtin('mldivide',A,b);
-
-end
-
+x = builtin('mldivide',double(op),b);
