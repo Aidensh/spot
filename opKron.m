@@ -135,11 +135,11 @@ classdef opKron < opSpot
                 % Preallocate and setup header
                 header_out        = header;
                 header_out.dims   = n_out_dims;
-                header_out.size   = zeros(1,n_out_dims);
-                header_out.origin = zeros(1,n_out_dims);
-                header_out.delta  = zeros(1,n_out_dims);
-                header_out.unit   = zeros(1,n_out_dims);
-                header_out.label  = zeros(1,n_out_dims);
+                header_out.size(1:n_out_dims) = 0;
+                header_out.origin(1:n_out_dims) = 0;
+                header_out.delta(1:n_out_dims) = 0;
+                header_out.unit(1:n_out_dims) = {0};
+                header_out.label(1:n_out_dims) = {0};
                 
                 % Replace old first (collapsed) dimensional sizes with operator sizes.
                 i = 1;
@@ -175,11 +175,11 @@ classdef opKron < opSpot
                 % Preallocate and setup header
                 header_out        = header;
                 header_out.dims   = n_out_dims;
-                header_out.size   = zeros(1,n_out_dims);
-                header_out.origin = zeros(1,n_out_dims);
-                header_out.delta  = zeros(1,n_out_dims);
-                header_out.unit   = zeros(1,n_out_dims);
-                header_out.label  = zeros(1,n_out_dims);
+                header_out.size(1:n_out_dims) = 0;
+                header_out.origin(1:n_out_dims) = 0;
+                header_out.delta(1:n_out_dims) = 0;
+                header_out.unit(1:n_out_dims) = {0};
+                header_out.label(1:n_out_dims) = {0};
                 
                 % Replace old first (collapsed) dimensional sizes with operator sizes.
                 i = 1;

@@ -8,23 +8,33 @@ function h = headerRef(header,index)
 index = index(1):index(end);
 assert(isnumeric(index), 'index must be numeric!');
 assert(isvector(index), 'index must be a vector!');
+% singleton = false;
 
-size    = header.size;
+sizes   = header.size;
 origin  = header.origin;
 delta   = header.delta;
 unit    = header.unit;
 label   = header.label;
+% if length(sizes) == 1, sizes = [sizes 1]; singleton = true; end
 
 % Check index range
-assert(index(1) >= 1 && index(end) <= length(size), 'index out of bounds');
+if ~(index(1) >= 1 && index(end) <= length(sizes))
+    warning( 'index out of bounds');
+end
 
 % Update dims
-dims = length(size(index));
+% if singleton
+%     dims = 1;
+%     index = 1;
+%     sizes = sizes(1);
+% else
+    dims = length(sizes(index));
+% end
 
 % Fill in the new ranges
 h        = header;
 h.dims   = dims;
-h.size   = size(index);
+h.size   = sizes(index);
 h.origin = origin(index);
 h.delta  = delta(index);
 h.unit   = unit(index);
