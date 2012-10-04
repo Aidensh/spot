@@ -130,16 +130,16 @@ classdef opKron < opSpot
                 % Setup variables
                 opList = fliplr(op.children); % Last op applied first
                 % Number of output dimensions
-                n_out_dims = length(spot.utils.uncell(op.ms));
+                n_out_dims = length(spot.utils.uncell(op.ms)) + size(exsize,2) - 1;
                 
                 % Preallocate and setup header
                 header_out        = header;
                 header_out.dims   = n_out_dims;
-                header_out.size(1:n_out_dims) = 0;
-                header_out.origin(1:n_out_dims) = 0;
-                header_out.delta(1:n_out_dims) = 0;
-                header_out.unit(1:n_out_dims) = {0};
-                header_out.label(1:n_out_dims) = {0};
+                header_out.size   = zeros(1,n_out_dims);
+                header_out.origin = zeros(1,n_out_dims);
+                header_out.delta  = zeros(1,n_out_dims);
+                header_out.unit   = zeros(1,n_out_dims);
+                header_out.label  = zeros(1,n_out_dims);
                 
                 % Replace old first (collapsed) dimensional sizes with operator sizes.
                 i = 1;
@@ -170,16 +170,16 @@ classdef opKron < opSpot
                 % Setup variables
                 opList = fliplr(op.children); % Last op applied first
                 % Number of output dimensions
-                n_out_dims = length(spot.utils.uncell(op.ns));
+                n_out_dims = length(spot.utils.uncell(op.ns)) + size(exsize,2) - 1;
                 
                 % Preallocate and setup header
                 header_out        = header;
                 header_out.dims   = n_out_dims;
-                header_out.size(1:n_out_dims) = 0;
-                header_out.origin(1:n_out_dims) = 0;
-                header_out.delta(1:n_out_dims) = 0;
-                header_out.unit(1:n_out_dims) = {0};
-                header_out.label(1:n_out_dims) = {0};
+                header_out.size   = zeros(1,n_out_dims);
+                header_out.origin = zeros(1,n_out_dims);
+                header_out.delta  = zeros(1,n_out_dims);
+                header_out.unit   = zeros(1,n_out_dims);
+                header_out.label  = zeros(1,n_out_dims);
                 
                 % Replace old first (collapsed) dimensional sizes with operator sizes.
                 i = 1;
