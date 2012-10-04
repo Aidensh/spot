@@ -141,6 +141,14 @@ classdef opKron < opSpot
                 header_out.unit   = zeros(1,n_out_dims);
                 header_out.label  = zeros(1,n_out_dims);
                 
+                % Fill in the non-first-dimension header parts
+                if size(exsize,2) > 1
+                    h_part = href(header,exsize(1,2):exsize(end,end));
+                    header_out = hasg(header_out,h_part,...
+                        length(spot.utils.uncell(op.ms))+1:...
+                        length(header_out.size));
+                end
+                
                 % Replace old first (collapsed) dimensional sizes with operator sizes.
                 i = 1;
                 x = 1;
@@ -180,6 +188,14 @@ classdef opKron < opSpot
                 header_out.delta  = zeros(1,n_out_dims);
                 header_out.unit   = zeros(1,n_out_dims);
                 header_out.label  = zeros(1,n_out_dims);
+                
+                % Fill in the non-first-dimension header parts
+                if size(exsize,2) > 1
+                    h_part = href(header,exsize(1,2):exsize(end,end));
+                    header_out = hasg(header_out,h_part,...
+                        length(spot.utils.uncell(op.ms))+1:...
+                        length(header_out.size));
+                end
                 
                 % Replace old first (collapsed) dimensional sizes with operator sizes.
                 i = 1;
