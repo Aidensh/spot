@@ -18,9 +18,7 @@ label   = header.label;
 % if length(sizes) == 1, sizes = [sizes 1]; singleton = true; end
 
 % Check index range
-if ~(index(1) >= 1 && index(end) <= length(sizes))
-    warning( 'index out of bounds');
-end
+assert(index(1) >= 1 && index(end) <= length(sizes),'index out of bounds');
 
 % Update dims
 % if singleton

@@ -9,18 +9,18 @@ function y = minus(A,B)
    
 %   http://www.cs.ubc.ca/labs/scl/spot
 
-if isa(B,'dataContainer') % Please see DataContainerInfo.md
+if isa(B,'SeisDataContainer') % Please see DataContainerInfo.md
     y = minus(B,A,'swap');
 else
-if nargin ~= 2
-   error('Exactly two operators must be specified.')
-end
-if isscalar(A)
-   A = A*opOnes(size(B));
-end
-if isscalar(B)
-   B = B*opOnes(size(A));
-end
-y = opMinus(A,B);
+    if nargin ~= 2
+       error('Exactly two operators must be specified.')
+    end
+    if isscalar(A)
+       A = A*opOnes(size(B));
+    end
+    if isscalar(B)
+       B = B*opOnes(size(A));
+    end
+    y = opMinus(A,B);
 
 end % else
