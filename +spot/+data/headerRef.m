@@ -15,25 +15,28 @@ origin  = header.origin;
 delta   = header.delta;
 unit    = header.unit;
 label   = header.label;
-% if length(sizes) == 1, sizes = [sizes 1]; singleton = true; end
 
-% Check index range
-assert(index(1) >= 1 && index(end) <= length(sizes),'index out of bounds');
+if length(origin) == 1 && all(index ~= 1) % indexing into singleton in vec case
+    h        = header;
+    h.dims   = 1;
+    h.size   = 1;
+    h.origin = 0;
+    h.delta  = 1;
+    h.unit   = {'u1'};
+    h.label  = {'l1'};
+else % not vec case
+    % Check index range
+    assert(index(1) >= 1 && index(end) <= length(sizes),...
+        'index out of bounds');
 
-% Update dims
-% if singleton
-%     dims = 1;
-%     index = 1;
-%     sizes = sizes(1);
-% else
     dims = length(sizes(index));
-% end
 
-% Fill in the new ranges
-h        = header;
-h.dims   = dims;
-h.size   = sizes(index);
-h.origin = origin(index);
-h.delta  = delta(index);
-h.unit   = unit(index);
-h.label  = label(index);
+    % Fill in the new ranges
+    h        = header;
+    h.dims   = dims;
+    h.size   = sizes(index);
+    h.origin = origin(index);
+    h.delta  = delta(index);
+    h.unit   = unit(index);
+    h.label  = label(index);
+end % not vec case
