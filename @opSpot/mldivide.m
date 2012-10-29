@@ -40,7 +40,7 @@ function x = mldivide(A,B)
 % SeisDataContainer catch
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if isa(B,'SeisDataContainer')
-    x = applyDivide(B,A);
+    x = dataDivide(B,A);
     return;
 end
 

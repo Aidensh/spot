@@ -27,7 +27,7 @@ function y = mtimes(A,B)
 % Always strip the data at the highest level possible(mtimes)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if isa(B,'SeisDataContainer') && isa(A,'opSpot')
-    y = applyMultiply(B,A); % Let the datacontainer itself handle the stripping
+    y = dataMultiply(B,A); % Let the datacontainer itself handle the stripping
     return;
 end
  

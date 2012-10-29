@@ -140,7 +140,7 @@ classdef opWavelet2 < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function y = mldivide(op,x)
             if isa(x,'SeisDataContainer')
-                y = applyDivide(x,op);
+                y = dataDivide(x,op);
             else
                 y = op.funHandle2(op,x);
             end
