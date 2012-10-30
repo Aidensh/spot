@@ -71,7 +71,16 @@ classdef opClass < opSpot
            else
               y = op.obj' * x;
            end
-        end
+       end
+        
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % Divide
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       function x = divide(op,b,mode)
+           % Non-sweepable
+           x = lsqrdivide(op,b,mode);
+       end % divide
+       
     end % methods
    
 end

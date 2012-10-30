@@ -155,7 +155,15 @@ classdef opGaussian < opSpot
             for u = 1:x_n
                 y(:,u) = op.funHandle(op,x(:,u),mode);
             end
-       end % Multiply
+        end % Multiply
+       
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Non-sweepable
+            x = lsqrdivide(op,b,mode);
+        end % divide
 
     end % Methods
     

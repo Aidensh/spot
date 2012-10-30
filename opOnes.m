@@ -62,6 +62,14 @@ classdef opOnes < opSpot
               y = ones(op.n,1)*sum(x);
            end
         end % multiply
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Non-sweepable
+            x = lsqrdivide(op,b,mode);
+        end % divide
       
     end % Methods
         

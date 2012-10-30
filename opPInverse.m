@@ -76,6 +76,18 @@ classdef opPInverse < opSpot
           end
            y = A\x;
         end % function multiply
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Non-sweepable?????
+            if op.sweepflag
+                x = matldivide(op,b,mode);
+            else
+                x = lsqrdivide(op,b,mode);
+            end
+        end % divide
 
     end % methods - protected
    

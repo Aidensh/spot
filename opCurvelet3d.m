@@ -174,7 +174,15 @@ classdef opCurvelet3d < opSpot
              end
           end
          
-       end % Multiply          
+       end % Multiply
+       
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % Divide
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       function x = divide(op,b,mode)
+           % Non-sweepable
+           x = lsqrdivide(op,b,mode);
+       end % divide
 
     end % Methods
    

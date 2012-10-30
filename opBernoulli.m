@@ -133,6 +133,15 @@ classdef opBernoulli < opSpot
                 y(:,u) = op.funHandle(op,x(:,u),mode);
             end
        end % function multiply
+       
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % Divide
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       function x = divide(op,b,mode)
+           % Non-sweepable
+           x = lsqrdivide(op,b,mode);
+       end % divide
+       
     end % methods - protected
         
     methods ( Access = private )

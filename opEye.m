@@ -72,6 +72,14 @@ classdef opEye < opSpot
               end
            end
         end % multiply
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Non-sweepable
+            x = lsqrdivide(op,b,mode);
+        end % divide
       
     end % Methods
         

@@ -140,7 +140,16 @@ methods(Access = protected)
             end
             y(:,u) = full(Xmat(:));  % need full because op.Rx is sparse
         end
-    end % function multiply   
+    end % function multiply
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Divide
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    function x = divide(op,b,mode)
+        % Non-sweepable
+        x = lsqrdivide(op,b,mode);
+    end % divide
+      
 end % methods protected
 
 end

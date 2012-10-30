@@ -71,6 +71,14 @@ classdef opDFT < opOrthogonal
          y = op.funHandle(op,x,mode);
       end % Multiply
       
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      % Divide
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      function x = divide(op,b,mode)
+          % Sweepable
+          x = matldivide(op,b,mode);
+      end % divide
+      
    end % Methods
    
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

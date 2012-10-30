@@ -18,16 +18,13 @@ function x = divide(op,b,mode)
 
 %   http://www.cs.ubc.ca/labs/scl/spot
 
+warning('opSpot:sweepflag',['sweepflag and applyDivide is being ',...
+    'discontinued due to performance issues. Please put all the ',...
+    'multivector support in your operators divide function and recode',...
+    'accordingly']);
+
 if op.sweepflag
-    if mode == 1
-        x = matldivide(op,b);
-    else
-        x = matldivide(op',b);
-    end
+    x = matldivide(op,b,mode);
 else
-    if mode == 1
-        x = lsqrdivide(op,b);
-    else
-        x = lsqrdivide(op',b);
-    end
+    x = lsqrdivide(op,b,mode);
 end

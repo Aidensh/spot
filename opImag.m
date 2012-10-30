@@ -85,6 +85,18 @@ classdef opImag < opSpot
              end
           end
        end % Multiply
+       
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Non-sweepable?????
+            if op.sweepflag
+                x = matldivide(op,b,mode);
+            else
+                x = lsqrdivide(op,b,mode);
+            end
+        end % divide
 
     end % Methods
    

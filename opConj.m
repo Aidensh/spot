@@ -90,6 +90,14 @@ classdef opConj < opSpot
               y = conj(multiply(op.children{1},conj(x),2));
            end
        end % function multiply
+       
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % Divide
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       function x = divide(op,b,mode)
+           % Sweepable
+           x = matldivide(op,b,mode);
+       end % divide
 
     end % methods - protected
    

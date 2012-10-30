@@ -80,6 +80,18 @@ classdef opInverse < opSpot
           end
            y = A\x;
         end % function multiply
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Non-sweepable
+            if mode == 1
+                x = op.children{1}*b;
+            else
+                x = op.children{1}'*b;
+            end
+        end % divide
 
     end % methods - protected
    

@@ -73,6 +73,14 @@ classdef opUnaryMinus < opSpot
        function y = multiply(op,x,mode)
            y = -1 * multiply(op.children{1},x,mode);
        end % Multiply
+       
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Non-sweepable
+            x = lsqrdivide(op,b,mode);
+        end % divide
 
     end % Methods
    

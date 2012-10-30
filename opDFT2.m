@@ -88,6 +88,14 @@ classdef opDFT2 < opOrthogonal
             end
       end % function multiply
       
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      % Divide
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      function x = divide(op,b,mode)
+          % Non-sweepable
+          x = lsqrdivide(op,b,mode);
+      end % divide
+      
    end % methods - protected
 
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

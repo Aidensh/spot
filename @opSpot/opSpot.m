@@ -79,6 +79,55 @@ classdef opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods( Access = protected )
         
+        function y = applyMultiply(op,x,mode)
+            warning('opSpot:sweepflag',['sweepflag and applyMultiply is being ',...
+            'discontinued due to performance issues. Please put all the ',...
+            'multivector support in your operators multiply function and recode',...
+            'accordingly']);
+        
+            op.counter.plus1(mode);
+            
+            % For border case: empty x
+            if isempty(x)
+                if mode == 1
+                    y = zeros(op.m,0);
+                else
+                    y = zeros(op.n,0);
+                end
+                return
+            end
+            
+            if op.sweepflag
+                y = op.multiply(x,mode);
+            else
+                q = size(x,2);
+                
+                % Preallocate y
+                if q > 1
+                    if isscalar(op)
+                        % special case: allocate result size of x
+                        y = zeros(size(x));
+                    elseif mode==1
+                        y = zeros(op.m,q);
+                    else
+                        y = zeros(op.n,q);
+                    end
+                end
+                
+                if q == 1
+                    y = op.multiply(x,mode);
+                else
+                    for i=1:q
+                        y(:,i) = op.multiply(x(:,i),mode);
+                    end
+                end
+            end
+        end
+        
+        function y = applyDivide(op,x,mode)
+            y = op.divide(x,mode);
+        end
+        
         % Signature of external protected functions (In class folder)
         y = divide(op,x,mode);
     end % methods - protected

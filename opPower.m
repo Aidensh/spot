@@ -73,6 +73,14 @@ classdef opPower < opSpot
        function y = multiply(op,x,mode)
           y = op.funHandle(op,x,mode);
        end % function multiply
+       
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Need to be Sweepable???
+            x = lsqrdivide(op,b,mode);
+        end % divide
 
     end % methods - protected
 

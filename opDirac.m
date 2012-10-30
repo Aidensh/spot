@@ -47,6 +47,13 @@ classdef opDirac < opOrthogonal
          y = x;
       end
       
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      % Divide
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      function x = divide(op,b,mode)
+          x = b;
+      end % divide
+      
    end % methods - protected
    
 end % classdef

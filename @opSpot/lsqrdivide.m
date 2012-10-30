@@ -1,4 +1,8 @@
-function x = lsqrdivide(A,b)
+function x = lsqrdivide(A,b,mode)
+
+if mode == 2
+    A = A';
+end
 
 [m,n] = size(A);
 opts = spotparams;

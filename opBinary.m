@@ -138,6 +138,14 @@ classdef opBinary < opSpot
               end
           end
        end % Multiply
+       
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       % Divide
+       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+       function x = divide(op,b,mode)
+           % Non-sweepable
+           x = lsqrdivide(op,b,mode);
+       end % divide
 
     end % methods - protected
    

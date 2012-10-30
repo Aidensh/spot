@@ -67,6 +67,14 @@ classdef opDCT < opOrthogonal
          end
       end % function multiply
       
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      % Divide
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      function x = divide(op,b,mode)
+          % Sweepable
+          x = matldivide(op,b,mode);
+      end % divide
+      
    end % methods - protected
    
 end % Classdef

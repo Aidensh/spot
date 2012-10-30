@@ -83,6 +83,17 @@ classdef opSparseBinary < opSpot
              y = op.matrix'* x;
           end
        end % Multiply
+       
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            if mode == 1
+                x = op.matrix \ b;
+            else
+                x = op.matrix'\ b;
+            end
+        end % divide
 
     end % Methods
    
