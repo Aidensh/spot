@@ -80,7 +80,10 @@ classdef opFunction < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-           y = op.funHandle(x,mode);
+            y = zeros(size(op,1), size(x,2));
+            for u = 1:size(x,2)
+                y(:,u) = op.funHandle(x(:,u),mode);
+            end
         end % Multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
