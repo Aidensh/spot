@@ -180,7 +180,7 @@ classdef opFoG < opSpot
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function x = divide(op,b,mode)
-            % Non-sweepable?????
+            % Needs sweepflag
             if op.sweepflag
                 x = matldivide(op,b,mode);
             else

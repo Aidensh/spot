@@ -78,7 +78,7 @@ classdef opPower < opSpot
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function x = divide(op,b,mode)
-            % Need to be Sweepable???
+            % Non-sweepable
             x = lsqrdivide(op,b,mode);
         end % divide
 

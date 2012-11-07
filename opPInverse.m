@@ -81,7 +81,7 @@ classdef opPInverse < opSpot
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function x = divide(op,b,mode)
-            % Non-sweepable?????
+            % Depends on sweepflag
             if op.sweepflag
                 x = matldivide(op,b,mode);
             else

@@ -47,7 +47,7 @@ classdef opHeaviside < opSpot
            if mode == 1
               % Scale if normalized columns requested
               if op.normalized
-                  x = [1./sqrt(op.n:-1:1)]'.*x(:);
+                  x = (1./sqrt(op.n:-1:1))'.*x(:);
               end
 
               y = cumsum(x);
@@ -59,7 +59,7 @@ classdef opHeaviside < opSpot
    
               % Scale if normalized columns requested
               if op.normalized,
-                 y = [1./sqrt(op.n:-1:1)]'.*y(:);
+                 y = (1./sqrt(op.n:-1:1))'.*y(:);
               end
            end
         end % Multipy

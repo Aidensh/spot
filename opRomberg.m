@@ -41,7 +41,6 @@ classdef opRomberg < opSpot
             op = op@opSpot('Romberg',m,n);
             op.cflag      = false;
             op.linear     = true;
-            op.sweepflag  = false;
             op.dimensions = dims;
             op.phases     = random_phasesND(dims);
             op.signs      = sign(randn(dims));
