@@ -146,7 +146,7 @@ if mode == 1
       z1 = SurfBox.Matlab.surf_coeff2vec(z1);
       z2 = SurfBox.Matlab.Surfdec(imag(x),pyramidMode,levelArray,HRGfilter, options{:});
       z2 = sufracelet.surf_coeff2vec(z2);
-      y  = z1 + sqrt(-1) * z2;
+      y  = z1 + 1i * z2;
    else
       y  = SurfBox.Matlab.Surfdec(x,pyramidMode,levelArray,HRGfilter,options{:});
       y  = SurfBox.Matlab.surf_coeff2vec(y);
@@ -158,7 +158,7 @@ else
      z1 = SurfBox.Matlab.Surfrec(z1,recInfo);
      z2 = surf_vec2coeff(imag(x), structureInfo);
      z2 = SurfBox.Matlab.Surfrec(z2,recInfo);
-     y  = z1 + sqrt(-1) * z2;
+     y  = z1 + 1i * z2;
    else
      y  = surf_vec2coeff(x, structureInfo);
      y  = SurfBox.Matlab.Surfrec(y,recInfo);

@@ -63,13 +63,13 @@ classdef opReal < opSpot
           if isreal(x)
              % Purely real
              y = real(multiply(opA,x,mode));
-          elseif isreal(sqrt(-1)*x)
+          elseif isreal(1i*x)
              % Purely imaginary
-             y = real(multiply(opA,imag(x),mode)) * sqrt(-1);
+             y = real(multiply(opA,imag(x),mode)) * 1i;
           else
              % Mixed
              y = real(multiply(opA,real(x),mode)) + ...
-                 real(multiply(opA,imag(x),mode)) * sqrt(-1);
+                 real(multiply(opA,imag(x),mode)) * 1i;
           end
        end % Multiply
        

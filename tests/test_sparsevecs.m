@@ -47,7 +47,7 @@ function [A,xs,xf] = generate(A)
    [m,n] = size(A);
    xs = sprand(n,1,.1);
    if ~isreal(A)
-      xs = xs + sqrt(-1)*sprandn(n,1,.1);
+      xs = xs + 1i*sprandn(n,1,.1);
    end
    xf = full(xs);
 end

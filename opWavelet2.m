@@ -179,7 +179,7 @@ classdef opWavelet2 < opSpot
             else
                y1 = spot.rwt.mdwt(real(Xmat), filter, levels);
                y2 = spot.rwt.mdwt(imag(Xmat), filter, levels);
-               y  = y1 + sqrt(-1) * y2;
+               y  = y1 + 1i * y2;
             end
             y = y(:);
          else % mode == 2
@@ -189,7 +189,7 @@ classdef opWavelet2 < opSpot
             else
                y1 = spot.rwt.midwt(real(Xmat), filter, levels);
                y2 = spot.rwt.midwt(imag(Xmat), filter, levels);
-               y  = y1 + sqrt(-1) * y2;
+               y  = y1 + 1i * y2;
             end
             
             % apply adjoint of extension operator
@@ -227,7 +227,7 @@ classdef opWavelet2 < opSpot
             else
                [yl1,yh1] = spot.rwt.mrdwt(real(Xmat), filter, levels);
                [yl2,yh2] = spot.rwt.mrdwt(imag(Xmat), filter, levels);
-               y = [yl1,yh1] + sqrt(-1) * [yl2,yh2];
+               y = [yl1,yh1] + 1i * [yl2,yh2];
             end
             y = y(:);
          else % mode == 2
@@ -238,7 +238,7 @@ classdef opWavelet2 < opSpot
             else
                y1 = spot.rwt.mirdwt(real(xl), real(xh), filter, levels);
                y2 = spot.rwt.mirdwt(imag(xl), imag(xh), filter, levels);
-               y = y1 + sqrt(-1) * y2;
+               y = y1 + 1i * y2;
             end
             
             % apply adjoint of extension operator
@@ -267,7 +267,7 @@ classdef opWavelet2 < opSpot
          else
             y1 = spot.rwt.midwt(real(Xmat), filter, levels);
             y2 = spot.rwt.midwt(imag(Xmat), filter, levels);
-            y  = y1 + sqrt(-1) * y2;
+            y  = y1 + 1i * y2;
          end
          
          
@@ -298,7 +298,7 @@ classdef opWavelet2 < opSpot
          else
             y1 = spot.rwt.mirdwt(real(xl), real(xh), filter, levels);
             y2 = spot.rwt.mirdwt(imag(xl), imag(xh), filter, levels);
-            y = y1 + sqrt(-1) * y2;
+            y = y1 + 1i * y2;
          end
          
          
@@ -327,9 +327,9 @@ classdef opWavelet2 < opSpot
         
             % Preallocate y
             if mode == 1
-                y = zeros(op.m, x_n);
+                y = zeros(op.m, x_n, class(x));
             else
-                y = zeros(op.n, x_n);
+                y = zeros(op.n, x_n, class(x));
             end
             
             for u = 1:x_n

@@ -128,7 +128,7 @@ classdef opStack < opSpot
         function y = multiply(op,x,mode)
             q = size(x,2);
             if mode == 1
-                y = zeros(op.m,q);
+                y = zeros(op.m,q, class(x));
                 for u = 1:q
                     k = 0;
                     for i=1:length(op.children)
@@ -139,7 +139,7 @@ classdef opStack < opSpot
                     end
                 end
             else
-                y = zeros(op.n,q);
+                y = zeros(op.n,q, class(x));
                 for u = 1:q
                     k = 0;
                     for i=1:length(op.children)

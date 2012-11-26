@@ -104,9 +104,9 @@ classdef opBinary < opSpot
           else
               x_n = size(x,2);
               if mode == 1
-                  y = zeros(op.m,x_n);
+                  y = zeros(op.m,x_n, class(x));
               else
-                  y = zeros(op.n,x_n);
+                  y = zeros(op.n,x_n, class(x));
               end
               
               for u = 1:x_n
@@ -118,13 +118,13 @@ classdef opBinary < opSpot
 
                  % Multiply
                  if mode == 1
-                    y_tmp = zeros(m,1);
+                    y_tmp = zeros(m,1, class(x_tmp));
                     for i=1:n
                        v = 1.0 * (randn(m,1) < 0);
                        y_tmp = y_tmp + v * x_tmp(i);
                     end
                  else
-                    y_tmp = zeros(n,1);
+                    y_tmp = zeros(n,1, class(x_tmp));
                     for i=1:n
                        v    = 1.0 * (randn(1,m) < 0);
                        y_tmp(i) = v * x_tmp;

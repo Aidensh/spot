@@ -140,29 +140,11 @@ classdef opFoG < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function z = multiply(op,x,mode)
             if mode == 1
-%                 if ~op.sweepflag
-%                     y = zeros(size(op.children{2},1),size(x,2));
-%                     z = zeros(size(op.children{1},1),size(y,2));
-%                     for u=1:size(x,2);
-%                         y(:,u) = multiply(op.children{2},x(:,u),mode);
-%                         z(:,u) = multiply(op.children{1},y(:,u),mode);
-%                     end
-%                 else
                     y = multiply(op.children{2},x,mode);
                     z = multiply(op.children{1},y,mode);
-%                 end
             else % mode = 2
-%                 if ~op.sweepflag
-%                     y = zeros(size(op.children{1},2),size(x,2));
-%                     z = zeros(size(op.children{2},2),size(y,2));
-%                     for u=1:size(x,2);
-%                         y(:,u) = multiply(op.children{1},x(:,u),mode);
-%                         z(:,u) = multiply(op.children{2},y(:,u),mode);
-%                     end
-%                 else
                     y = multiply(op.children{1},x,mode);
                     z = multiply(op.children{2},y,mode);
-%                 end
             end
                 
         end % Multiply

@@ -149,7 +149,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function test_coremethods_pow(dat)
    A = dat.A; B = dat.B; x = dat.x; xr = real(x); xi = imag(x);
-   c = randn(1,1) + sqrt(-1) * randn(1,1);
+   c = randn(1,1) + 1i * randn(1,1);
    assertElementsAlmostEqual(...
       (A^3) * x,...
       (B^3) * x);
@@ -163,7 +163,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function test_coremethods_inv(dat)
    A = dat.A; B = dat.B; x = dat.x;
-   c = randn(1,1) + sqrt(-1) * randn(1,1);
+   c = randn(1,1) + 1i * randn(1,1);
    assertElementsAlmostEqual(...
       inv(A) * x,...
       inv(B) * x);

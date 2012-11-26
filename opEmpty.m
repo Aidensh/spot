@@ -47,9 +47,9 @@ classdef opEmpty < opSpot
         % Multiplication
         function y = multiply(op,x,mode)
            if (mode == 1)
-              y = zeros(op.m,0);
+              y = zeros(op.m,0, class(x));
            else
-              y = zeros(op.n,0);
+              y = zeros(op.n,0, class(x));
            end
         end % Multipy
         

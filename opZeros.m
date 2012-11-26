@@ -62,9 +62,9 @@ classdef opZeros < opSpot
            end
    
            if any(isinf(x) | isnan(x))
-              y = ones(s,1) * NaN;
+              y = ones(s,1, class(x)) * NaN;
            else
-              y = zeros(s,1);
+              y = zeros(s,1, class(x));
            end
         end % function multiply
         

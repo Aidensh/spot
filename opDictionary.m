@@ -136,7 +136,7 @@ classdef opDictionary < opSpot
        function y = multiply(op,x,mode)
            x_n = size(x,2);
           if mode == 1
-             y = zeros(op.m,x_n);
+             y = zeros(op.m,x_n, class(x));
              for u = 1:x_n
                 k = 0;
                  x_tmp = x(:,u);
@@ -148,7 +148,7 @@ classdef opDictionary < opSpot
                  end
              end
           else
-             y = zeros(op.n,x_n);
+             y = zeros(op.n,x_n, class(x));
              for u = 1:x_n
                 k = 0;
                  y_tmp = y(:,u);

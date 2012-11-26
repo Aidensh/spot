@@ -123,9 +123,9 @@ methods(Access = protected)
         
         % Preallocate y
         if mode == 1
-            y = zeros(op.m, x_n);
+            y = zeros(op.m, x_n, class(x));
         else
-            y = zeros(op.n, x_n);
+            y = zeros(op.n, x_n, class(x));
         end
         
         for u = 1:x_n

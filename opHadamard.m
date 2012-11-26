@@ -52,7 +52,7 @@ classdef opHadamard < opSpot
         function y = multiply(op,x,mode)
             
             x_n = size(x,2);
-            y = zeros(op.m,x_n);
+            y = zeros(op.m,x_n, class(x));
             for u = 1:x_n
                y_tmp = x(:,u);
                n = op.n;

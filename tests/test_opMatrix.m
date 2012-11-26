@@ -8,10 +8,10 @@ function test_opMatrix_multiply
    rng('default');
    
    % Set up matrices and operators for problems
-   A  = randn(2,2) + sqrt(-1) * randn(2,2);
+   A  = randn(2,2) + 1i * randn(2,2);
    B  = opMatrix(A);
    xr = randn(2,2);
-   xi = sqrt(-1) * randn(2,2);
+   xi = 1i * randn(2,2);
    x  = xr + xi;
 
    % Check opMatrix
@@ -29,10 +29,10 @@ function test_opMatrix_divide
    rng('default');
    
    % Set up matrices and operators for problems
-   A  = randn(2,2) + sqrt(-1) * randn(2,2);
+   A  = randn(2,2) + 1i * randn(2,2);
    B  = opMatrix(A);
    xr = randn(2,2);
-   xi = sqrt(-1) * randn(2,2);
+   xi = 1i * randn(2,2);
    x  = xr + xi;
 
    % Check opMatrix

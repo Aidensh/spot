@@ -87,7 +87,7 @@ classdef opBlockOp < opSpot
           
           if mode == 1
              y = full(reshape(x,m,n));
-             z = zeros(nbr*bsr2,nbc*bsc2);
+             z = zeros(nbr*bsr2,nbc*bsc2, class(x));
              for i=1:nbr
                  for j=1:nbc
                     blk = y((i-1)*bsr1+(1:bsr1),(j-1)*bsc1+(1:bsc1));
@@ -97,7 +97,7 @@ classdef opBlockOp < opSpot
              end             
           else
              y = full(reshape(x,nbr*bsr2,nbc*bsc2));
-             z = zeros(m,n);
+             z = zeros(m,n, class(x));
              for i=1:nbr
                  for j=1:nbc
                     blk = y((i-1)*bsr2+(1:bsr2),(j-1)*bsc2+(1:bsc2));
