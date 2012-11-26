@@ -90,9 +90,9 @@ classdef (HandleCompatible) opSpot
             % For border case: empty x
             if isempty(x)
                 if mode == 1
-                    y = zeros(op.m,0);
+                    y = zeros(op.m,0,class(x));
                 else
-                    y = zeros(op.n,0);
+                    y = zeros(op.n,0,class(x));
                 end
                 return
             end
@@ -106,11 +106,11 @@ classdef (HandleCompatible) opSpot
                 if q > 1
                     if isscalar(op)
                         % special case: allocate result size of x
-                        y = zeros(size(x));
+                        y = zeros(size(x),class(x));
                     elseif mode==1
-                        y = zeros(op.m,q);
+                        y = zeros(op.m,q,class(x));
                     else
-                        y = zeros(op.n,q);
+                        y = zeros(op.n,q,class(x));
                     end
                 end
                 
