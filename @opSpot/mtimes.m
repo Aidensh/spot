@@ -78,9 +78,9 @@ elseif ~isa(B,'opSpot') % A is spot, B isnt
         else
         % Perform operator*matrix
             if isempty(A)
-                y = zeros(A.m,size(B,2));
+                y = zeros(A.m,size(B,2), class(B));
             elseif isempty(B)
-                y = zeros(A.m,0);
+                y = zeros(A.m,0, class(B));
             else
                 y = multiply(A,B,1);
             end
