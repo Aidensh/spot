@@ -80,11 +80,15 @@ classdef opFunction < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-            if mode == 1
+            if isscalar(op)
+                % special case: allocate result size of x
+                y = zeros(size(x),class(x));
+            elseif mode == 1
                 y = zeros(size(op,1), size(x,2), class(x));
             else
                 y = zeros(size(op,2), size(x,2), class(x));
             end
+            
             for u = 1:size(x,2)
                 y(:,u) = op.funHandle(x(:,u),mode);
             end

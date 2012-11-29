@@ -56,10 +56,10 @@ classdef opOnes < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-           if (mode == 1)
-              y = ones(op.m,1)*sum(x);
+           if mode == 1
+               y = ones(op.m,1)*sum(x);
            else
-              y = ones(op.n,1)*sum(x);
+               y = ones(op.n,1)*sum(x);
            end
         end % multiply
         

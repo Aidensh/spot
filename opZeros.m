@@ -55,7 +55,7 @@ classdef opZeros < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-           if (mode == 1)
+           if mode == 1
               s = op.m;
            else
               s = op.n;

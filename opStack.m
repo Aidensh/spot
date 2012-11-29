@@ -128,7 +128,13 @@ classdef opStack < opSpot
         function y = multiply(op,x,mode)
             q = size(x,2);
             if mode == 1
-                y = zeros(op.m,q, class(x));
+                if isscalar(op)
+                    % special case: allocate result size of x
+                    y = zeros(size(x),class(x));
+                else
+                    y = zeros(op.m,q, class(x));
+                end
+                
                 for u = 1:q
                     k = 0;
                     for i=1:length(op.children)
@@ -139,7 +145,13 @@ classdef opStack < opSpot
                     end
                 end
             else
-                y = zeros(op.n,q, class(x));
+                if isscalar(op)
+                    % special case: allocate result size of x
+                    y = zeros(size(x),class(x));
+                else
+                    y = zeros(op.n,q, class(x));
+                end
+                
                 for u = 1:q
                     k = 0;
                     for i=1:length(op.children)

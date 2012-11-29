@@ -142,29 +142,29 @@ classdef opCurvelet3d < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function x = multiply(op,x,mode)
          
-          if mode == 1
-            % Analysis mode
-            x = fdct3d_forward_mex(op.dims(1),op.dims(2),op.dims(3),...
-               op.nbscales,op.nbangles,logical(op.finest),reshape(x,op.dims));
-            if op.finest == 2, zero_finest_scale; end
-            if ~op.cflag
-               x = fdct_wrapping_c2r(x);
+            if mode == 1
+                % Analysis mode
+                x = fdct3d_forward_mex(op.dims(1),op.dims(2),op.dims(3),...
+                op.nbscales,op.nbangles,logical(op.finest),reshape(x,op.dims));
+                if op.finest == 2, zero_finest_scale; end
+                if ~op.cflag
+                    x = fdct_wrapping_c2r(x);
+                end
+                x = spot.utils.fdct_c2v(x,op.nbcoeffs);
+            else
+                % Synthesis mode  
+                x = spot.utils.fdct_v2c(x,op.header);
+                if op.finest == 2, zero_finest_scale; end
+                if ~op.cflag
+                    x = fdct_wrapping_r2c(x);
+                end
+                x = fdct3d_inverse_mex(op.dims(1),op.dims(2),op.dims(3),...
+                op.nbscales,op.nbangles,logical(op.finest),x);
+                if ~op.cflag
+                    x = real(x);
+                end
+                x = x(:);
             end
-            x = spot.utils.fdct_c2v(x,op.nbcoeffs);
-          else
-            % Synthesis mode  
-            x = spot.utils.fdct_v2c(x,op.header);
-            if op.finest == 2, zero_finest_scale; end
-            if ~op.cflag
-               x = fdct_wrapping_r2c(x);
-            end
-            x = fdct3d_inverse_mex(op.dims(1),op.dims(2),op.dims(3),...
-               op.nbscales,op.nbangles,logical(op.finest),x);
-            if ~op.cflag
-               x = real(x);
-            end
-            x = x(:);
-          end
          
          
           %%% Nested Function

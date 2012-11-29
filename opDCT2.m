@@ -84,14 +84,26 @@ classdef opDCT2 < opOrthogonal
          n = op.inputdims(2);
          q = size(x,2);
          if mode == 1
-             y = zeros(op.m,q);
+             if isscalar(op)
+                % special case: allocate result size of x
+                y = zeros(size(x),class(x));
+             else
+                y = zeros(op.m,q, class(x));
+             end
+             
              for u = 1:q
                 y_tmp  = spot.utils.dct(full(reshape(x(:,u),m,n)));
                 y_tmp  = spot.utils.dct(y_tmp')';
                 y(:,u) = y_tmp(:);
              end
          else
-             y = zeros(op.n,q);
+             if isscalar(op)
+                % special case: allocate result size of x
+                y = zeros(size(x),class(x));
+             else
+                y = zeros(op.n,q, class(x));
+             end
+             
              for u = 1:q
                 y_tmp = spot.utils.idct(full(reshape(x(:,u),m,n)));
                 y_tmp = spot.utils.idct(y_tmp')';

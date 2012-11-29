@@ -170,7 +170,12 @@ classdef opCurvelet < opSpot
             
             if mode == 1
                 % Preallocate y
-                y = zeros(op.m,x_n, class(x));
+                if isscalar(op)
+                    % special case: allocate result size of x
+                    y = zeros(size(x),class(x));
+                else
+                    y = zeros(op.m,x_n, class(x));
+                end
                 
                 % Loop over multivec dimension
                 for u = 1:x_n
@@ -192,7 +197,12 @@ classdef opCurvelet < opSpot
                 x = y;
             else
                 % Preallocate y
-                y = zeros(op.n,x_n, class(x));
+                if isscalar(op)
+                    % special case: allocate result size of x
+                    y = zeros(size(x),class(x));
+                else
+                    y = zeros(op.n,x_n, class(x));
+                end
                 
                 % Loop over multivec dimension
                 for u = 1:x_n

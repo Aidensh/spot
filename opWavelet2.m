@@ -326,7 +326,10 @@ classdef opWavelet2 < opSpot
             x_n = size(x,2);
         
             % Preallocate y
-            if mode == 1
+            if isscalar(op)
+                % special case: allocate result size of x
+                y = zeros(size(x),class(x));
+            elseif mode == 1
                 y = zeros(op.m, x_n, class(x));
             else
                 y = zeros(op.n, x_n, class(x));

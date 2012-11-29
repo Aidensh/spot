@@ -61,14 +61,26 @@ classdef opRomberg < opSpot
             x_n  = size(x,2);
             
             if mode == 1
-                y = zeros(op.m,x_n, class(x));
+                if isscalar(op)
+                    % special case: allocate result size of x
+                    y = zeros(size(x),class(x));
+                else
+                    y = zeros(op.m,x_n, class(x));
+                end
+                
                 for u = 1:x_n
                     x_tmp  = reshape(x(:,u),dims);
                     y_tmp  = sgn.*ifftn(phs.*fftn(full(x_tmp)));
                     y(:,u) = y_tmp(:);
                 end
             else
-                y = zeros(op.n,x_n, class(x));
+                if isscalar(op)
+                    % special case: allocate result size of x
+                    y = zeros(size(x),class(x));
+                else
+                    y = zeros(op.n,x_n, class(x));
+                end
+                
                 for u = 1:x_n
                     x_tmp  = reshape(x(:,u),dims);
                     y_tmp  = ifftn(conj(phs).*fftn(sgn.*full(x_tmp)));

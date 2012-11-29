@@ -52,7 +52,13 @@ classdef opHadamard < opSpot
         function y = multiply(op,x,mode)
             
             x_n = size(x,2);
-            y = zeros(op.m,x_n, class(x));
+            if isscalar(op)
+                % special case: allocate result size of x
+                y = zeros(size(x),class(x));
+            else
+                y = zeros(op.m,x_n, class(x));
+            end
+            
             for u = 1:x_n
                y_tmp = x(:,u);
                n = op.n;
