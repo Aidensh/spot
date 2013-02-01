@@ -96,6 +96,7 @@ classdef opExcise < opSpot
           op.opIntrnl   = opIntrnl;
           op.indices    = idx;
           op.rowExcise  = rowExcise;
+          op.sweepflag  = true;
        end % Constructor
       
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -119,7 +120,7 @@ classdef opExcise < opSpot
        % Multiply
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function y = multiply(op,x,mode)
-          y = multiply(op.opIntrnl,x,mode);
+          y = applyMultiply(op.opIntrnl,x,mode);
        end % Multiply
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

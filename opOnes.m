@@ -38,6 +38,7 @@ classdef opOnes < opSpot
              error('Too many input arguments.');
           end
           op = op@opSpot('Ones',m,n);
+          op.sweepflag  = true;
        end % function opOnes
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

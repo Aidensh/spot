@@ -37,6 +37,7 @@ classdef opHaar < opWavelet
            
            op = op@opWavelet(n,'Haar',0,levels,redundant);
            op.type = 'Haar';
+          op.sweepflag  = true;
            
         end % function opHaar
         

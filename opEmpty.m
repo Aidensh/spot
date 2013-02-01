@@ -28,6 +28,7 @@ classdef opEmpty < opSpot
           end
             
           op = op@opSpot('Empty',m,n);
+          op.sweepflag  = true;
        end % Constructor
 
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

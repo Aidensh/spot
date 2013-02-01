@@ -56,6 +56,7 @@ classdef opClass < opSpot
           op.cflag      = cflag;
           op.linear     = linflag;
           op.obj        = obj;
+          op.sweepflag  = true;
        end
 
     end % Methods

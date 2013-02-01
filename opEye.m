@@ -42,6 +42,7 @@ classdef opEye < opSpot
            if m == n
             op.isDirac = true;
            end
+          op.sweepflag  = true;
         end % function opEye
 
         function A = double(op)

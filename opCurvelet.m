@@ -102,6 +102,7 @@ classdef opCurvelet < opSpot
           op.dims      = [m,n];
           op.ttype     = ttype;
           op.ns        = {[m n]};
+          op.sweepflag  = true;
        end % Constructor
 
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -110,7 +111,7 @@ classdef opCurvelet < opSpot
        % overloaded to produce a vector that really falls in the range of op
        function y = rrandn(op)
           y = op.drandn;
-          y = multiply(op,y,1);
+          y = applyMultiply(op,y,1);
        end
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

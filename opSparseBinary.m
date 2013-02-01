@@ -68,6 +68,7 @@ classdef opSparseBinary < opSpot
           % Construct operator
           op = op@opSpot('SparseBinary', m, n);
           op.matrix = A;
+          op.sweepflag  = true;
        end % Constructor
                  
     end % Methods

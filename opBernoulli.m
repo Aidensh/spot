@@ -100,6 +100,7 @@ classdef opBernoulli < opSpot
           end
           op.matrix = A;
           op.funHandle = fun;
+          op.sweepflag = true;
        end % Constructor
 
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

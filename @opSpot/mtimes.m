@@ -82,7 +82,7 @@ elseif ~isa(B,'opSpot') % A is spot, B isnt
             elseif isempty(B)
                 y = zeros(A.m,0, class(B));
             else
-                y = multiply(A,B,1);
+                y = applyMultiply(A,B,1);
             end
         end
         

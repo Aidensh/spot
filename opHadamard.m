@@ -39,6 +39,7 @@ classdef opHadamard < opSpot
           if nargin == 2 && normalized
              op.normalized = true;
           end
+          op.sweepflag  = true;
        end % Constructor
         
     end % Methods

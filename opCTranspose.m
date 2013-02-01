@@ -126,9 +126,9 @@ classdef opCTranspose < opSpot
        function y = multiply(op,x,mode)
            A = op.children{1};
            if mode == 1
-              y = multiply(A,x,2);
+              y = applyMultiply(A,x,2);
            else
-              y = multiply(A,x,1);
+              y = applyMultiply(A,x,1);
            end
        end % function multiply
        

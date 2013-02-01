@@ -61,6 +61,7 @@ classdef opBlockOp < opSpot
            op.blocksize1 = [br1,bc1];
            op.blocksize2 = [br2,bc2];
            op.children   = {A};
+           op.sweepflag  = true;
         end
 
     end % Methods
