@@ -76,6 +76,7 @@ classdef opRestriction < opSpot
           % Construct operator
           op = op@opSpot('Restriction', m, n);
           op.funHandle = fun;
+          op.sweepflag  = true;
        end % Constructor
 
     end % Methods

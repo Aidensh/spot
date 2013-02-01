@@ -108,6 +108,7 @@ methods
       op.q = q;
       op.pext = pext;
       op.qext = qext;
+          op.sweepflag  = true;
    end % Constructor
    
 end % methods public

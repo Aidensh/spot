@@ -148,6 +148,7 @@ classdef opToeplitz < opSpot
           op = op@opSpot('Toeplitz', m, n);
           op.cflag     = cflag;
           op.funHandle = fun;
+          op.sweepflag  = true;
        end % Constructor
 
     end % Methods

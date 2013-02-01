@@ -21,6 +21,7 @@ classdef opDirac < opOrthogonal
          if nargin < 1, n = 1; end
          op = op@opOrthogonal('Dirac',n,n);
          op.isDirac = true;
+          op.sweepflag  = true;
       end
       
       function A = double(op)

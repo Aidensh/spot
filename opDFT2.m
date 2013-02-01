@@ -57,6 +57,7 @@ classdef opDFT2 < opOrthogonal
          op.centered  = centered;
          op.cflag     = true;
          op.inputdims = [m,n];
+          op.sweepflag  = true;
          
          % Initialize function handle
          if centered

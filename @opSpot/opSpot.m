@@ -80,10 +80,13 @@ classdef (HandleCompatible) opSpot
     methods( Access = protected )
         
         function y = applyMultiply(op,x,mode)
-            warning('opSpot:applyMultiply',['applyMultiply is being ',...
-            'discontinued due to performance issues. Please put all the ',...
-            'multivector support in your operators multiply function and recode',...
-            'accordingly']);
+            if size(x,2) > 1
+%                 warning('opSpot:applyMultiply',['The sweeping function in ',...
+%                     'applyMultiply is being ',...
+%                 'discontinued due to performance issues. Please put all the ',...
+%                 'multivector support in your operators multiply function and recode',...
+%                 'accordingly']);
+            end
         
             op.counter.plus1(mode);
             
@@ -122,7 +125,7 @@ classdef (HandleCompatible) opSpot
                     end
                 end
             end
-        end
+        end % applyMultiply
         
         function y = applyDivide(op,x,mode)
             y = op.divide(x,mode);

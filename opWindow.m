@@ -92,6 +92,7 @@ classdef opWindow < opSpot
           op.funHandle = fun;
           op.family    = family;
           op.window    = window;
+          op.sweepflag  = true;
        end % Constructor
 
     end % Methods

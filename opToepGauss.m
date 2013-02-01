@@ -63,6 +63,7 @@ classdef opToepGauss < opToeplitz
            % Construct operator
            op = op@opToeplitz(c,r,normalized);
            op.type = 'ToepGauss';
+          op.sweepflag  = true;
         end % Constructor
         
     end % Methods

@@ -41,6 +41,7 @@ classdef opDCT2 < opOrthogonal
          end
          op = op@opOrthogonal('DCT2',m*n,m*n);
          op.inputdims = [m,n];
+          op.sweepflag  = true;
       end % function opDCT2
       
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

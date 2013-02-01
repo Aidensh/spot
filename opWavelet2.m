@@ -132,6 +132,7 @@ classdef opWavelet2 < opSpot
             op.funHandle = @multiply_intrnl;
             op.funHandle2 = @divide_intrnl;
          end
+          op.sweepflag  = true;
          
       end % function opWavelet
       

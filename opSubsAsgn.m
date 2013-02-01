@@ -209,6 +209,7 @@ classdef opSubsAsgn < opSpot
           op.opIntrnl   = opIntrnl;
           op.rowIndices = rowIdx;
           op.colIndices = colIdx;
+          op.sweepflag  = true;
        end % Constructor
       
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -227,7 +228,7 @@ classdef opSubsAsgn < opSpot
        % Multiply
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function y = multiply(op,x,mode)
-          y = multiply(op.opIntrnl,x,mode);
+          y = applyMultiply(op.opIntrnl,x,mode);
        end % Multiply
        
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

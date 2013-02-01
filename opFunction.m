@@ -69,6 +69,7 @@ classdef opFunction < opSpot
            op.cflag  = cflag;
            op.linear = linflag;
            op.funHandle = fun;
+          op.sweepflag  = true;
         end % Constructor
         
     end % Methods

@@ -63,6 +63,7 @@ classdef opToepSign < opToeplitz
            % Construct operator
            op = op@opToeplitz(c,r,normalized);
            op.type = 'ToepSign';
+          op.sweepflag  = true;
         end % Constructor
         
     end % Methods

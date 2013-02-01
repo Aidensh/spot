@@ -74,6 +74,8 @@ classdef opBinary < opSpot
             otherwise
                 error('Invalid mode.')
           end
+          
+          op.sweepflag = true;
        end % Constructor
 
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

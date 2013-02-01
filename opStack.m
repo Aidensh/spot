@@ -97,6 +97,7 @@ classdef opStack < opSpot
           op.children   = opListNew;
           op.precedence = 1;
           op.weights    = weights;
+          op.sweepflag  = true;
        end % Constructor
       
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,7 +141,7 @@ classdef opStack < opSpot
                     for i=1:length(op.children)
                         child      = op.children{i};
                         s          = size(child,1);
-                        y(k+(1:s),u) = op.weights(i)*multiply(child,x(:,u),1);
+                        y(k+(1:s),u) = op.weights(i)*applyMultiply(child,x(:,u),1);
                         k          = k + s;
                     end
                 end
@@ -158,7 +159,7 @@ classdef opStack < opSpot
                         child = op.children{i};
                         s     = size(child,1);
                         xd    = x(k+1:k+s,u) * conj(op.weights(i));
-                        y(:,u) = y(:,u) + multiply(child,xd,2);
+                        y(:,u) = y(:,u) + applyMultiply(child,xd,2);
                         k     = k + s;
                     end
                 end

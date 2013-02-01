@@ -42,6 +42,7 @@ classdef opUnaryMinus < opSpot
           op.precedence = 2;
           op.ms         = A.ms;
           op.ns         = A.ns;
+          op.sweepflag  = true;
        end % Constructor
       
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,7 +72,7 @@ classdef opUnaryMinus < opSpot
        % Multiply
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function y = multiply(op,x,mode)
-           y = -1 * multiply(op.children{1},x,mode);
+           y = -1 * applyMultiply(op.children{1},x,mode);
        end % Multiply
        
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

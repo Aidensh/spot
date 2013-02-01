@@ -55,6 +55,7 @@ classdef opWavelet < opWavelet2
  
          op = op@opWavelet2(n,1,varargin{:});
          op.type = 'Wavelet';
+          op.sweepflag  = true;
          
       end % function opWavelet
       

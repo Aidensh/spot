@@ -161,6 +161,7 @@ classdef opBlockDiag < opSpot
           op.linear     = linear;
           op.children   = opList;
           op.funHandle  = fun;
+          op.sweepflag  = true;
       end
       
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

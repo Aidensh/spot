@@ -252,6 +252,7 @@ classdef opConvolve < opSpot
           op = op@opSpot('Convolve', nRows, nCols);
           op.cflag     = cflag;
           op.funHandle = fun;
+          op.sweepflag  = true;
        end % Constructor
 
     end % Methods
