@@ -67,6 +67,9 @@ classdef opCurvelet < opSpot
              ' nbscales and nbangles are scalar values']);
           assert( (any(finest == [0 1 2])) && (is_real==0||is_real==1),...
              'Please ensure finest and is_real are appropriate values');
+          if finest==0, assert( nbscales>1, ['Please ensure'...
+             ' that m and n is large enough for nbscales to be greater then 1 '...
+             'while finest is set to 0']); end;
 
           % Compute length of curvelet coefficient vector
           if strcmp(ttype,'ME')
@@ -210,7 +213,7 @@ classdef opCurvelet < opSpot
                     x_tmp = x(:,u);
                     % Synthesis mode  
                     if strcmp(op.ttype,'ME')
-                        x_tmp = spot.utils.mefdct_v2c(x_tmp,op.header,op.nbangles);
+                        x_tmp = spot.utils.mefdct_v2c(full(x_tmp),op.header,op.nbangles);
                         x_tmp = meicv2(x_tmp,op.dims(1),op.dims(2),op.nbscales,op.nbangles);
                     else
                         x_tmp = spot.utils.fdct_v2c(x_tmp,op.header);
