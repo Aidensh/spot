@@ -63,7 +63,7 @@ classdef opMask < opSpot
            % Construct operator
            op = op@opSpot('Mask',n,n);
            op.mask = mask;
-           op.sweepflag  = false;
+           op.sweepflag = false;
         end % Constructor
         
     end % Methods
@@ -75,7 +75,7 @@ classdef opMask < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-            y = op.mask.*x;
+            y = diag(op.mask)*x;
         end % Multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
