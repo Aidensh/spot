@@ -79,7 +79,7 @@ classdef opCurvelet3d < opSpot
           op.nbcoeffs = cn;
           op.dims     = [m,n,p];
           op.ns       = {[m n p]};
-          op.sweepflag  = true;
+          op.sweepflag  = false;
        end % Constructor
 
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -263,7 +263,19 @@ classdef opConvolve < opSpot
        % Multiply
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function y = multiply(op,x,mode)
-           y = op.funHandle(x,mode);
+            x_n = size(x,2);
+            % Preallocate y
+            if isscalar(op)
+                % special case: allocate result size of x
+                y = zeros(size(x),class(x));
+            elseif mode == 1
+                y = zeros(op.m, x_n, class(x));
+            else
+                y = zeros(op.n, x_n, class(x));
+            end
+            for i=1:x_n
+                y(:,i) = op.funHandle(x(:,i),mode);
+            end
        end % Multiply
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -31,7 +31,7 @@ classdef opHeaviside < opSpot
             
             op = op@opSpot('Heaviside',n,n);
             op.normalized = (normalized ~= 0);
-          op.sweepflag  = true;
+            op.sweepflag  = false;
         end
         
     end % Methods

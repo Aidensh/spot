@@ -44,7 +44,7 @@ classdef opRomberg < opSpot
             op.dimensions = dims;
             op.phases     = random_phasesND(dims);
             op.signs      = sign(randn(dims));
-          op.sweepflag  = true;
+            op.sweepflag  = true;
         end % Constructor
         
     end % Public methods

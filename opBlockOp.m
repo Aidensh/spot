@@ -93,7 +93,8 @@ classdef opBlockOp < opSpot
                  for j=1:nbc
                     blk = y((i-1)*bsr1+(1:bsr1),(j-1)*bsc1+(1:bsc1));
                     data= multiply(blockOp,blk(:),1);
-                    z((i-1)*bsr2+(1:bsr2),(j-1)*bsc2+(1:bsc2)) = reshape(data,bsr2,bsc2);
+                    z((i-1)*bsr2+(1:bsr2),(j-1)*bsc2+(1:bsc2))...
+                        = reshape(data,bsr2,bsc2);
                  end
              end             
           else
@@ -103,7 +104,8 @@ classdef opBlockOp < opSpot
                  for j=1:nbc
                     blk = y((i-1)*bsr2+(1:bsr2),(j-1)*bsc2+(1:bsc2));
                     data= multiply(blockOp,blk(:),2);
-                    z((i-1)*bsr1+(1:bsr1),(j-1)*bsc1+(1:bsc1)) = reshape(data,bsr1,bsc1);
+                    z((i-1)*bsr1+(1:bsr1),(j-1)*bsc1+(1:bsc1))...
+                        = reshape(data,bsr1,bsc1);
                  end
              end             
           end

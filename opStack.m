@@ -71,12 +71,13 @@ classdef opStack < opSpot
           linear = opA.linear;
           for i=2:length(opList)
              opA    = opList{i};
-             cflag  = cflag  | ~isreal(opA); % Update complexity information
+             cflag  = cflag  | ~isreal(opA); % Update complexity info
              linear = linear & opA.linear;
    
              % Generate error if operator sizes are incompatible
              if (size(opA,2) ~= n) && ~isempty(opA)
-               error('Operator %d is not consistent with the previous operators.',i);
+               error(['Operator %d is not consistent with the '...
+               'previous operators.'],i);
              end
 
              m = m + size(opA,1); % Total number of rows
@@ -127,21 +128,22 @@ classdef opStack < opSpot
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function y = multiply(op,x,mode)
-            q = size(x,2);
+            x_n = size(x,2);
             if mode == 1
                 if isscalar(op)
                     % special case: allocate result size of x
                     y = zeros(size(x),class(x));
                 else
-                    y = zeros(op.m,q, class(x));
+                    y = zeros(op.m,x_n, class(x));
                 end
                 
-                for u = 1:q
+                for u = 1:x_n
                     k = 0;
                     for i=1:length(op.children)
                         child      = op.children{i};
                         s          = size(child,1);
-                        y(k+(1:s),u) = op.weights(i)*applyMultiply(child,x(:,u),1);
+                        y(k+(1:s),u) = op.weights(i)*...
+                            applyMultiply(child,x(:,u),1);
                         k          = k + s;
                     end
                 end
@@ -150,10 +152,10 @@ classdef opStack < opSpot
                     % special case: allocate result size of x
                     y = zeros(size(x),class(x));
                 else
-                    y = zeros(op.n,q, class(x));
+                    y = zeros(op.n,x_n, class(x));
                 end
                 
-                for u = 1:q
+                for u = 1:x_n
                     k = 0;
                     for i=1:length(op.children)
                         child = op.children{i};

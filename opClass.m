@@ -47,7 +47,8 @@ classdef opClass < opSpot
            end
 
            if ~(ismethod(obj,'mtimes') && ismethod(obj,'ctranspose'))
-              error('The class object must proved the `mtimes'' and `ctranspose'' methods.');
+              error(['The class object must provide the `mtimes'' '...
+                  'and `ctranspose'' methods.']);
            end
 
           % Create object
