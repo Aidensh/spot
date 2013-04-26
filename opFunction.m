@@ -45,7 +45,7 @@ classdef opFunction < opSpot
            if nargin < 5 || isempty(linflag)
               linflag = 1;
            end
-           if ~isposintscalar(m) || ~isposintscalar(n)
+           if ~spot.utils.isposintscalar(m) || ~spot.utils.isposintscalar(n)
               error('Dimensions of operator must be positive integers.');
            end
            
