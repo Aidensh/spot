@@ -64,6 +64,12 @@ elseif ~isa(A,'opSpot') % A is not spot
 elseif ~isa(B,'opSpot') % A is spot, B isnt
         p = size(B,1);
         
+        % Unsupported data types warning
+        if ~isnumeric(B) && ~isa(A,'oppSpot')
+            warning(['Data type "' class(B)...
+            '" is not officially supported by spot, proceed at own risk']);
+        end
+        
         if isscalar(B) && A.n ~= 1
             % C*s (mode 4)
             y = opFoG(A,B);
