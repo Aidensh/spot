@@ -49,7 +49,11 @@ if (isnumeric(A) || isa(A, 'opMatrix')) && isa(B, 'opMatrix')
 elseif ~isa(A,'opSpot') % A is not spot
     if isscalar(A) && (B.m ~= 1)
        % s*C (mode 3)
-       y = opFoG(A,B);
+       if isa(A,'oppSpot') || isa(B,'oppSpot')
+           y = oppFoG(A,B);
+       else
+           y = opFoG(A,B);
+       end
     else
        % M*C (mode 1)
        y = (B' * A')';
@@ -64,15 +68,13 @@ elseif ~isa(A,'opSpot') % A is not spot
 elseif ~isa(B,'opSpot') % A is spot, B isnt
         p = size(B,1);
         
-        % Unsupported data types warning
-        if ~isnumeric(B) && ~isa(A,'oppSpot')
-            warning(['Data type "' class(B)...
-            '" is not officially supported by spot, proceed at own risk']);
-        end
-        
         if isscalar(B) && A.n ~= 1
             % C*s (mode 4)
-            y = opFoG(A,B);
+            if isa(A,'oppSpot') || isa(B,'oppSpot')
+                y = oppFoG(A,B);
+            else
+                y = opFoG(A,B);
+            end
         
         elseif A.n ~= p && ~isscalar(A)
         % Raise an error when the matrices do not commute. We make an
@@ -81,8 +83,13 @@ elseif ~isa(B,'opSpot') % A is spot, B isnt
             error('Matrix dimensions must agree when multiplying by %s and %s.',...
             char(A), sizB);
         
-        else
-        % Perform operator*matrix
+        else % Perform operator*matrix
+        % Unsupported data types warning
+        if ~isnumeric(B) && ~isa(A,'oppSpot')
+            warning(['Data type "' class(B)...
+            '" is not officially supported by spot, proceed at own risk']);
+        end
+        
             if isempty(A)
                 y = zeros(A.m,size(B,2), class(B));
             elseif isempty(B)
@@ -96,5 +103,9 @@ elseif ~isa(B,'opSpot') % A is spot, B isnt
 % Both args are Spot ops.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 else
-    y = opFoG(A,B);
+    if isa(A,'oppSpot') || isa(B,'oppSpot')
+        y = oppFoG(A,B);
+    else
+        y = opFoG(A,B);
+    end
 end
