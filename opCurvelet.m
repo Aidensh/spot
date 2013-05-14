@@ -114,7 +114,7 @@ classdef opCurvelet < opSpot
        % overloaded to produce a vector that really falls in the range of op
        function y = rrandn(op)
           y = op.drandn;
-          y = applyMultiply(op,y,1);
+          y = multiply(op,y,1);
        end
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
