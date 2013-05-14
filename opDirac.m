@@ -20,19 +20,19 @@ classdef opDirac < opOrthogonal
       function op = opDirac(n)
          if nargin < 1, n = 1; end
          op = op@opOrthogonal('Dirac',n,n);
-         op.isDirac = true;
-          op.sweepflag  = true;
+         op.isDirac    = true;
+         op.sweepflag  = true;
       end
       
       function A = double(op)
-         A = eye(size(op));
+          A = eye(size(op));
       end
       
       function result = xtratests(op)
       %XTRATESTS    User defined tests
       %
       % Just a demo here
-      result = true;
+          result = true;
           disp('How thoughtful of you to test opDirac!!!');
       end
       
@@ -44,15 +44,15 @@ classdef opDirac < opOrthogonal
    methods( Access = protected )
       
       % Multiplication
-      function y = multiply(op,x,mode)
-         y = x;
+      function x = multiply(op,x,mode)
+          
       end
       
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       % Divide
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function x = divide(op,b,mode)
-          x = b;
+      function x = divide(op,x,mode)
+          
       end % divide
       
    end % methods - protected

@@ -32,10 +32,10 @@ classdef opNull < opSpot
       %XTRATESTS    User defined tests
       %
       % Just a demo here
-      x = randn(3);
-      A = opNull(3);
-      y = A*x;
-      result = all(all(x == y));
+          x = randn(3);
+          A = opNull(3);
+          y = A*x;
+          result = all(all(x == y));
       end
       
    end % methods - public
@@ -46,15 +46,15 @@ classdef opNull < opSpot
    methods( Access = protected )
       
       % Multiplication
-      function y = multiply(op,x,mode)
-         y = x;
+      function x = multiply(op,x,mode)
+          
       end
       
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       % Divide
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function x = divide(op,b,mode)
-          x = b;
+      function x = divide(op,x,mode)
+          
       end % divide
       
    end % methods - protected
