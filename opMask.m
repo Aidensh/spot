@@ -63,7 +63,7 @@ classdef opMask < opSpot
            % Construct operator
            op = op@opSpot('Mask',n,n);
            op.mask = mask;
-           op.sweepflag = false;
+           op.sweepflag = true;
         end % Constructor
         
     end % Methods
