@@ -126,11 +126,11 @@ classdef opBernoulli < opSpot
             % Preallocate y
             if isscalar(op)
                 % special case: allocate result size of x
-                y = zeros(size(x),class(x));
+                y(size(x)) = cast(0,class(x));
             elseif mode == 1
-                y = zeros(op.m, x_n, class(x));
+                y(op.m,x_n) = cast(0,class(x));
             else
-                y = zeros(op.n, x_n, class(x));
+                y(op.n,x_n) = cast(0,class(x));
             end
             
             for u = 1:x_n
@@ -171,13 +171,13 @@ classdef opBernoulli < opSpot
           rng(op.seed);
 
           if mode == 1
-             y = zeros(m,1);
+             y(m,1) = cast(0,class(x));
              for i=1:n
                 v = 2.0 * (randn(m,1) < 0) - 1;
                 y = y + v * x(i);
              end
           else
-             y = zeros(n,1);
+             y(n,1) = cast(0,class(x));
              for i=1:n
                 v    = 2.0 * (randn(1,m) < 0) - 1;
                 y(i) = v * x;

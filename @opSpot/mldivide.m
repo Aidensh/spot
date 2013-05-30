@@ -64,9 +64,9 @@ if ~isa(A,'opSpot')
       end
       
       % Pre-allocate result matrix
-      x = zeros(size(A,2),size(B,2));
+      x(size(A,2),size(B,2)) = cast(0,class(B));
       
-      ej = zeros(size(B,2),1);
+      ej(size(B,2),1) = 0;
       for j=1:size(B,2)
           ej(j) = 1;
           x(:,j) = A \ (B * ej);

@@ -76,7 +76,7 @@ classdef opMask < opSpot
         % Multiplication
         function y = multiply(op,x,mode)
             x_n = size(x,2);
-            y   = zeros(op.m,x_n,class(x));
+            y(op.m,x_n) = cast(0,class(x));
             for i=1:x_n
                 y(:,i) = op.mask.*x(:,i);
             end

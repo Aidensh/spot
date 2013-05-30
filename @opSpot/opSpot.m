@@ -109,11 +109,11 @@ classdef (HandleCompatible) opSpot
                 if q > 1
                     if isscalar(op)
                         % special case: allocate result size of x
-                        y = zeros(size(x),class(x));
+                        y(size(x)) = cast(0,class(x));
                     elseif mode==1
-                        y = zeros(op.m,q,class(x));
+                        y(op.m,q) = cast(0,class(x));
                     else
-                        y = zeros(op.n,q,class(x));
+                        y(op.n,q) = cast(0,class(x));
                     end
                 end
                 

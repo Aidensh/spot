@@ -203,11 +203,11 @@ classdef opBlockDiag < opSpot
             % Preallocate y
             if isscalar(op)
                 % special case: allocate result size of x
-                y = zeros(size(x),class(x));
+                y(size(x)) = cast(0,class(x));
             elseif mode == 1
-                y = zeros(op.m, x_n, class(x));
+                y(op.m,x_n) = cast(0,class(x));
             else
-                y = zeros(op.n, x_n, class(x));
+                y(op.n,x_n) = cast(0,class(x));
             end
             
             for u = 1:x_n
@@ -236,7 +236,7 @@ function y = opBlockDiag_intrnl(m,n,opList,weights,x,mode)
 kx = 0; ky = 0;
 
 if mode == 1
-   y  = zeros(m,1);
+   y(m,1) = cast(0,class(x));
    for i=1:length(opList)
       op  = opList{i};
       mOp = op.m;
@@ -246,7 +246,7 @@ if mode == 1
       ky = ky + mOp;
    end;
 else   
-   y  = zeros(n,1);
+   y(n,1) = cast(0,class(x));
    for i=1:length(opList)
       op = opList{i};
       mOp = op.m;
@@ -267,7 +267,7 @@ function y = opBlockDiagCol_intrnl(m,n,offset,overlap,opList,weights,x,mode)
 kx = 0; ky = 0;
 
 if mode == 1
-   kx = offset; y  = zeros(m,1);
+   kx = offset; y(m,1) = cast(0,class(x));
    for i=1:length(opList)
       op = opList{i};
       mOp = op.m;
@@ -277,7 +277,7 @@ if mode == 1
       ky = ky + mOp;
    end
 else
-   ky = offset; y  = zeros(n,1);
+   ky = offset; y(n,1) = cast(0,class(x));
    for i=1:length(opList)
       op = opList{i};
       mOp = op.m;
@@ -297,7 +297,7 @@ function y = opBlockDiagRow_intrnl(m,n,offset,overlap,opList,weights,x,mode)
 kx = 0; ky = 0;
 
 if mode == 1
-   ky = offset; y  = zeros(m,1);
+   ky = offset; y(m,1) = cast(0,class(x));
    for i=1:length(opList)
       op = opList{i};
       mOp = op.m;
@@ -307,7 +307,7 @@ if mode == 1
       ky = ky + mOp - overlap;
    end
 else
-   kx = offset; y  = zeros(n,1);
+   kx = offset; y(n,1) = cast(0,class(x));
    for i=1:length(opList)
       op = opList{i};
       mOp = op.m;

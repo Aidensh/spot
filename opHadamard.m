@@ -55,9 +55,9 @@ classdef opHadamard < opSpot
             x_n = size(x,2);
             if isscalar(op)
                 % special case: allocate result size of x
-                y = zeros(size(x),class(x));
+                y(size(x)) = cast(0,class(x));
             else
-                y = zeros(op.m,x_n, class(x));
+                y(op.m,x_n) = cast(0,class(x));
             end
             
             for u = 1:x_n

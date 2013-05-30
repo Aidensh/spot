@@ -129,14 +129,17 @@ classdef opStack < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function y = multiply(op,x,mode)
             x_n = size(x,2);
+            % Preallocate y
+            if isscalar(op)
+                % special case: allocate result size of x
+                y(size(x)) = cast(0,class(x));
+            elseif mode == 1
+                y(op.m,x_n) = cast(0,class(x));
+            else
+                y(op.n,x_n) = cast(0,class(x));
+            end
+            
             if mode == 1
-                if isscalar(op)
-                    % special case: allocate result size of x
-                    y = zeros(size(x),class(x));
-                else
-                    y = zeros(op.m,x_n, class(x));
-                end
-                
                 for u = 1:x_n
                     k = 0;
                     for i=1:length(op.children)
@@ -148,13 +151,6 @@ classdef opStack < opSpot
                     end
                 end
             else
-                if isscalar(op)
-                    % special case: allocate result size of x
-                    y = zeros(size(x),class(x));
-                else
-                    y = zeros(op.n,x_n, class(x));
-                end
-                
                 for u = 1:x_n
                     k = 0;
                     for i=1:length(op.children)
