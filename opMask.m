@@ -75,7 +75,8 @@ classdef opMask < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-            y = diag(op.mask)*x;
+            n = length(op.mask);
+            y = spdiags(op.mask,0,n,n)*x;
         end % Multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
