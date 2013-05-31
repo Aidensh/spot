@@ -14,105 +14,96 @@ classdef opDFT < opOrthogonal
 
 %   http://www.cs.ubc.ca/labs/scl/spot
 
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   % Properties
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   properties ( Access = private )
-      funHandle       % Multiplication function
-   end % Properties
-   
-   properties ( SetAccess = private, GetAccess = public )
-      centered
-   end % properties
-   
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   % Methods - public
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   methods
-      
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      % opDFT. Constructor.
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function op = opDFT(m,centered)
-         if nargin < 1 || nargin > 2
-            error('Invalid number of arguments to opDFT.');
-         end
-         if nargin == 2 && islogical(centered)
-            centered = true;
-         else
-            centered = false;
-         end
-         if  ~isscalar(m) || m~=round(m) || m <= 0
-            error('First argument to opDFT has to be a positive integer.');
-         end
-         
-         op = op@opOrthogonal('DFT',m,m);
-         op.centered    = centered;
-         op.cflag       = true;
-         op.sweepflag   = true;
-         
-         % Create function handle
-         if centered
-            op.funHandle = @opDFT_centered_intrnl;
-         else
-            op.funHandle = @opDFT_intrnl;
-         end
-      end % function opDFT
-      
-   end % methods - public
-   
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   % Methods - protected
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   methods( Access = protected )
-      
-      % Multiplication
-      function y = multiply(op,x,mode)
-         y = op.funHandle(op,x,mode);
-      end % Multiply
-      
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      % Divide
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function x = divide(op,b,mode)
-          % Sweepable
-          x = matldivide(op,b,mode);
-      end % divide
-      
-   end % Methods
-   
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   % Methods - private
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   methods( Access = private )
-      
-      function y = opDFT_intrnl(op,x,mode)
-         % One-dimensional DFT
-         n = op.n;
-         if mode == 1
-            % Analysis
-            y = fft(full(x));
-            y = y / sqrt(n);
-         else
-            % Synthesis
-            y = ifft(full(x));
-            y = y * sqrt(n);
-         end
-      end
-      
-      function y = opDFT_centered_intrnl(op,x,mode)
-         % One-dimensional DFT - Centered
-         n = op.n;
-         if mode == 1
-            y = fftshift(fft(full(x)));
-            y = y / sqrt(n);
-         else
-            y = ifft(ifftshift(full(x)));
-            y = y * sqrt(n);
-         end
-      end
-      
-   end % Methods
-   
-end % classdef
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Properties
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    properties ( Access = private )
+        funHandle % Multiplication function
+    end % private properties
 
+    properties ( SetAccess = private, GetAccess = public )
+        centered
+    end % set-private get-public properties
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - public
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Constructor
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opDFT(m,centered)
+            if nargin < 1 || nargin > 2
+                error('Invalid number of arguments to opDFT.');
+            end
+            
+            centered = nargin == 2 && islogical(centered);
+            
+            if  ~isscalar(m) || m~=round(m) || m <= 0
+                error(['First argument to opDFT has to be a '...
+                       'positive integer.']);
+            end
+
+            op = op@opOrthogonal('DFT',m,m);
+            op.centered  = centered;
+            op.cflag     = true;
+            op.sweepflag = true;
+
+            % Create function handle
+            if centered
+                op.funHandle = @opDFT_centered_intrnl;
+            else
+                op.funHandle = @opDFT_intrnl;
+            end
+        end % constructor
+    end % methods - public
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - protected
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods( Access = protected )
+        % Multiplication
+        function y = multiply(op,x,mode)
+            y = op.funHandle(op,x,mode);
+        end % Multiply
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Sweepable
+            x = matldivide(op,b,mode);
+        end % divide
+    end % protected methods
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - private
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods( Access = private )
+        function y = opDFT_intrnl(op,x,mode)
+            % One-dimensional DFT
+            n = op.n;
+            if mode == 1
+                % Analysis
+                y = fft(full(x));
+                y = y / sqrt(n);
+            else
+                % Synthesis
+                y = ifft(full(x));
+                y = y * sqrt(n);
+            end
+        end % opDFT_intrnl
+
+        function y = opDFT_centered_intrnl(op,x,mode)
+            % One-dimensional DFT - Centered
+            n = op.n;
+            if mode == 1
+                y = fftshift(fft(full(x)));
+                y = y / sqrt(n);
+            else
+                y = ifft(ifftshift(full(x)));
+                y = y * sqrt(n);
+            end
+        end % opDFT_centered_intrnl
+    end % private methods
+end % opDFT

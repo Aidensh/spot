@@ -26,63 +26,60 @@ classdef opClass < opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Constructor
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function op = opClass(m,n,obj,cflag,linflag)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Constructor
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opClass(m,n,obj,cflag,linflag)
+            if nargin < 5, linflag = 1; end;
+            if nargin < 4, cflag   = 0; end;
 
-           if nargin < 5, linflag = 1; end;
-           if nargin < 4, cflag   = 0; end;
+            if nargin < 3
+                error('opClass requires at least three parameters.');
+            end
 
-           if nargin < 3
-              error('opClass requires at least three parameters.');
-           end
+            if round(m) ~= m || round(n) ~= n
+                error('Size parameters must be integer.');
+            end
 
-           if round(m) ~= m || round(n) ~= n
-              error('Size parameters must be integer.');
-           end
-           
-           if ~isobject(obj)
-              error('Input argument must be a class object.');
-           end
+            if ~isobject(obj)
+                error('Input argument must be a class object.');
+            end
 
-           if ~(ismethod(obj,'mtimes') && ismethod(obj,'ctranspose'))
-              error(['The class object must provide the `mtimes'' '...
-                  'and `ctranspose'' methods.']);
-           end
+            if ~(ismethod(obj,'mtimes') && ismethod(obj,'ctranspose'))
+                error(['The class object must provide the `mtimes'' '...
+                    'and `ctranspose'' methods.']);
+            end
 
-          % Create object
-          description = ['Class:',class(obj)];
-          op = op@opSpot(description, m, n);
-          op.cflag      = cflag;
-          op.linear     = linflag;
-          op.obj        = obj;
-          op.sweepflag  = true;
-       end
+            % Create object
+            description = ['Class:',class(obj)];
+            op = op@opSpot(description, m, n);
+            op.cflag      = cflag;
+            op.linear     = linflag;
+            op.obj        = obj;
+            op.sweepflag  = true;
+        end
 
     end % Methods
 
 
     methods ( Access = protected )
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Multiply
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
-           if mode == 1
-              y = op.obj * x;
-           else
-              y = op.obj' * x;
-           end
-       end
-        
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Divide
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function x = divide(op,b,mode)
-           % Non-sweepable
-           x = lsqrdivide(op,b,mode);
-       end % divide
-       
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function y = multiply(op,x,mode)
+            if mode == 1
+                y = op.obj * x;
+            else
+                y = op.obj' * x;
+            end
+        end
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+             % Non-sweepable
+             x = lsqrdivide(op,b,mode);
+        end % divide
     end % methods
-   
-end
+end % opClass

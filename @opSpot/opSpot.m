@@ -103,24 +103,12 @@ classdef (HandleCompatible) opSpot
             if op.sweepflag
                 y = op.multiply(x,mode);
             else
-                q = size(x,2);
+                x_n = size(x,2);
                 
-                % Preallocate y
-                if q > 1
-                    if isscalar(op)
-                        % special case: allocate result size of x
-                        y(size(x)) = cast(0,class(x));
-                    elseif mode==1
-                        y(op.m,q) = cast(0,class(x));
-                    else
-                        y(op.n,q) = cast(0,class(x));
-                    end
-                end
-                
-                if q == 1
+                if x_n == 1
                     y = op.multiply(x,mode);
                 else
-                    for i=1:q
+                    for i=x_n:-1:1
                         y(:,i) = op.multiply(x(:,i),mode);
                     end
                 end
