@@ -11,50 +11,49 @@ classdef opDirac < opOrthogonal
 
 %   http://www.cs.ubc.ca/labs/scl/spot
 
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   % Methods - public
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   methods
-      
-      % Constructor
-      function op = opDirac(n)
-         if nargin < 1, n = 1; end
-         op = op@opOrthogonal('Dirac',n,n);
-         op.isDirac    = true;
-         op.sweepflag  = true;
-      end
-      
-      function A = double(op)
-          A = eye(size(op));
-      end
-      
-      function result = xtratests(op)
-      %XTRATESTS    User defined tests
-      %
-      % Just a demo here
-          result = true;
-          disp('How thoughtful of you to test opDirac!!!');
-      end
-      
-   end % methods - public
-   
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   % Methods - protected
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   methods( Access = protected )
-      
-      % Multiplication
-      function x = multiply(op,x,mode)
-          
-      end
-      
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      % Divide
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function x = divide(op,x,mode)
-          
-      end % divide
-      
-   end % methods - protected
-   
-end % classdef
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - public
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods
+
+        % Constructor
+        function op = opDirac(n)
+            if nargin < 1, n = 1; end
+            op = op@opOrthogonal('Dirac',n,n);
+            op.isDirac   = true;
+            op.sweepflag = true;
+        end % constructor
+
+        function A = double(op)
+            A = eye(size(op));
+        end % double
+
+        function result = xtratests(op)
+        %XTRATESTS    User defined tests
+        %
+        % Just a demo here
+            result = true;
+            disp('How thoughtful of you to test opDirac!!!');
+        end % xtratests
+
+    end % methods - public
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - protected
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods( Access = protected )
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiplication
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = multiply(op,x,mode)
+            % Nothing to do here
+        end
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,x,mode)
+            % Nothing to do here
+        end % divide
+    end % methods - protected
+end % opDirac

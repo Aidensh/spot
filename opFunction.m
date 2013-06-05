@@ -35,41 +35,41 @@ classdef opFunction < opSpot
         
         % Constructor
         function op = opFunction(m,n,funhandle,cflag,linflag)
-           import spot.utils.*
-           if nargin < 3
-              error('opFunction requires at least three parameters.');
-           end
-           if nargin < 4 || isempty(cflag)
-              cflag = 0;
-           end
-           if nargin < 5 || isempty(linflag)
-              linflag = 1;
-           end
-           if ~spot.utils.isposintscalar(m) || ~spot.utils.isposintscalar(n)
-              error('Dimensions of operator must be positive integers.');
-           end
-           
-           if iscell(funhandle) && length(funhandle) == 2
-              if ~isa(funhandle{1},'function_handle') || ...
-                 ~isa(funhandle{2},'function_handle')
-                 error('Invalid function handle specified.');
-              end
-              fun = @(x,mode) opFunction_intrnl(funhandle,x,mode);
-              
-           elseif isa(funhandle,'function_handle')
-              fun = @(x,mode) funhandle(x,mode);
-              
-           else
-              error('Invalid function handle specified.');
-              
-           end
-           
-           % Construct operator
-           op = op@opSpot('Function',m,n);
-           op.cflag  = cflag;
-           op.linear = linflag;
-           op.funHandle = fun;
-          op.sweepflag  = true;
+            import spot.utils.*
+            if nargin < 3
+                error('opFunction requires at least three parameters.');
+            end
+            if nargin < 4 || isempty(cflag)
+                cflag = 0;
+            end
+            if nargin < 5 || isempty(linflag)
+                linflag = 1;
+            end
+            if ~spot.utils.isposintscalar(m)||~spot.utils.isposintscalar(n)
+                error('Dimensions of operator must be positive integers.');
+            end
+
+            if iscell(funhandle) && length(funhandle) == 2
+                if ~isa(funhandle{1},'function_handle') || ...
+                   ~isa(funhandle{2},'function_handle')
+                    error('Invalid function handle specified.');
+                end
+                fun = @(x,mode) opFunction_intrnl(funhandle,x,mode);
+
+            elseif isa(funhandle,'function_handle')
+                fun = @(x,mode) funhandle(x,mode);
+
+            else
+                error('Invalid function handle specified.');
+
+            end
+
+            % Construct operator
+            op = op@opSpot('Function',m,n);
+            op.cflag     = cflag;
+            op.linear    = linflag;
+            op.funHandle = fun;
+            op.sweepflag = true;
         end % Constructor
         
     end % Methods
@@ -81,18 +81,7 @@ classdef opFunction < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-            x_n = size(x,2);
-            % Preallocate y
-            if isscalar(op)
-                % special case: allocate result size of x
-                y(size(x)) = cast(0,class(x));
-            elseif mode == 1
-                y(op.m,x_n) = cast(0,class(x));
-            else
-                y(op.n,x_n) = cast(0,class(x));
-            end
-            
-            for u = 1:size(x,2)
+            for u = size(x,2):-1:1
                 y(:,u) = op.funHandle(x(:,u),mode);
             end
         end % Multiply
@@ -112,12 +101,12 @@ end % Classdef
 %======================================================================
 
 function y = opFunction_intrnl(funhandle,x,mode)
-if mode == 1
-   fun = funhandle{1};
-else
-   fun = funhandle{2};
-end
+    if mode == 1
+        fun = funhandle{1};
+    else
+        fun = funhandle{2};
+    end
 
-% Evaluate the function
-y = fun(x);
-end
+    % Evaluate the function
+    y = fun(x);
+end % opFunction_internl

@@ -27,19 +27,19 @@ classdef opHaar < opWavelet
         % Constructor
         function op = opHaar(n,levels,redundant)
 
-           if nargin < 2, levels    = 5;     end
-           if nargin < 3, redundant = false; end
-           
-           % n must be a multiple of 2^(levels)
-           if rem(n,2^levels)
-              error('N must be a multiple of 2^(%i)',levels)
-           end
-           
-           op = op@opWavelet(n,'Haar',0,levels,redundant);
-           op.type = 'Haar';
-          op.sweepflag  = true;
-           
-        end % function opHaar
+            if nargin < 2, levels    = 5;     end
+            if nargin < 3, redundant = false; end
+
+            % n must be a multiple of 2^(levels)
+            if rem(n,2^levels)
+                error('N must be a multiple of 2^(%i)',levels)
+            end
+
+            op = op@opWavelet(n,'Haar',0,levels,redundant);
+            op.type      = 'Haar';
+            op.sweepflag = true;
+
+        end % constructor
         
     end % methods - public
         

@@ -18,30 +18,30 @@ classdef opHaar2 < opWavelet2
 %   Use the command 'spot.gpl' to locate this file.
 
 %   http://www.cs.ubc.ca/labs/scl/spot
-   
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   % Methods - Public
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   methods
-      
-      % Constructor
-      function op = opHaar2(m,n,levels,redundant)
-         %opHaar  constructor
-         if nargin < 2, n = m; end
-         if nargin < 3, levels = 5; end
-         if nargin < 4, redundant = false; end
-         
-         % n must be a multiple of 2^(levels)
-         if rem(m*n,2^levels)
-            error('N must be a multiple of 2^(%i)',levels)
-         end
-         
-         op = op@opWavelet2(m,n,'Haar',1,levels,redundant);
-         op.type = 'Haar2';
-          op.sweepflag  = true;
-         
-      end % function opHaar2
-      
-   end % methods - public
-   
-end % classdef
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - Public
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods
+
+        % Constructor
+        function op = opHaar2(m,n,levels,redundant)
+            %opHaar  constructor
+            if nargin < 2, n = m; end
+            if nargin < 3, levels = 5; end
+            if nargin < 4, redundant = false; end
+
+            % n must be a multiple of 2^(levels)
+            if rem(m*n,2^levels)
+                error('N must be a multiple of 2^(%i)',levels)
+            end
+
+            op = op@opWavelet2(m,n,'Haar',1,levels,redundant);
+            op.type      = 'Haar2';
+            op.sweepflag = true;
+
+        end % function opHaar2
+
+    end % methods - public
+
+end % opHaar2

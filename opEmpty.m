@@ -14,31 +14,31 @@ classdef opEmpty < opSpot
     % Methods - Public
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
-        
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Constructor
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function op = opEmpty(m,n)
-          if nargin ~= 2
-             error('Exactly two operators must be specified.')
-          end
-          
-          if ~((m == 0) || (n == 0))
-             error('At least one dimension must be zero.')
-          end
-            
-          op = op@opSpot('Empty',m,n);
-          op.sweepflag  = true;
-       end % Constructor
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Double
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function A = double(op)
-          A = [];          
-       end       
-       
-    end % Methods
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Constructor
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opEmpty(m,n)
+            if nargin ~= 2
+                error('Exactly two operators must be specified.')
+            end
+
+            if ~((m == 0) || (n == 0))
+                error('At least one dimension must be zero.')
+            end
+
+            op = op@opSpot('Empty',m,n);
+            op.sweepflag = true;
+        end % Constructor
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Double
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function A = double(op)
+            A = [];          
+        end % double
+
+    end % public Methods
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Methods - protected
@@ -47,12 +47,12 @@ classdef opEmpty < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-           if mode == 1
-              y = zeros(op.m,0, class(x));
-           else
-              y = zeros(op.n,0, class(x));
-           end
-        end % Multipy
+            if mode == 1
+                y = zeros(op.m,0, class(x));
+            else
+                y = zeros(op.n,0, class(x));
+            end
+        end % Multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
@@ -61,7 +61,5 @@ classdef opEmpty < opSpot
             % Non-sweepable
             x = lsqrdivide(op,b,mode);
         end % divide
-      
-    end % Methods
-        
-end % Classdef
+    end % protected Methods
+end % opEmpty

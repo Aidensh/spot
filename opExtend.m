@@ -32,128 +32,116 @@ classdef opExtend < opSpot
 %   Copyright 2012, Hassan Mansour
 
 %   http://www.cs.ubc.ca/labs/scl/spot   
-    
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Properties
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-properties( SetAccess = private, GetAccess = public )
-   % Input matrix
-   p           % rows
-   q           % cols
-   % Extended result
-   pext        % rows
-   qext        % cols
-end
 
-properties( Access = public )
-   Rc
-   Rr
-end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Properties
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    properties( SetAccess = private, GetAccess = public )
+        % Input matrix
+        p           % rows
+        q           % cols
+        % Extended result
+        pext        % rows
+        qext        % cols
+    end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Methods - public
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-methods
-   function op = opExtend(p,q,pext,qext)
-      
-      m = pext*qext;
-      n = p*q;
-      op = op@opSpot('Extend',m,n);
-      
-      if p <= pext
-         I = speye(p);
-         Iflip = flipud(I);
-         
-         pbndry_size = pext - p;
-         pmult = floor(pbndry_size/p);
-         
-         if mod(pmult,2)
-            Icat = repmat([I;Iflip],(pmult+1)/2,1);
-            I = Icat;
-         else
-            Icat = repmat([Iflip;I],(pmult)/2,1);
-            I = [I;Icat];
-         end
-         
-         pbndry = I(end:-1:end - (pbndry_size - pmult*p)+ 1, :);
-         op.Rc = [I; pbndry]; % = I if p == pext.
-      else
-         I = speye(p);
-         op.Rc = I(1:pext,1:p);
-      end
-      
-      if q <= qext
-         I = speye(q);
-         Iflip = flipud(I);
-         
-         qbndry_size = qext - q;
-         qmult = floor(qbndry_size/q);
-         
-         if mod(qmult,2)
-            Icat = repmat([I;Iflip],(qmult+1)/2,1);
-            I = Icat;
-         else
-            Icat = repmat([Iflip;I],(qmult)/2,1);
-            I = [I;Icat];
-         end
-         
-         qbndry = I(end:-1:end - (qbndry_size - qmult*q)+ 1, :);
-         op.Rr = [I; qbndry]; % = I if q == qext.
-      else
-         I = speye(q);
-         op.Rr = I(1:qext,1:q);
-      end
-      
-      op.p = p;
-      op.q = q;
-      op.pext = pext;
-      op.qext = qext;
-          op.sweepflag  = true;
-   end % Constructor
-   
-end % methods public
+    properties( Access = public )
+        Rc
+        Rr
+    end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Methods - protected
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-methods(Access = protected)
-   
-    function y = multiply(op,x,mode)
-        
-        x_n = size(x,2);
-        
-        % Preallocate y
-        if isscalar(op)
-            % special case: allocate result size of x
-            y(size(x)) = cast(0,class(x));
-        elseif mode == 1
-            y(op.m,x_n) = cast(0,class(x));
-        else
-            y(op.n,x_n) = cast(0,class(x));
-        end
-        
-        for u = 1:x_n
-            if mode == 1
-                Xmat = reshape(x(:,u), op.p, op.q);
-                Xmat = op.Rc*Xmat;
-                Xmat = (op.Rr*Xmat')';
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - public
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods
+        function op = opExtend(p,q,pext,qext)
+
+            m  = pext*qext;
+            n  = p*q;
+            op = op@opSpot('Extend',m,n);
+
+            if p <= pext
+                I           = speye(p);
+                Iflip       = flipud(I);
+
+                pbndry_size = pext - p;
+                pmult       = floor(pbndry_size/p);
+
+                if mod(pmult,2)
+                    Icat = repmat([I;Iflip],(pmult+1)/2,1);
+                    I    = Icat;
+                else
+                    Icat = repmat([Iflip;I],(pmult)/2,1);
+                    I    = [I;Icat];
+                end
+
+                pbndry = I(end:-1:end - (pbndry_size - pmult*p)+ 1, :);
+                op.Rc  = [I; pbndry]; % = I if p == pext
             else
-                Xmat = reshape(x(:,u), op.pext, op.qext);
-                Xmat = op.Rc'*Xmat;
-                Xmat = (op.Rr'*Xmat')';
+                I     = speye(p);
+                op.Rc = I(1:pext,1:p);
             end
-            y(:,u) = full(Xmat(:));  % need full because op.Rx is sparse
-        end
-    end % function multiply
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Divide
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    function x = divide(op,b,mode)
-        % Non-sweepable
-        x = lsqrdivide(op,b,mode);
-    end % divide
-      
-end % methods protected
 
-end
+            if q <= qext
+                I           = speye(q);
+                Iflip       = flipud(I);
+
+                qbndry_size = qext - q;
+                qmult       = floor(qbndry_size/q);
+
+                if mod(qmult,2)
+                    Icat = repmat([I;Iflip],(qmult+1)/2,1);
+                    I    = Icat;
+                else
+                    Icat = repmat([Iflip;I],(qmult)/2,1);
+                    I    = [I;Icat];
+                end
+
+                qbndry = I(end:-1:end - (qbndry_size - qmult*q)+ 1, :);
+                op.Rr  = [I; qbndry]; % = I if q == qext.
+            else
+                I     = speye(q);
+                op.Rr = I(1:qext,1:q);
+            end
+
+            op.p         = p;
+            op.q         = q;
+            op.pext      = pext;
+            op.qext      = qext;
+            op.sweepflag = true;
+        end % Constructor
+
+    end % methods public
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - protected
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods(Access = protected)
+
+        function y = multiply(op,x,mode)
+
+            for u = size(x,2):-1:1 % loop over multivector
+                if mode == 1
+                    Xmat = reshape(x(:,u), op.p, op.q);
+                    Xmat = op.Rc*Xmat;
+                    Xmat = (op.Rr*Xmat')';
+                else
+                    Xmat = reshape(x(:,u), op.pext, op.qext);
+                    Xmat = op.Rc'*Xmat;
+                    Xmat = (op.Rr'*Xmat')';
+                end
+                y(:,u) = full(Xmat(:)); % need full because op.Rx is sparse
+            end
+        end % multiply
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Non-sweepable
+            x = lsqrdivide(op,b,mode);
+        end % divide
+
+    end % methods protected
+
+end % opExtend
