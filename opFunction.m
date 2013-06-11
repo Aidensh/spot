@@ -78,10 +78,12 @@ classdef opFunction < opSpot
     % Methods - protected
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods( Access = protected )
-       
-        % Multiplication
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function y = multiply(op,x,mode)
-            for u = size(x,2):-1:1
+            for u = size(x,2):-1:1 % Loop through multivector
                 y(:,u) = op.funHandle(x(:,u),mode);
             end
         end % Multiply

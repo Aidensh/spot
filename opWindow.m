@@ -92,7 +92,7 @@ classdef opWindow < opSpot
           op.funHandle = fun;
           op.family    = family;
           op.window    = window;
-          op.sweepflag  = true;
+          op.sweepflag = true;
        end % Constructor
 
     end % Methods
@@ -103,18 +103,7 @@ classdef opWindow < opSpot
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function y = multiply(op,x,mode)
-            x_n = size(x,2);
-            % Preallocate y
-            if isscalar(op)
-                % special case: allocate result size of x
-                y(size(x)) = cast(0,class(x));
-            elseif mode == 1
-                y(op.m,x_n) = cast(0,class(x));
-            else
-                y(op.n,x_n) = cast(0,class(x));
-            end
-            
-            for u = 1:size(x,2)
+            for u = size(x,2):-1:1
                 y(:,u) = op.funHandle(x(:,u),mode);
             end
             

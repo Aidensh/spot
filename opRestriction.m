@@ -22,7 +22,7 @@ classdef opRestriction < opSpot
     % Properties
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     properties (SetAccess = private)
-       funHandle = []; % Multiplication function
+        funHandle = []; % Multiplication function
     end % Properties
 
 
@@ -31,55 +31,56 @@ classdef opRestriction < opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Constructor
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function op = opRestriction(n,idx)
-          if nargin ~= 2
-             error('Exactly two operators must be specified.')
-          end
-           
-          idx = full(idx(:));
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Constructor
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opRestriction(n,idx)
+            if nargin ~= 2
+                error('Exactly two operators must be specified.')
+            end
 
-          if islogical(idx)
-             if length(idx) > n
-                error('Index exceeds operator dimensions.');
-             else
-                m = sum(idx);
-             end
-          elseif spot.utils.isposintmat(idx) || isempty(idx)
-             if ~isempty(idx) && (max(idx) > n)
-                error('Index exceeds operator dimensions.');
-             else
-                m = length(idx);
-             end
-          else
-             error('Subscript indices must either be real positive integers or logicals.');
-          end
+            idx = full(idx(:));
 
-          % -----------------------------------------------------------
-          % If the indices are unique we can use the direct indexing
-          % method for the conjugate operation; otherwise need to
-          % construct sparse indexing matrix. The reason behind this
-          % is that using y(idx) = x sequentially sets the y(idx(i)),
-          % overwriting old results when needed, instead of
-          % aggregating them.
-          % -----------------------------------------------------------
-          if islogical(idx) || (length(idx) == length(unique(idx)))
-             fun = @(x,mode) opRestriction_intrnl(n,idx,x,mode);
-          else
-             P   = sparse(n,length(idx));
-             P((0:length(idx)-1)'*n + idx) = 1;
-             fun = @(x,mode) opRestrictionP_intrnl(n,idx,P,x,mode);
-          end
+            if islogical(idx)
+                if length(idx) > n
+                    error('Index exceeds operator dimensions.');
+                else
+                    m = sum(idx);
+                end
+            elseif spot.utils.isposintmat(idx) || isempty(idx)
+                if ~isempty(idx) && (max(idx) > n)
+                    error('Index exceeds operator dimensions.');
+                else
+                    m = length(idx);
+                end
+            else
+                error(['Subscript indices must either be real '...
+                       'positive integers or logicals.']);
+            end
 
-          % Construct operator
-          op = op@opSpot('Restriction', m, n);
-          op.funHandle = fun;
-          op.sweepflag  = true;
-       end % Constructor
+            % -----------------------------------------------------------
+            % If the indices are unique we can use the direct indexing
+            % method for the conjugate operation; otherwise need to
+            % construct sparse indexing matrix. The reason behind this
+            % is that using y(idx) = x sequentially sets the y(idx(i)),
+            % overwriting old results when needed, instead of
+            % aggregating them.
+            % -----------------------------------------------------------
+            if islogical(idx) || (length(idx) == length(unique(idx)))
+                fun = @(x,mode) opRestriction_intrnl(n,idx,x,mode);
+            else
+                P   = sparse(n,length(idx));
+                P((0:length(idx)-1)'*n + idx) = 1;
+                fun = @(x,mode) opRestrictionP_intrnl(n,idx,P,x,mode);
+            end
 
-    end % Methods
+            % Construct operator
+            op = op@opSpot('Restriction', m, n);
+            op.funHandle = fun;
+            op.sweepflag = true;
+        end % Constructor
+
+    end % public Methods
        
  
     methods ( Access = protected )
@@ -87,21 +88,8 @@ classdef opRestriction < opSpot
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function y = multiply(op,x,mode)
-            
-            x_n = size(x,2);
-            
-            % Preallocate y
-            if isscalar(op)
-                % special case: allocate result size of x
-                y(size(x)) = cast(0,class(x));
-            elseif mode == 1
-                y(op.m,x_n) = cast(0,class(x));
-            else
-                y(op.n,x_n) = cast(0,class(x));
-            end
-            
             % Loop through multivec
-            for u = 1:x_n
+            for u = size(x,2):-1:1
                 y(:,u) = op.funHandle(x(:,u),mode);
             end
             

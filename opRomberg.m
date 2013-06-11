@@ -29,7 +29,8 @@ classdef opRomberg < opSpot
             
             % Check for input arguments
             assert(isnumeric(dims) && all(dims > 0),...
-                'Dimensions argument of opRomberg has to be a positive numeric vector.')
+                ['Dimensions argument of opRomberg has to be a '...
+                 'positive numeric vector.'])
             
             % Check for vector cases
             if numel(dims) == 1, dims = [dims 1]; end
@@ -60,24 +61,15 @@ classdef opRomberg < opSpot
             phs  = op.phases;
             sgn  = op.signs;
             x_n  = size(x,2);
-            % Preallocate y
-            if isscalar(op)
-                % special case: allocate result size of x
-                y(size(x)) = cast(0,class(x));
-            elseif mode == 1
-                y(op.m,x_n) = cast(0,class(x));
-            else
-                y(op.n,x_n) = cast(0,class(x));
-            end
             
             if mode == 1
-                for u = 1:x_n
+                for u = x_n:-1:1 % Loop through multivector
                     x_tmp  = reshape(x(:,u),dims);
                     y_tmp  = sgn.*ifftn(phs.*fftn(full(x_tmp)));
                     y(:,u) = y_tmp(:);
                 end
             else
-                for u = 1:x_n
+                for u = x_n:-1:1
                     x_tmp  = reshape(x(:,u),dims);
                     y_tmp  = ifftn(conj(phs).*fftn(sgn.*full(x_tmp)));
                     y(:,u) = y_tmp(:);
@@ -103,10 +95,10 @@ classdef opRomberg < opSpot
         function PHS = random_phasesND(dims)
             % random_phases.m
             %
-            % Create array of random phases, with symmetries for a real-valued
-            % 3D image.
-            p1 = exp(1i*2*pi*rand(dims));
-            p2 = fftn(real(ifftn(p1)));
+            % Create array of random phases, with symmetries for a
+            % real-valued 3D image.
+            p1  = exp(1i*2*pi*rand(dims));
+            p2  = fftn(real(ifftn(p1)));
             PHS = p2./abs(p2);
             
         end % random_phasesND

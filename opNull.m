@@ -11,52 +11,54 @@ classdef opNull < opSpot
 
 %   http://www.cs.ubc.ca/labs/scl/spot
 
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   % Methods - public
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   methods
-      
-      % Constructor
-      function op = opNull(n)
-         if nargin < 1, n = 1; end
-         op = op@opSpot('Null',n,n);
-         op.isDirac = true;
-         op.sweepflag  = true;
-      end
-      
-      function A = double(op)
-         A = eye(size(op));
-      end
-      
-      function result = xtratests(op)
-      %XTRATESTS    User defined tests
-      %
-      % Just a demo here
-          x = randn(3);
-          A = opNull(3);
-          y = A*x;
-          result = all(all(x == y));
-      end
-      
-   end % methods - public
-   
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   % Methods - protected
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   methods( Access = protected )
-      
-      % Multiplication
-      function x = multiply(op,x,mode)
-          
-      end
-      
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      % Divide
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function x = divide(op,x,mode)
-          
-      end % divide
-      
-   end % methods - protected
-   
-end % classdef
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - public
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods
+
+        % Constructor
+        function op = opNull(n)
+            if nargin < 1, n = 1; end
+            op = op@opSpot('Null',n,n);
+            op.isDirac   = true;
+            op.sweepflag = true;
+        end
+
+        function A = double(op)
+            % double
+            A = eye(size(op));
+        end
+
+        function result = xtratests(op)
+            %XTRATESTS    User defined tests
+            %
+            % Just a demo here
+            x = randn(3);
+            A = opNull(3);
+            y = A*x;
+            result = all(all(x == y));
+        end % xtratests
+
+    end % methods - public
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - protected
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods( Access = protected )
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = multiply(op,x,mode)
+            % Nothing happens here
+        end
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,x,mode)
+            % and nothing happens here too
+        end % divide
+
+    end % methods - protected
+
+end % opNull

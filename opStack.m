@@ -29,98 +29,98 @@ classdef opStack < opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Constructor
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function op = opStack(varargin)
-          % Checks weights parameter
-          if ~isnumeric(varargin{1})
-             weights = ones(nargin,1);
-             opList = varargin;
-          else
-             weights = varargin{1};
-             if isempty(weights), weights = 1; end;
-             [m,n] = size(weights);
-             if (((m == 1) && (n == nargin-1)) || ...
-                 ((n == 1) && (m == nargin-1)) || ...
-                 ((m == 1) && (n == 1)))
-               weights = ones(nargin-1,1).*weights(:); 
-               opList = varargin(2:end);
-             else
-               weights = ones(nargin,1);
-               opList = varargin;
-             end
-          end
-
-          % Check number of operators
-          if (length(opList) < 1)
-            error('At least one operator must be specified.');
-          end
-
-          % Convert all arguments to operators
-          for i=1:length(opList)
-             if ~isa(opList{i},'opSpot') 
-                opList{i} = opMatrix(opList{i});
-             end
-          end
-
-          % Check operator consistency and complexity
-          opA    = opList{1};
-          [m,n]  = size(opA);
-          cflag  = ~isreal(opA);
-          linear = opA.linear;
-          for i=2:length(opList)
-             opA    = opList{i};
-             cflag  = cflag  | ~isreal(opA); % Update complexity info
-             linear = linear & opA.linear;
-   
-             % Generate error if operator sizes are incompatible
-             if (size(opA,2) ~= n) && ~isempty(opA)
-               error(['Operator %d is not consistent with the '...
-               'previous operators.'],i);
-             end
-
-             m = m + size(opA,1); % Total number of rows
-          end
-
-          % Filter out all empty operators
-          opListNew = {};
-          for i=1:length(opList)
-            if ~isempty(opList{i})
-              opListNew{end+1} = opList{i};
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Constructor
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opStack(varargin)
+            % Checks weights parameter
+            if ~isnumeric(varargin{1})
+                weights = ones(nargin,1);
+                opList = varargin;
+            else
+                weights = varargin{1};
+                if isempty(weights), weights = 1; end;
+                [m,n] = size(weights);
+                if (((m == 1) && (n == nargin-1)) || ...
+                    ((n == 1) && (m == nargin-1)) || ...
+                    ((m == 1) && (n == 1)))
+                    weights = ones(nargin-1,1).*weights(:); 
+                    opList  = varargin(2:end);
+                else
+                    weights = ones(nargin,1);
+                    opList  = varargin;
+                end
             end
-          end
-          
-          % Construct operator
-          op = op@opSpot('Stack', m, n);
-          op.cflag      = cflag;
-          op.linear     = linear;
-          op.children   = opListNew;
-          op.precedence = 1;
-          op.weights    = weights;
-          op.sweepflag  = true;
-       end % Constructor
-      
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Display
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function str = char(op)
-          % Initialize
-          str = '[';
-       
-          for i=1:length(op.children)
-             strOp = char(op.children{i});
-             if i~=1
-                str = [str, '; ', strOp];
-             else
-                str = [str, strOp];
-             end             
-          end
-          
-          str = [str, ']'];
-       end % Display
 
-    end % Methods
+            % Check number of operators
+            if (length(opList) < 1)
+                error('At least one operator must be specified.');
+            end
+
+            % Convert all arguments to operators
+            for i=1:length(opList)
+                if ~isa(opList{i},'opSpot') 
+                    opList{i} = opMatrix(opList{i});
+                end
+            end
+
+            % Check operator consistency and complexity
+            opA    = opList{1};
+            [m,n]  = size(opA);
+            cflag  = ~isreal(opA);
+            linear = opA.linear;
+            for i=2:length(opList)
+                opA    = opList{i};
+                cflag  = cflag  | ~isreal(opA); % Update complexity info
+                linear = linear & opA.linear;
+
+                % Generate error if operator sizes are incompatible
+                if (size(opA,2) ~= n) && ~isempty(opA)
+                    error(['Operator %d is not consistent with the '...
+                           'previous operators.'],i);
+                end
+
+                m = m + size(opA,1); % Total number of rows
+            end
+
+            % Filter out all empty operators
+            opListNew = {};
+            for i=1:length(opList)
+                if ~isempty(opList{i})
+                    opListNew{end+1} = opList{i};
+                end
+            end
+
+            % Construct operator
+            op = op@opSpot('Stack', m, n);
+            op.cflag      = cflag;
+            op.linear     = linear;
+            op.children   = opListNew;
+            op.precedence = 1;
+            op.weights    = weights;
+            op.sweepflag  = true;
+        end % Constructor
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % char
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function str = char(op)
+            % Initialize
+            str = '[';
+
+            for i=1:length(op.children)
+                strOp = char(op.children{i});
+                if i~=1
+                    str = [str, '; ', strOp];
+                else
+                    str = [str, strOp];
+                end             
+            end
+
+            str = [str, ']'];
+        end % char
+
+    end % public Methods
        
  
     methods ( Access = protected )
@@ -129,36 +129,32 @@ classdef opStack < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function y = multiply(op,x,mode)
             x_n = size(x,2);
-            % Preallocate y
-            if isscalar(op)
-                % special case: allocate result size of x
-                y(size(x)) = cast(0,class(x));
-            elseif mode == 1
-                y(op.m,x_n) = cast(0,class(x));
-            else
-                y(op.n,x_n) = cast(0,class(x));
-            end
-            
             if mode == 1
-                for u = 1:x_n
+                for u = x_n:-1:1 % Loop through multivector
                     k = 0;
                     for i=1:length(op.children)
-                        child      = op.children{i};
-                        s          = size(child,1);
+                        child        = op.children{i};
+                        s            = size(child,1);
                         y(k+(1:s),u) = op.weights(i)*...
                             applyMultiply(child,x(:,u),1);
-                        k          = k + s;
+                        k            = k + s;
                     end
                 end
             else
-                for u = 1:x_n
+                for u = x_n:-1:1
                     k = 0;
-                    for i=1:length(op.children)
-                        child = op.children{i};
-                        s     = size(child,1);
-                        xd    = x(k+1:k+s,u) * conj(op.weights(i));
+                    i = 1;
+                    child  = op.children{i};
+                    s      = size(child,1);
+                    xd     = x(k+1:k+s,u) * conj(op.weights(i));
+                    y(:,u) = applyMultiply(child,xd,2);
+                    k      = k + s;
+                    for i=2:length(op.children)
+                        child  = op.children{i};
+                        s      = size(child,1);
+                        xd     = x(k+1:k+s,u) * conj(op.weights(i));
                         y(:,u) = y(:,u) + applyMultiply(child,xd,2);
-                        k     = k + s;
+                        k      = k + s;
                     end
                 end
             end
