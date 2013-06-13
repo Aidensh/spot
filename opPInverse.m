@@ -18,65 +18,65 @@ classdef opPInverse < opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Constructor
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function op = opPInverse(A)
-          
-          if nargin ~= 1
-             error('Exactly one operator must be specified.')
-          end
-           
-          % Input matrices are immediately cast as opMatrix's.
-          if isa(A,'numeric'), A = opMatrix(A); end
-          
-          % Check that the input operators are valid.
-          if ~isa(A,'opSpot')
-             error('Input operator is not valid.')
-          end
-          
-          % Construct operator
-          [m, n] = size(A);
-          op = op@opSpot('PInverse', n, m);
-          op.cflag      = A.cflag;
-          op.linear     = A.linear;
-          op.sweepflag  = A.sweepflag;
-          op.children   = {A};
-          op.ms         = A.ns;
-          op.ns         = A.ms;
-       end % function opPInverse
-      
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Display
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function str = char(op)
-          str = ['pinv(', char(op.children{1}) ,')'];
-       end % function char
-       
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % PInv
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function opOut = pinv(op)
-          opOut = op.children{1};
-       end % function pinv
-       
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Constructor
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opPInverse(A)
+
+            if nargin ~= 1
+                error('Exactly one operator must be specified.')
+            end
+
+            % Input matrices are immediately cast as opMatrix's.
+            if isa(A,'numeric'), A = opMatrix(A); end
+
+            % Check that the input operators are valid.
+            if ~isa(A,'opSpot')
+                error('Input operator is not valid.')
+            end
+
+            % Construct operator
+            [m, n] = size(A);
+            op = op@opSpot('PInverse', n, m);
+            op.cflag     = A.cflag;
+            op.linear    = A.linear;
+            op.sweepflag = A.sweepflag;
+            op.children  = {A};
+            op.ms        = A.ns;
+            op.ns        = A.ms;
+        end % constructor
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Display
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function str = char(op)
+            str = ['pinv(', char(op.children{1}) ,')'];
+        end % function char
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % PInv
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function opOut = pinv(op)
+            opOut = op.children{1};
+        end % function pinv
+
     end % methods - public
 
 
     methods ( Access = protected )
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Multiply
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
-          opA    = op.children{1};
-          if mode == 1
-             A = opA;
-          else
-             A = opA';
-          end
-           y = A\x;
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function y = multiply(op,x,mode)
+            opA = op.children{1};
+            if mode == 1
+                A = opA;
+            else
+                A = opA';
+            end
+            y = A\x;
         end % function multiply
-        
+
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -91,4 +91,4 @@ classdef opPInverse < opSpot
 
     end % methods - protected
    
-end % classdef
+end % opPInverse

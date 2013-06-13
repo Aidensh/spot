@@ -4,7 +4,8 @@ classdef opKron < opSpot
 %   opKron(OP1,OP2,...OPn) creates an operator that is the Kronecker
 %   tensor product of OP1, OP2, ..., OPn.
 
-%   Copyright 2009, Rayan Saab, Ewout van den Berg and Michael P. Friedlander
+%   Copyright 2009, Rayan Saab, Ewout van den Berg and 
+%   Michael P. Friedlander
 %   See the file COPYING.txt for full copyright information.
 %   Use the command 'spot.gpl' to locate this file.
 
@@ -44,7 +45,8 @@ classdef opKron < opSpot
             
             % Input matrices are immediately cast to opMatrix.
             for i=1:narg
-                if isa(varargin{i},'numeric'), varargin{i} = opMatrix(varargin{i});
+                if isa(varargin{i},'numeric')
+                    varargin{i} = opMatrix(varargin{i});
                 elseif ~isa(varargin{i},'opSpot')
                     error('One of the operators is not a valid input.')
                 end
@@ -122,15 +124,16 @@ classdef opKron < opSpot
         function h = headerMod(op,header,mode)
             % Extract explicit size indices
             exsize = header.exsize;
-            href   = @spot.data.headerRef; % Used function handles because its shorter
-            hasg   = @spot.data.headerAsgn;
+            href   = @spot.data.headerRef; % Used function handles because
+            hasg   = @spot.data.headerAsgn; % its shorter
 
             if mode == 1
                 
                 % Setup variables
                 opList = fliplr(op.children); % Last op applied first
                 % Number of output dimensions
-                n_out_dims = length(spot.utils.uncell(op.ms)) + size(exsize,2) - 1;
+                n_out_dims = length(spot.utils.uncell(op.ms)) +...
+                                                        size(exsize,2) - 1;
                 
                 % Preallocate and setup header
                 header_out        = header;
@@ -149,20 +152,21 @@ classdef opKron < opSpot
                         length(header_out.size));
                 end
                 
-                % Replace old first (collapsed) dimensional sizes with operator sizes.
+                % Replace old first (collapsed) dimensional sizes with
+                % operator sizes.
                 i = 1;
                 x = 1;
                 % Extract collapsed first dims from header.
                 first_header = href(header,exsize(:,1));
                 for u = 1:length(op.children)
                     % Input header (including collapsed)
-                    y            = length(spot.utils.uncell(op.ns{u})) + x - 1;
+                    y            = length(spot.utils.uncell(op.ns{u}))+x-1;
                     in_header    = href(first_header,x:y);
                     in_header.exsize = [1;y-x+1];
                     % child header
                     child_header = headerMod(opList{u},in_header,mode);
                     % Assignment indices
-                    j            = length(spot.utils.uncell(op.ms{u})) + i - 1;
+                    j            = length(spot.utils.uncell(op.ms{u}))+i-1;
                     % header assignment
                     oldsize      = length(header_out.size);
                     header_out   = hasg(header_out,child_header,i:j);
@@ -172,13 +176,14 @@ classdef opKron < opSpot
                 end
                 exsize_out = 1:length(header_out.size);
                 exsize_out = [exsize_out;exsize_out];
-                h = header_out;
-                h.exsize = exsize_out;
+                h          = header_out;
+                h.exsize   = exsize_out;
             else
                 % Setup variables
                 opList = fliplr(op.children); % Last op applied first
                 % Number of output dimensions
-                n_out_dims = length(spot.utils.uncell(op.ns)) + size(exsize,2) - 1;
+                n_out_dims = length(spot.utils.uncell(op.ns)) +...
+                                                        size(exsize,2) - 1;
                 
                 % Preallocate and setup header
                 header_out        = header;
@@ -197,20 +202,21 @@ classdef opKron < opSpot
                         length(header_out.size));
                 end
                 
-                % Replace old first (collapsed) dimensional sizes with operator sizes.
+                % Replace old first (collapsed) dimensional sizes with 
+                % operator sizes.
                 i = 1;
                 x = 1;
                 % Extract collapsed first dims from header.
                 first_header = href(header,exsize(:,1));
                 for u = 1:length(op.children)
                     % Input header (including collapsed)
-                    y            = length(spot.utils.uncell(op.ms{u})) + x - 1;
+                    y            = length(spot.utils.uncell(op.ms{u}))+x-1;
                     in_header    = href(first_header,x:y);
                     in_header.exsize = [1;y-x+1];
                     % child header
                     child_header = headerMod(opList{u},in_header,mode);
                     % Assignment indices
-                    j            = length(spot.utils.uncell(op.ns{u})) + i - 1;
+                    j            = length(spot.utils.uncell(op.ns{u}))+i-1;
                     % header assignment
                     oldsize      = length(header_out.size);
                     header_out   = hasg(header_out,child_header,i:j);
@@ -220,8 +226,8 @@ classdef opKron < opSpot
                 end
                 exsize_out = 1:length(header_out.size);
                 exsize_out = [exsize_out;exsize_out];
-                h = header_out;
-                h.exsize = exsize_out;
+                h          = header_out;
+                h.exsize   = exsize_out;
             end
             
         end % headerMod
@@ -240,36 +246,36 @@ classdef opKron < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function y = multiply(op,x,mode)
             
-            %The Kronecker product (KP) is applied to the right-hand matrix
-            %taking in account the best order to apply the operators.
-            %That necessitates to decompose the KP in successive matrix
-            %products with terms of type I(a) kron A kron I(b).
-            %A is the operator to apply. I(a) and I(b) are identity
-            %matrices with respective sizes a and b.
+            % The Kronecker product (KP) is applied to the righthand matrix
+            % taking in account the best order to apply the operators.
+            % That necessitates to decompose the KP in successive matrix
+            % products with terms of type I(a) kron A kron I(b).
+            % A is the operator to apply. I(a) and I(b) are identity
+            % matrices with respective sizes a and b.
             
-            opList=op.children; %Contains the list of opKron children
-            ncol = size(x,2); %Number of columns of 'x'
-            nbr_children = length(opList); %Number of children
+            opList       = op.children; % Contains list of opKron children
+            ncol         = size(x,2); % Number of columns of 'x'
+            nbr_children = length(opList); % Number of children
             
-            %Pre-registering of the sizes of opKron's children
-            sizes=zeros(nbr_children,2);
+            % Pre-registering of the sizes of opKron's children
+            sizes = zeros(nbr_children,2);
             for i=1:nbr_children
-                sizes(i,:)=size(opList{i});
+                sizes(i,:) = size(opList{i});
             end
             
             %%%%%%%%%%%%%%%%%%%%%%Multiplication%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            if mode == 1 %Classic mode
-                perm = op.permutation; %Permutation to take in account.
-                m=op.m; %Height of the resulting matrix
+            if mode == 1 % Classic mode
+                perm = op.permutation; % Permutation to take in account.
+                m = op.m; % Height of the resulting matrix
                 
                 for i = 1:nbr_children
-                    %Index of the operator A to consider.
-                    index=perm(i);
+                    % Index of the operator A to consider.
+                    index = perm(i);
                     
-                    %Calculation of the sizes of the identity matrices used
-                    %in the Kronecker product I(a) kron A kron I(b)
+                    % Calculation of the sizes of the identity matrixs used
+                    % in the Kronecker product I(a) kron A kron I(b)
                     
-                    %Size of I(a)
+                    % Size of I(a)
                     a = 1;
                     for k = 1:(index-1)
                         if i > find(perm==k)
@@ -279,14 +285,14 @@ classdef opKron < opSpot
                         end
                     end
                     
-                    %If 'x' has several columns. The initial matrix I(a)
-                    %kron A kron I(b) is replicated 'ncol' (number of
-                    %columns of x) times) along the diagonal.
+                    % If 'x' has several columns. The initial matrix I(a)
+                    % kron A kron I(b) is replicated 'ncol' (number of
+                    % columns of x) times) along the diagonal.
                     if ncol>1
                         a=a*ncol;
                     end
                     
-                    %Size of I(b)
+                    % Size of I(b)
                     b = 1;
                     for k = (index+1):nbr_children
                         if i > find(perm==k)
@@ -296,29 +302,29 @@ classdef opKron < opSpot
                         end
                     end
                     
-                    %Size of the operator A=opList{index} to apply
-                    r=sizes(index,1);
-                    c=sizes(index,2);
+                    % Size of the operator A=opList{index} to apply
+                    r = sizes(index,1);
+                    c = sizes(index,2);
                     
-                    %(I(a) kron A kron I(b)) * x;
-                    t=reshape(reshape(x,b,a*c).',c,a*b);
-                    x=reshape(applyMultiply(opList{index},t,1)',a,r*b)';
+                    % (I(a) kron A kron I(b)) * x;
+                    t = reshape(reshape(x,b,a*c).',c,a*b);
+                    x = reshape(applyMultiply(opList{index},t,1)',a,r*b)';
                 end
                 y = reshape(x,m,ncol);
                 
-            elseif mode == 2 %Transpose mode
-                perm = op.permutation(length(opList):-1:1); %The
-                %permutation has to be in the other direction since with
-                %transposition, operators' computational costs will be
-                %inverted.
-                n=op.n; %Height of the resulting matrix
+            elseif mode == 2 % Transpose mode
+                perm = op.permutation(length(opList):-1:1); % The
+                % permutation has to be in the other direction since with
+                % transposition, operators' computational costs will be
+                % inverted.
+                n = op.n; % Height of the resulting matrix
                 
                 for i = 1:nbr_children
                     %Index of the operator A to consider.
-                    index=perm(i);
+                    index = perm(i);
                     
-                    %Calculation of the sizes of the identity matrices used
-                    %in the Kronecker product I(a) kron A kron I(b)
+                    % Calculation of the sizes of the identity matrixs used
+                    % in the Kronecker product I(a) kron A kron I(b)
                     
                     %Size of I(a)
                     a = 1;
@@ -330,14 +336,14 @@ classdef opKron < opSpot
                         end
                     end
                     
-                    %If 'x' has several columns. The initial matrix I(a)
-                    %kron A kron I(b) is replicated 'ncol' (number of
-                    %columns of x) times) along the diagonal.
+                    % If 'x' has several columns. The initial matrix I(a)
+                    % kron A kron I(b) is replicated 'ncol' (number of
+                    % columns of x) times) along the diagonal.
                     if ncol>1
-                        a=a*ncol;
+                        a = a*ncol;
                     end
                     
-                    %Size of I(b)
+                    % Size of I(b)
                     b = 1;
                     for k = (index+1):length(opList)
                         if i > find(perm==k)
@@ -347,15 +353,15 @@ classdef opKron < opSpot
                         end
                     end
                     
-                    %Size of the operator A=opList{index} to apply
-                    r=sizes(index,2);
-                    c=sizes(index,1);
+                    % Size of the operator A=opList{index} to apply
+                    r = sizes(index,2);
+                    c = sizes(index,1);
                     
-                    %(I(a) kron A kron I(b)) * x;
-                    t=reshape(reshape(x,b,a*c).',c,a*b);
-                    x=reshape(applyMultiply(opList{index},t,2)',a,r*b)';
+                    % (I(a) kron A kron I(b)) * x;
+                    t = reshape(reshape(x,b,a*c).',c,a*b);
+                    x = reshape(applyMultiply(opList{index},t,2)',a,r*b)';
                 end
-                y=reshape(x,n,ncol);
+                y = reshape(x,n,ncol);
             end
         end % Multiply
         
@@ -382,72 +388,75 @@ classdef opKron < opSpot
         % best_permutation
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        %Returns the best permutation associated to this Kronecker product
-        function perm=best_permutation(op)
-            list=op.children; %List of 'op''s children
-            cost=zeros(1,length(list)); %Computational costs of the
-            %operators (children of 'op'). This is simply a numeric
-            %representation of theirs shapes, which will affect computation
-            %time. Operators with low computational costs should be applied
-            %first.
+        % Returns the best permutation associated to this Kronecker product
+        function perm = best_permutation(op)
+            list = op.children; % List of 'op''s children
+            cost = zeros(1,length(list)); % Computational costs of the
+            % operators (children of 'op'). This is simply a numeric
+            % representation of theirs shapes, which will affect 
+            % computation time. Operators with low computational costs 
+            % should be applied first.
             for i=1:length(list)
-                %Cost = (nbr_rows-nbr_columns) / (size of the operator)
-                cost(1,i)=(size(list{i},1)-size(list{i},2))/...
+                % Cost = (nbr_rows-nbr_columns) / (size of the operator)
+                cost(1,i) = (size(list{i},1)-size(list{i},2))/...
                     (size(list{i},1)*size(list{i},2));
             end
             
-            perm=op.quicksort(cost,1,length(cost),op.permutation);
+            perm = op.quicksort(cost,1,length(cost),op.permutation);
         end
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % quick_sort
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        %Function doing a quick sort on the vector containing the
-        %computational costs associated to the operators of the Kronecker
-        %product. The corresponding permutation 'perm' is returned as an
-        %output. It contains the indices of the operators which have to be
-        %successively applied to the data vector. These laters are
-        %bracketed from left to right.
+        % Function doing a quick sort on the vector containing the
+        % computational costs associated to the operators of the Kronecker
+        % product. The corresponding permutation 'perm' is returned as an
+        % output. It contains the indices of the operators which have to be
+        % successively applied to the data vector. These laters are
+        % bracketed from left to right.
         
-        %n: permutation enabling to follow the transpositions during the
-        %recursive application of the quick sort function.
-        %n initialy rates [1,2,..,n] where n is the number of operators in
-        %the Kronecker product.
+        % n: permutation enabling to follow the transpositions during the
+        % recursive application of the quick sort function.
+        % n initialy rates [1,2,..,n] where n is the number of operators in
+        % the Kronecker product.
         
-        %start and stop: indices of the sort area in the cost vector.
+        % start and stop: indices of the sort area in the cost vector.
         
-        function perm=quicksort(op,cost,start,stop,n)
+        function perm = quicksort(op,cost,start,stop,n)
             
-            if start<stop
-                left=start;
-                right=stop;
-                pivot=cost(start);
+            if start < stop
+                left  = start;
+                right = stop;
+                pivot = cost(start);
                 
                 while 1
-                    while cost(right)>pivot,right=right-1;
+                    while cost(right) > pivot
+                        right = right-1;
                     end
-                    if cost(right)==pivot && right>start
-                        right=right-1;
+                    if cost(right) == pivot && right > start
+                        right = right-1;
                     end
-                    while cost(left)<pivot,left=left+1;
+                    while cost(left) < pivot
+                        left = left+1;
                     end
                     
-                    if(left<right)
-                        temp=cost(left);
-                        cost(left)=cost(right);
-                        cost(right)=temp;
+                    if left < right
+                        temp        = cost(left);
+                        cost(left)  = cost(right);
+                        cost(right) = temp;
                         
-                        temp=n(left);
-                        n(left)=n(right);
-                        n(right)=temp;
-                    else break
+                        temp        = n(left);
+                        n(left)     = n(right);
+                        n(right)    = temp;
+                    else
+                        break
                     end
                 end
-                n=op.quicksort(cost, start, right,n);
-                n=op.quicksort(cost, right+1, stop,n);
+                n = op.quicksort(cost, start, right,n);
+                n = op.quicksort(cost, right+1, stop,n);
             end
-            perm=n;
-        end
-    end
-end % Classdef
+            perm = n;
+        end % quicksort
+    end % private methods
+end % opKron

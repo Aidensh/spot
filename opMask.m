@@ -19,7 +19,7 @@ classdef opMask < opSpot
     % Properties
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     properties (SetAccess = private)
-       mask = []; % Binary mask
+        mask = []; % Binary mask
     end % Properties
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,43 +27,44 @@ classdef opMask < opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
         
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Constructor
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function op = opMask(varargin)
-           
-          if nargin == 1 && islogical(varargin{1})
-             idx = varargin{1};
-             n   = numel(idx);
-          elseif nargin == 2
-             n   = varargin{1};
-             idx = varargin{2};
-          else
-             error('Invalid number of parameters specified.')
-          end
-           
-          idx = full(idx(:));
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Constructor
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opMask(varargin)
 
-          if islogical(idx)
-             if length(idx) > n
-                error('Index exceeds operator dimensions.');
-             end
-          elseif spot.utils.isposintmat(idx) || isempty(idx)
-             if ~isempty(idx) && (max(idx) > n)
-                error('Index exceeds operator dimensions.');
-             end
-          else
-             error('Subscript indices must either be real positive integers or logicals.');
-          end
-           
-           % Set mask
-           mask = zeros(n,1);
-           mask(idx) = 1;
-           
-           % Construct operator
-           op = op@opSpot('Mask',n,n);
-           op.mask = mask;
-           op.sweepflag = false;
+            if nargin == 1 && islogical(varargin{1})
+                idx = varargin{1};
+                n   = numel(idx);
+            elseif nargin == 2
+                n   = varargin{1};
+                idx = varargin{2};
+            else
+                error('Invalid number of parameters specified.')
+            end
+
+            idx = full(idx(:));
+
+            if islogical(idx)
+                if length(idx) > n
+                    error('Index exceeds operator dimensions.');
+                end
+            elseif spot.utils.isposintmat(idx) || isempty(idx)
+                if ~isempty(idx) && (max(idx) > n)
+                    error('Index exceeds operator dimensions.');
+                end
+            else
+                error(['Subscript indices must either be real positive '...
+                       'integers or logicals.']);
+            end
+
+            % Set mask
+            mas      = zeros(n,1);
+            mas(idx) = 1;
+
+            % Construct operator
+            op = op@opSpot('Mask',n,n);
+            op.mask      = mas;
+            op.sweepflag = true;
         end % Constructor
         
     end % Methods
@@ -75,9 +76,7 @@ classdef opMask < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-            x_n = size(x,2);
-            y   = zeros(op.m,x_n,class(x));
-            for i=1:x_n
+            for i=size(x,2):-1:1
                 y(:,i) = op.mask.*x(:,i);
             end
         end % Multiply

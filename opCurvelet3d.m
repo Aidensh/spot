@@ -18,7 +18,8 @@ classdef opCurvelet3d < opSpot
 %   See also CURVELAB.
 
 %   Nameet Kumar - Oct 2010
-%   Copyright 2009, Gilles Hennenfent, Ewout van den Berg and Michael P. Friedlander
+%   Copyright 2009, Gilles Hennenfent, Ewout van den Berg and 
+%   Michael P. Friedlander
 %   See the file COPYING.txt for full copyright information.
 %   Use the command 'spot.gpl' to locate this file.
 
@@ -28,13 +29,12 @@ classdef opCurvelet3d < opSpot
     % Properties
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     properties (SetAccess = protected)
-       nbscales;
-       nbangles;
-       finest;   
-       header;          %sizes of coefficient vectors
-       nbcoeffs;           %total number of coefficients
-       dims;           %size of curvelet
-       
+        nbscales;
+        nbangles;
+        finest;   
+        header;          %sizes of coefficient vectors
+        nbcoeffs;           %total number of coefficients
+        dims;           %size of curvelet
     end % Properties
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -42,99 +42,100 @@ classdef opCurvelet3d < opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Constructor
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function op = opCurvelet3d(m,n,p,nbscales,nbangles,finest,is_real)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Constructor
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opCurvelet3d(m,n,p,nbscales,nbangles,finest,is_real)
 
-          assert( isscalar(m) && isscalar(n) && isscalar(p),['Please ensure'...
-            ' sizes are scalar values']);
-          if nargin < 4, nbscales = max(1,ceil(log2(min([m,n,p]))-3)); end;
-          if nargin < 5, nbangles = 16;                              end;
-          if nargin < 6, finest = 0;                      end;
-          if nargin < 7, is_real = 1;                                end;
-          assert( isscalar(nbscales) && isscalar(nbangles),['Please ensure'...
-             ' nbscales and nbangles are scalar values']);
-          assert( (any(finest == [0 1 2])) && (is_real==0||is_real==1),...
+            assert( isscalar(m) && isscalar(n) && isscalar(p),...
+              'Please ensure sizes are scalar values');
+            if nargin < 4
+                nbscales = max(1,ceil(log2(min([m,n,p]))-3)); 
+            end
+            if nargin < 5, nbangles = 16; end;
+            if nargin < 6, finest = 0; end;
+            if nargin < 7, is_real = 1; end;
+            assert( isscalar(nbscales) && isscalar(nbangles),...
+              'Please ensure nbscales and nbangles are scalar values');
+            assert((any(finest == [0 1 2])) && (is_real==0||is_real==1),...
              'Please ensure finest and is_real are appropriate values');
 
-          % Compute length of curvelet coefficient vector
-          [tmphdr, cn] = fdct3d_sizes_mex(m,n,p,nbscales,nbangles,logical(finest)); 
-          hdr = cell(nbscales,1);
-          hdr{1} = {[tmphdr{1:3}]};
-          for i = 2:nbscales - (~finest)
-             j = 4 + 10*(i - 2);
-             hdr{i} = {[tmphdr{j+1:j+3}];[tmphdr{j+4:j+6}];...
+            % Compute length of curvelet coefficient vector
+            [tmphdr, cn] = fdct3d_sizes_mex(m,n,p,nbscales,nbangles,...
+                                                          logical(finest)); 
+            hdr = cell(nbscales,1);
+            hdr{1} = {[tmphdr{1:3}]};
+            for i = 2:nbscales - (~finest)
+                j = 4 + 10*(i - 2);
+                hdr{i} = {[tmphdr{j+1:j+3}];[tmphdr{j+4:j+6}];...
                 [tmphdr{j+7:j+9}];[tmphdr{j}]};
-          end
-          if ~finest,    hdr{end} = {[tmphdr{end-2:end}];1};         end;
-          
-          % Construct operator
-          op = op@opSpot('Curvelet3d', cn, m*n*p);
-          op.cflag    = ~is_real;
-          op.nbscales = nbscales;
-          op.nbangles = nbangles;
-          op.finest   = finest;
-          op.header   = hdr;
-          op.nbcoeffs = cn;
-          op.dims     = [m,n,p];
-          op.ns       = {[m n p]};
-          op.sweepflag  = false;
-       end % Constructor
+            end
+            if ~finest,    hdr{end} = {[tmphdr{end-2:end}];1}; end;
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % rrandn             
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % overloaded to produce a vector that really falls in the range of op
-       function y = rrandn(op)
-          y = op.drandn;
-          y = multiply(op,y,1);
-       end
-       
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % headerMod             
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % overloaded to modify metadata correctly
-       function h = headerMod(op,header,mode)
-       exsize = header.exsize;
+            % Construct operator
+            op = op@opSpot('Curvelet3d', cn, m*n*p);
+            op.cflag     = ~is_real;
+            op.nbscales  = nbscales;
+            op.nbangles  = nbangles;
+            op.finest    = finest;
+            op.header    = hdr;
+            op.nbcoeffs  = cn;
+            op.dims      = [m,n,p];
+            op.ns        = {[m n p]};
+            op.sweepflag = false;
+        end % Constructor
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % rrandn             
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % overloaded to produce a vector that really falls in the range of 
+        % op
+        function y = rrandn(op)
+            y = op.drandn;
+            y = multiply(op,y,1);
+        end
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % headerMod             
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % overloaded to modify metadata correctly
+        function h = headerMod(op,header,mode)
+        exsize = header.exsize;
 
         if mode == 1
             h = header; % Copy header
-            % Replace old first (collapsed) dimensional sizes with operator sizes.
+            % Replace old first (collapsed) dimensional sizes with operator
+            % sizes.
             h.size(exsize(1,1):exsize(2,1)) = [];
-            h.size = [op.ms{:} h.size];
+            h.size   = [op.ms{:} h.size];
             h.origin(exsize(1,1):exsize(2,1)) = [];
             h.origin = [0 h.origin];
             h.delta(exsize(1,1):exsize(2,1)) = [];
-            h.delta = [1 h.delta];
+            h.delta  = [1 h.delta];
             h.label(exsize(1,1):exsize(2,1)) = [];
-            h.label = ['lcurvelet3d' h.label];
+            h.label  = ['lcurvelet3d' h.label];
             h.unit(exsize(1,1):exsize(2,1)) = [];
-            h.unit = ['ucurvelet3d' h.unit];
-            
+            h.unit   = ['ucurvelet3d' h.unit];
         else % mode == 2
             h = header;
             h.size(exsize(1,1):exsize(2,1)) = [];
-            h.size = [op.ns{:} h.size];
+            h.size   = [op.ns{:} h.size];
             h.origin(exsize(1,1):exsize(2,1)) = [];
             h.origin = [0 0 0 h.origin];
             h.delta(exsize(1,1):exsize(2,1)) = [];
-            h.delta = [1 1 1 h.delta];
+            h.delta  = [1 1 1 h.delta];
             h.label(exsize(1,1):exsize(2,1)) = [];
-            h.label = ['l1' 'l2' 'l3' h.label];
+            h.label  = ['l1' 'l2' 'l3' h.label];
             h.unit(exsize(1,1):exsize(2,1)) = [];
-            h.unit = ['u1' 'u2' 'u3' h.unit];
-            
+            h.unit   = ['u1' 'u2' 'u3' h.unit];
         end
-        
+
         % Re-append correct exsize
         exsize_out = 1:length(h.size);
         exsize_out = [exsize_out;exsize_out];
         h.exsize   = exsize_out;
-        
-       end % headerMod
-       
-    end % Methods
+        end % headerMod
+    end % Public Methods
        
  
     methods ( Access = protected )
@@ -146,7 +147,8 @@ classdef opCurvelet3d < opSpot
             if mode == 1
                 % Analysis mode
                 x = fdct3d_forward_mex(op.dims(1),op.dims(2),op.dims(3),...
-                op.nbscales,op.nbangles,logical(op.finest),reshape(x,op.dims));
+                    op.nbscales,op.nbangles,logical(op.finest),...
+                    reshape(x,op.dims));
                 if op.finest == 2, zero_finest_scale; end
                 if ~op.cflag
                     x = fdct_wrapping_c2r(x);
@@ -160,21 +162,19 @@ classdef opCurvelet3d < opSpot
                     x = fdct_wrapping_r2c(x);
                 end
                 x = fdct3d_inverse_mex(op.dims(1),op.dims(2),op.dims(3),...
-                op.nbscales,op.nbangles,logical(op.finest),x);
+                    op.nbscales,op.nbangles,logical(op.finest),x);
                 if ~op.cflag
                     x = real(x);
                 end
                 x = x(:);
             end
          
-         
-          %%% Nested Function
-          function zero_finest_scale
-             for i = 1:length(x{end})
-               x{end}{i} = zeros( size( x{end}{i} ) );
-             end
-          end
-         
+            %%% Nested Function
+            function zero_finest_scale
+                for i = 1:length(x{end})
+                    x{end}{i} = zeros( size( x{end}{i} ) );
+                end
+            end
        end % Multiply
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -184,7 +184,5 @@ classdef opCurvelet3d < opSpot
            % Non-sweepable
            x = lsqrdivide(op,b,mode);
        end % divide
-
     end % Methods
-   
 end % Classdef

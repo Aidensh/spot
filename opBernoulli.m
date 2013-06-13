@@ -122,20 +122,10 @@ classdef opBernoulli < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function y = multiply(op,x,mode)
            x_n = size(x,2);
-        
-            % Preallocate y
-            if isscalar(op)
-                % special case: allocate result size of x
-                y = zeros(size(x),class(x));
-            elseif mode == 1
-                y = zeros(op.m, x_n, class(x));
-            else
-                y = zeros(op.n, x_n, class(x));
-            end
-            
-            for u = 1:x_n
-                y(:,u) = op.funHandle(op,x(:,u),mode);
-            end
+           
+           for u = x_n:-1:1
+               y(:,u) = op.funHandle(op,x(:,u),mode);
+           end
        end % function multiply
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -171,13 +161,13 @@ classdef opBernoulli < opSpot
           rng(op.seed);
 
           if mode == 1
-             y = zeros(m,1);
+             y(m,1) = cast(0,class(x));
              for i=1:n
                 v = 2.0 * (randn(m,1) < 0) - 1;
                 y = y + v * x(i);
              end
           else
-             y = zeros(n,1);
+             y(n,1) = cast(0,class(x));
              for i=1:n
                 v    = 2.0 * (randn(1,m) < 0) - 1;
                 y(i) = v * x;

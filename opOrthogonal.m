@@ -15,17 +15,17 @@ classdef (HandleCompatible) opOrthogonal < opSpot
 %   http://www.cs.ubc.ca/labs/scl/spot
     
    methods
-      
-      function op = opOrthogonal(type,m,n)
-         %opOrthogonal   Constructor for the abstract class. 
-         op = op@opSpot(type,m,n);
-      end         
-         
-      function x = mldivide(op,b)
-         %\ (backslash)  x = op\b
-         x = op'*b;
-      end
-            
+
+        function op = opOrthogonal(type,m,n)
+            % opOrthogonal   Constructor for the abstract class. 
+            op = op@opSpot(type,m,n);
+        end         
+
+        function x = mldivide(op,b)
+            % \ (backslash)  x = op\b
+            x = op'*b;
+        end
+
    end % methods
       
-end % classdef
+end % opOrthogonal

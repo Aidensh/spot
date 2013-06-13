@@ -17,90 +17,84 @@ classdef opConj < opSpot
     % Methods
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Constructor
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opConj(A)
+            if nargin ~= 1
+                error('Exactly one operator must be specified.')
+            end
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Constructor
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function op = opConj(A)
-          
-          if nargin ~= 1
-             error('Exactly one operator must be specified.')
-          end
-           
-          % Input matrices are immediately cast as opMatrix's.
-          if isa(A,'numeric'), A = opMatrix(A); end
-          
-          % Check that the input operators are valid.
-          if ~isa(A,'opSpot')
-             error('Input operator is not valid.')
-          end
-          
-          % Construct operator
-          [m, n] = size(A);
-          op = op@opSpot('Conj', m, n);
-          op.cflag      = A.cflag;
-          op.linear     = A.linear;
-          op.sweepflag  = true;
-          op.children   = {A};
-          op.ms         = A.ms;
-          op.ns         = A.ns;
+            % Input matrices are immediately cast as opMatrix's.
+            if isa(A,'numeric'), A = opMatrix(A); end
 
-       end % function opConj
+            % Check that the input operators are valid.
+            if ~isa(A,'opSpot')
+                error('Input operator is not valid.')
+            end
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Char
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function str = char(op)
-          op1 = op.children{1};
-          str = ['Conj(', char(op1), ')'];
-       end
-       
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Conj
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function opOut = conj(op)
-          opOut = op.children{1};
-       end
-      
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % CTranspose
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function opOut = ctranspose(op)
-          opOut = transpose(op.children{1});
-       end
+            % Construct operator
+            [m, n] = size(A);
+            op = op@opSpot('Conj', m, n);
+            op.cflag      = A.cflag;
+            op.linear     = A.linear;
+            op.sweepflag  = true;
+            op.children   = {A};
+            op.ms         = A.ms;
+            op.ns         = A.ns;
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Transpose
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function opOut = transpose(op)
-          opOut = ctranspose(op.children{1});
-       end
+        end % function opConj
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Char
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function str = char(op)
+            op1 = op.children{1};
+            str = ['Conj(', char(op1), ')'];
+        end
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Conj
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function opOut = conj(op)
+            opOut = op.children{1};
+        end
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % CTranspose
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function opOut = ctranspose(op)
+            opOut = transpose(op.children{1});
+        end
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Transpose
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function opOut = transpose(op)
+            opOut = ctranspose(op.children{1});
+        end
 
     end % methods - public
 
     methods( Access = protected )
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Multiply
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
-           if mode == 1
-              y = conj(multiply(op.children{1},conj(x),1));
-           else
-              y = conj(multiply(op.children{1},conj(x),2));
-           end
-       end % function multiply
-       
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Divide
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function x = divide(op,b,mode)
-           % Sweepable
-           x = matldivide(op,b,mode);
-       end % divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function y = multiply(op,x,mode)
+            y = conj(multiply(op.children{1},conj(x),mode));
+        end % function multiply
 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Sweepable
+            x = matldivide(op,b,mode);
+        end % divide
+        
     end % methods - protected
-   
 end % classdef
     
 

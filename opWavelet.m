@@ -47,18 +47,18 @@ classdef opWavelet < opWavelet2
    % Methods - public
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    methods
-      
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      % opWavelet. Constructor.
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function op = opWavelet(n, varargin)
- 
-         op = op@opWavelet2(n,1,varargin{:});
-         op.type = 'Wavelet';
-          op.sweepflag  = true;
-         
-      end % function opWavelet
-      
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % opWavelet. Constructor.
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opWavelet(n, varargin)
+
+            op = op@opWavelet2(n,1,varargin{:});
+            op.type      = 'Wavelet';
+            op.sweepflag = true;
+
+        end % function opWavelet
+
    end % methods - public
 
-end % classdef
+end % opWavelet

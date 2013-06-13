@@ -26,7 +26,7 @@ classdef opSparseBinary < opSpot
     % Properties
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     properties (SetAccess = private)
-       matrix = []; % Sparse matrix representation
+        matrix = []; % Sparse matrix representation
     end % Properties
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -34,56 +34,56 @@ classdef opSparseBinary < opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Constructor
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function op = opSparseBinary(m,n,d)
-          
-          if nargin < 2
-             error('At least two parameters must be specified.')
-          end
-          
-          % Don't allow more than m nonzeros per column (obviously).
-          d = min(d,m);
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Constructor
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opSparseBinary(m,n,d)
 
-          % Preallocate row pointers.
-          ia = zeros(d*n,1);
-          ja = zeros(d*n,1);
-          va =  ones(d*n,1);
+            if nargin < 2
+                error('At least two parameters must be specified.')
+            end
 
-          for k = 1:n  % Loop over each column.
-             % Generate random integers in [1,m].
-             p = randperm(m);
+            % Don't allow more than m nonzeros per column (obviously).
+            d = min(d,m);
 
-             % Indices for start and end of the k-th column.
-             colbeg = 1+(k-1)*d;
-             colend = colbeg + d - 1;
+            % Preallocate row pointers.
+            ia = zeros(d*n,1);
+            ja = zeros(d*n,1);
+            va =  ones(d*n,1);
 
-             % Populate the row and column indices.
-             ia(colbeg:colend) = p(1:d);
-             ja(colbeg:colend) = k;
-          end
-          A  = sparse(ia,ja,va,m,n);
+            for k = 1:n  % Loop over each column.
+                % Generate random integers in [1,m].
+                p = randperm(m);
 
-          % Construct operator
-          op = op@opSpot('SparseBinary', m, n);
-          op.matrix = A;
-          op.sweepflag  = true;
-       end % Constructor
-                 
-    end % Methods
+                % Indices for start and end of the k-th column.
+                colbeg = 1+(k-1)*d;
+                colend = colbeg + d - 1;
+
+                % Populate the row and column indices.
+                ia(colbeg:colend) = p(1:d);
+                ja(colbeg:colend) = k;
+            end
+            A = sparse(ia,ja,va,m,n);
+
+            % Construct operator
+            op = op@opSpot('SparseBinary', m, n);
+            op.matrix    = A;
+            op.sweepflag = true;
+        end % Constructor
+
+    end % public Methods
 
     methods ( Access = protected )
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Multiply
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
-          if mode == 1
-             y = op.matrix * x;
-          else
-             y = op.matrix'* x;
-          end
-       end % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function y = multiply(op,x,mode)
+            if mode == 1
+                y = op.matrix * x;
+            else
+                y = op.matrix'* x;
+            end
+        end % Multiply
        
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
@@ -96,6 +96,6 @@ classdef opSparseBinary < opSpot
             end
         end % divide
 
-    end % Methods
+    end % protected Methods
    
-end % Classdef
+end % opSparseBinary

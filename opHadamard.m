@@ -19,29 +19,29 @@ classdef opHadamard < opSpot
     % Properties
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     properties( SetAccess = private, GetAccess = public )
-       normalized = false
+        normalized = false
     end
        
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Methods - Public
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
-       
-       function op = opHadamard(n,normalized)
-          %opHadamard Constructor
-          if nargin < 1  ||  nargin > 2
-             error('Invalid number of arguments.');
-          end
-          if n ~= power(2,round(log2(n)))
-             error('Dimension must be a power of two.')
-          end
-          op = op@opSpot('Hadamard',n,n);
-          if nargin == 2 && normalized
-             op.normalized = true;
-          end
-          op.sweepflag  = true;
-       end % Constructor
-        
+
+        function op = opHadamard(n,normalized)
+            %opHadamard Constructor
+            if nargin < 1  ||  nargin > 2
+                error('Invalid number of arguments.');
+            end
+            if n ~= power(2,round(log2(n)))
+                error('Dimension must be a power of two.')
+            end
+            op = op@opSpot('Hadamard',n,n);
+            if nargin == 2 && normalized
+                op.normalized = true;
+            end
+            op.sweepflag = true;
+        end % Constructor
+
     end % Methods
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -51,39 +51,30 @@ classdef opHadamard < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-            
-            x_n = size(x,2);
-            if isscalar(op)
-                % special case: allocate result size of x
-                y = zeros(size(x),class(x));
-            else
-                y = zeros(op.m,x_n, class(x));
-            end
-            
-            for u = 1:x_n
-               y_tmp = x(:,u);
-               n = op.n;
-               k = round(log2(n));
-               b = 1;     % Blocks on current level
-               s = n / 2; % Stride
-               for i=1:k  % Level
-                  for j=0:b-1  % Blocks
-                     for k=1:s   % Elements within block
-                        i1 = j*n + k;
-                        i2 = i1 + s;
-                        t1 = y_tmp(i1);
-                        t2 = y_tmp(i2);
-                        y_tmp(i1) = t1 + t2;
-                        y_tmp(i2) = t1 - t2;
-                     end
-                  end
-                  b = b * 2; s = s / 2; n = n / 2;
-               end
-               if op.normalized
-                  y_tmp = y_tmp / sqrt(op.n);
-               end
-               
-               y(:,u) = y_tmp;
+            for u = size(x,2):-1:1 % Loop through multivector
+                y_tmp = x(:,u);
+                n = op.n;
+                k = round(log2(n));
+                b = 1;     % Blocks on current level
+                s = n / 2; % Stride
+                for i=1:k  % Level
+                    for j=0:b-1  % Blocks
+                        for k=1:s   % Elements within block
+                            i1 = j*n + k;
+                            i2 = i1 + s;
+                            t1 = y_tmp(i1);
+                            t2 = y_tmp(i2);
+                            y_tmp(i1) = t1 + t2;
+                            y_tmp(i2) = t1 - t2;
+                        end
+                    end
+                    b = b * 2; s = s / 2; n = n / 2;
+                end
+                if op.normalized
+                    y_tmp = y_tmp / sqrt(op.n);
+                end
+
+                y(:,u) = y_tmp;
             end
         end % Multiply
         
@@ -97,4 +88,4 @@ classdef opHadamard < opSpot
     
     end % Methods
        
-end % Classdef
+end % opHadamard

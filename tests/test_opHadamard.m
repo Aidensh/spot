@@ -1,5 +1,5 @@
 function test_opHadamard
-%test_opHadamard  Unit tests for the Hadamard operator
+%% test_opHadamard  Unit tests for the Hadamard operator
 
 % $Id$
 
@@ -9,11 +9,11 @@ Hop  = opHadamard(m);
 Hmat = double(Hop);
 
 % Check that the matrix contains only +1/-1 entries.
-assertEqual( abs(Hmat), ones(m) )
+assertEqual( full(abs(Hmat)), ones(m) )
 
 % Check: H'*H = n I
-assertEqual( Hmat'*Hmat, m*eye(m) )
+assertEqual( full(Hmat'*Hmat), m*eye(m) )
 
 % Check normalized version: H'*H = I
 Hop = opHadamard(m,1);
-assertEqual( double(Hop'*Hop), eye(m) )
+assertEqual( full(double(Hop'*Hop)), eye(m) )

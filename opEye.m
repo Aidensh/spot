@@ -22,31 +22,29 @@ classdef opEye < opSpot
         
         % Constructor
         function op = opEye(varargin)
-           if nargin == 0
-              m = 1; n = 1;
-           elseif nargin == 1
-              if length(varargin{1}) == 2
-                 m = varargin{1}(1);
-                 n = varargin{1}(2);
-              else
-                 m = varargin{1};
-                 n = m;
-              end
-           elseif nargin == 2
-              m = varargin{1};
-              n = varargin{2};
-           else
-              error('Too many input arguments.');
-           end
-           op = op@opSpot('Eye',m,n);
-           if m == n
-            op.isDirac = true;
-           end
-          op.sweepflag  = true;
-        end % function opEye
+            if nargin == 0
+                m = 1; n = 1;
+            elseif nargin == 1
+                if length(varargin{1}) == 2
+                    m = varargin{1}(1);
+                    n = varargin{1}(2);
+                else
+                    m = varargin{1};
+                    n = m;
+                end
+            elseif nargin == 2
+                m = varargin{1};
+                n = varargin{2};
+            else
+                error('Too many input arguments.');
+            end
+            op = op@opSpot('Eye',m,n);
+            if m == n, op.isDirac = true; end;
+            op.sweepflag = true;
+        end % constructor
 
         function A = double(op)
-           A = eye(size(op));
+            A = eye(size(op));
         end % double
         
     end % Methods
@@ -58,20 +56,20 @@ classdef opEye < opSpot
        
         % Multiplication
         function y = multiply(op,x,mode)
-           [m,n] = size(op);
-           if mode == 1
-              if m <= n
-                  y = x(1:m);
-              else
-                  y = [x; zeros(m-n,1, class(x))];
-              end   
-           else
-              if n <= m
-                  y = x(1:n);
-              else
-                  y = [x; zeros(n-m,1, class(x))];
-              end
-           end
+            [m,n] = size(op);
+            if mode == 1
+                if m <= n
+                    y = x(1:m);
+                else
+                    y = [x; zeros(m-n,1, class(x))];
+                end   
+            else
+                if n <= m
+                    y = x(1:n);
+                else
+                    y = [x; zeros(n-m,1, class(x))];
+                end
+            end
         end % multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

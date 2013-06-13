@@ -34,7 +34,7 @@ classdef opToeplitz < opSpot
     % Properties
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     properties (SetAccess = private)
-       funHandle = []; % Multiplication function
+        funHandle = []; % Multiplication function
     end % Properties
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -42,136 +42,127 @@ classdef opToeplitz < opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
 
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Constructor
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function op = opToeplitz(varargin)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Constructor
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function op = opToeplitz(varargin)
 
-          if nargin < 1
-             error('Not enough input arguments.');
-          elseif nargin > 3
-              error('Too many input arguments.');
-          end
+            if nargin < 1
+                error('Not enough input arguments.');
+            elseif nargin > 3
+                error('Too many input arguments.');
+            end
 
-          % Extract parameters
-          if nargin == 1
-             r = varargin{1};
-             normalized = false;
-             type = 'circular';
-          elseif nargin == 2
-             if isscalar(varargin{2})
-                r = varargin{1};
-                normalized = varargin{2};
-                type = 'circular';
-             else
-                c = varargin{1};
-                r = varargin{2};
+            % Extract parameters
+            if nargin == 1
+                r          = varargin{1};
                 normalized = false;
-                type = 'toeplitz';
-             end             
-          elseif nargin == 3
-             c = varargin{1};
-             r = varargin{2};
-             normalized = varargin{3};
-             type = 'toeplitz';
-          end
-
-          % Set row or column vector for symmetric Toeplitz
-          if strcmp(type,'toeplitz')
-             if isempty(c), c = conj(r); c(1) = r(1); end;
-             if isempty(r), r = conj(c); r(1) = c(1); end;
-          end
-          
-
-          % Set up the operator
-          switch lower(type)
-             case {'circular'}
-                r  = r(:);
-                m  = length(r);
-                n  = m;
-                df = fft([r(1); r(end:-1:2)]);
-
-                if normalized
-                   s = 1 / norm(r);
+                type       = 'circular';
+            elseif nargin == 2
+                if isscalar(varargin{2})
+                    r          = varargin{1};
+                    normalized = varargin{2};
+                    type       = 'circular';
                 else
-                   s = 1;
-                end
+                    c          = varargin{1};
+                    r          = varargin{2};
+                    normalized = false;
+                    type       = 'toeplitz';
+                end             
+            elseif nargin == 3
+                c          = varargin{1};
+                r          = varargin{2};
+                normalized = varargin{3};
+                type       = 'toeplitz';
+            end
 
-                if isreal(r)
-                   fun = @(x,mode) opToeplitzCircular_intrnl(df,s,x,mode);
-                   cflag = false;
-                else
-                   fun = @(x,mode) opToeplitzCircular_complex_intrnl(df,s,x,mode);
-                   cflag = true;
-                end
+            % Set row or column vector for symmetric Toeplitz
+            if strcmp(type,'toeplitz')
+                if isempty(c), c = conj(r); c(1) = r(1); end;
+                if isempty(r), r = conj(c); r(1) = c(1); end;
+            end
 
-             case 'toeplitz'
-                % Check compatibility of R and C
-                if c(1) ~= r(1)
-                   warning(sprintf(['First element of input column does not ',...
-                                    'match first element of input row.\n',...
-                                    '         Column wins diagonal conflict.']));
-                   r(1) = c(1); % Not really needed
-                end
-          
-                r = r(:); c = c(:);
-                m = length(c);
-                n = length(r);
-                
-                % Generate the entries of the matrix
-                v  = [c;r(end:-1:2)];
-                df = fft(v);
+            % Set up the operator
+            switch lower(type)
+                case {'circular'}
+                    r  = r(:);
+                    m  = length(r);
+                    n  = m;
+                    df = fft([r(1); r(end:-1:2)]);
 
-                if normalized
-                   v = [c(end:-1:1);r(2:end)];
-                   s = zeros(n,1);
-                   for i=1:n
-                      s(i) = 1 / sqrt(sum(abs(v(i:i+m-1)).^2));
-                   end
-                else
-                   s = 1;
-                end
+                    if normalized
+                        s = 1 / norm(r);
+                    else
+                        s = 1;
+                    end
 
-                if isreal(v)
-                   fun = @(x,mode) opToeplitz_intrnl(df,s,m,n,x,mode);
-                   cflag = false;
-                else
-                   fun = @(x,mode) opToeplitz_complex_intrnl(df,s,m,n,x,mode);
-                   cflag = true;
-                end
+                    if isreal(r)
+                        fun   = @(x,mode) opToeplitzCircular_intrnl(df,...
+                                                                 s,x,mode);
+                        cflag = false;
+                    else
+                       fun = @(x,mode) opToeplitzCircular_complex_intrnl...
+                                                             (df,s,x,mode);
+                       cflag = true;
+                    end
 
-             otherwise
+                case 'toeplitz'
+                    % Check compatibility of R and C
+                    if c(1) ~= r(1)
+                        warning(sprintf(['First element of input column'...
+                                        ' does not match first element '...
+                                        'of input row.\n',...
+                                       'Column wins diagonal conflict.']));
+                        r(1) = c(1); % Not really needed
+                    end
+
+                    r = r(:); c = c(:);
+                    m = length(c);
+                    n = length(r);
+
+                    % Generate the entries of the matrix
+                    v  = [c;r(end:-1:2)];
+                    df = fft(v);
+
+                    if normalized
+                        v = [c(end:-1:1);r(2:end)];
+                        s = zeros(n,1);
+                        for i=1:n
+                            s(i) = 1 / sqrt(sum(abs(v(i:i+m-1)).^2));
+                        end
+                    else
+                        s = 1;
+                    end
+
+                    if isreal(v)
+                        fun = @(x,mode) opToeplitz_intrnl(df,s,m,n,x,mode);
+                        cflag = false;
+                    else
+                        fun = @(x,mode) opToeplitz_complex_intrnl(df,s,...
+                                                               m,n,x,mode);
+                        cflag = true;
+                    end
+
+                otherwise
                 error('Unrecognized type parameter');
-          end
+            end
 
-          % Construct operator
-          op = op@opSpot('Toeplitz', m, n);
-          op.cflag     = cflag;
-          op.funHandle = fun;
-          op.sweepflag  = true;
-       end % Constructor
+            % Construct operator
+            op = op@opSpot('Toeplitz', m, n);
+            op.cflag     = cflag;
+            op.funHandle = fun;
+            op.sweepflag = true;
+        end % Constructor
 
-    end % Methods
+    end % public Methods
        
  
     methods ( Access = protected )
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function y = multiply(op,x,mode)
-            x_n = size(x,2);
-        
-            % Preallocate y
-            if isscalar(op)
-                % special case: allocate result size of x
-                y = zeros(size(x),class(x));
-            elseif mode == 1
-                y = zeros(op.m, x_n, class(x));
-            else
-                y = zeros(op.n, x_n, class(x));
-            end
-            
-            for u = 1:x_n
+            for u = size(x,2):-1:1 % Loop over multivectors
                 y(:,u) = op.funHandle(x(:,u),mode);
             end
         end % function multiply
@@ -184,55 +175,57 @@ classdef opToeplitz < opSpot
             x = lsqrdivide(op,b,mode);
         end % divide
 
-    end % Methods
+    end % protected Methods
    
-end % Classdef
+end % opToeplitz
 
 
 %=======================================================================
 
 function y = opToeplitz_intrnl(df,s,m,n,x,mode)
-if mode == 1
-    y = opToeplitzCircular_intrnl(df,1,[s.*full(x);zeros(m-1,1)],mode);
-    y = y(1:m);
-else
-    y = opToeplitzCircular_intrnl(df,1,[full(x);zeros(n-1,1)],mode);
-    y = s.*y(1:n);  
-end
+    if mode == 1
+        y = opToeplitzCircular_intrnl(df,1,[s.*full(x);zeros(m-1,1)],mode);
+        y = y(1:m);
+    else
+        y = opToeplitzCircular_intrnl(df,1,[full(x);zeros(n-1,1)],mode);
+        y = s.*y(1:n);  
+    end
 end
 
 %======================================================================
 
 function y = opToeplitz_complex_intrnl(df,s,m,n,x,mode)
-if mode == 1
-    y = opToeplitzCircular_complex_intrnl(df,1,[s.*full(x);zeros(m-1,1)],mode);
-    y = y(1:m);
-else
-    y = opToeplitzCircular_complex_intrnl(df,1,[full(x);zeros(n-1,1)],mode);
-    y = s.*y(1:n);  
-end
+    if mode == 1
+        y = opToeplitzCircular_complex_intrnl(df,1,[s.*full(x);...
+                                                       zeros(m-1,1)],mode);
+        y = y(1:m);
+    else
+        y = opToeplitzCircular_complex_intrnl(df,1,[full(x);...
+                                                       zeros(n-1,1)],mode);
+        y = s.*y(1:n);  
+    end
 end
 
 %======================================================================
 
 function y = opToeplitzCircular_intrnl(df,s,x,mode)
-if mode == 1
-    y = ifft(df.*fft(s.*full(x)));
-    if isreal(x), y = real(y); end;
-else
-    y = ifft(conj(df).*fft(full(x)));
-    y = s.*y;
-    if isreal(x), y = real(y); end;
-end
+    if mode == 1
+        y = ifft(df.*fft(s.*full(x)));
+        if isreal(x), y = real(y); end;
+    else
+        y = ifft(conj(df).*fft(full(x)));
+        y = s.*y;
+        if isreal(x), y = real(y); end;
+    end
 end
 
 %======================================================================
 
 function y = opToeplitzCircular_complex_intrnl(df,s,x,mode)
-if mode == 1
-    y = ifft(df.*fft(s.*full(x)));
-else
-    y = ifft(conj(df).*fft(full(x)));
-    y = s.*y;
-end
+    if mode == 1
+        y = ifft(df.*fft(s.*full(x)));
+    else
+        y = ifft(conj(df).*fft(full(x)));
+        y = s.*y;
+    end
 end

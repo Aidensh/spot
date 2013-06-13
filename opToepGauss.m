@@ -33,39 +33,39 @@ classdef opToepGauss < opToeplitz
         % Constructor
         function op = opToepGauss(m,n,type,normalized)
 
-           if nargin < 3 || isempty(type)
-              type = 'Toeplitz';
-           end
-           if nargin < 4
-              normalized = 0;
-           end
-           
-           switch lower(type)
-              case 'circular'
-                 % Generate the entries of the matrix
-                 if m < n
-                    r = randn(n,1);
-                    c = [r(1); r(end:-1:end-m+2)];
-                 else
+            if nargin < 3 || isempty(type)
+                type = 'Toeplitz';
+            end
+            if nargin < 4
+                normalized = 0;
+            end
+
+            switch lower(type)
+                case 'circular'
+                    % Generate the entries of the matrix
+                    if m < n
+                        r = randn(n,1);
+                        c = [r(1); r(end:-1:end-m+2)];
+                    else
+                        c = randn(m,1);
+                        r = [c(1); c(end:-1:end-n+2)];
+                    end
+
+                case 'toeplitz'
+                    % Generate the entries of the matrix
                     c = randn(m,1);
-                    r = [c(1); c(end:-1:end-n+2)];
-                 end
-       
-              case 'toeplitz'
-                 % Generate the entries of the matrix
-                 c = randn(m,1);
-                 r = [c(1); randn(n-1,1)];
+                    r = [c(1); randn(n-1,1)];
 
-              otherwise
-                 error('Unrecognized type parameter.');
-           end
+                otherwise
+                    error('Unrecognized type parameter.');
+            end
 
-           % Construct operator
-           op = op@opToeplitz(c,r,normalized);
-           op.type = 'ToepGauss';
-          op.sweepflag  = true;
+            % Construct operator
+            op = op@opToeplitz(c,r,normalized);
+            op.type      = 'ToepGauss';
+            op.sweepflag = true;
         end % Constructor
         
     end % Methods
         
-end % Classdef
+end % opToepGauss

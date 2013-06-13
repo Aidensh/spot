@@ -7,7 +7,7 @@ end
 
 function test_mvopDiag_multiply
 %% Test for multivectors multiplication
-n = randi(100);
+n = 10;
 d = randn(n,1);
 D = opDiag(d);
 x = randn(n);
@@ -19,7 +19,7 @@ end % Built-in
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 function test_mvopDiag_diag
 %%
-   n = randi(100); k = randi(10);
+   n = 10; k = 3;
 
    b = randn(n,k);
    d = randn(n,1);
@@ -31,14 +31,14 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 function test_mvopDiag_class
-   n = randi(100);
+   n = 10;
    d = randn(n,1);
    assertEqual( double(diag(d)), double(opDiag(d)) ) 
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 function test_mvopDiag_divide
-   n = randi(100);
+   n = 10;
    d = randn(n,1) + 1i*randn(n,1);
    b = randn(n,2) + 1i*randn(n,2);
    D = opDiag(d);

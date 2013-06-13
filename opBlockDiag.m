@@ -85,7 +85,6 @@ classdef opBlockDiag < opSpot
           end;
        
           % Check complexity and size and repeat operators
-          opListNew  = {};
           if length(opList) == 1
              % Repeat one operator with given weights
              opA    = opList{1};
@@ -98,14 +97,14 @@ classdef opBlockDiag < opSpot
              linear = opA.linear;
 
              % Add operators to list
-             for i=1:length(weights)
-                opListNew{end+1} = opA;
+             for i=length(weights):-1:1
+                opListNew{i} = opA;
              end             
           else
              % Initialize
              m = 0; n = 0; cflag = 0; linear = 1;
   
-             for i=1:length(opList)
+             for i=length(opList):-1:1
                 % Get operator and update size
                 opA = opList{i};
                 m = m + size(opA,1);
@@ -116,7 +115,7 @@ classdef opBlockDiag < opSpot
                 linear = linear &  opA.linear;
 
                 % Append operator
-                opListNew{end+1}  = opA;
+                opListNew{i}  = opA;
              end
           end
           opList = opListNew;
@@ -168,19 +167,19 @@ classdef opBlockDiag < opSpot
        % Display
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function str = char(op)
-          % Initialize
-          str = 'BlockDiag(';
-       
-          for i=1:length(op.children)
-             strOp = char(op.children{i});
-             if i~=1
-                str = [str, ', ', strOp];
-             else
-                str = [str, strOp];
-             end             
-          end
-          
-          str = [str, ')'];
+           % Initialize
+           str = 'BlockDiag(';
+        
+           for i=1:length(op.children)
+               strOp = char(op.children{i});
+               if i~=1
+                   str = [str, ', ', strOp];
+               else
+                   str = [str, strOp];
+               end             
+           end
+           
+           str = [str, ')'];
        end % Display
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -194,37 +193,24 @@ classdef opBlockDiag < opSpot
        
  
     methods ( Access = protected )
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Multiply
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
-           x_n = size(x,2);
-        
-            % Preallocate y
-            if isscalar(op)
-                % special case: allocate result size of x
-                y = zeros(size(x),class(x));
-            elseif mode == 1
-                y = zeros(op.m, x_n, class(x));
-            else
-                y = zeros(op.n, x_n, class(x));
-            end
-            
-            for u = 1:x_n
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function y = multiply(op,x,mode)
+            for u = size(x,2):-1:1 % Loop through multivectors
                 y(:,u) = op.funHandle(x(:,u),mode);
             end
-       end % Multiply
-       
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Divide
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function x = divide(op,b,mode)
-           % Non-sweepable
-           x = lsqrdivide(op,b,mode);
-       end % divide
+        end % Multiply
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Non-sweepable
+            x = lsqrdivide(op,b,mode);
+        end % divide 
 
     end % Methods
-   
 end % Classdef
 
 
@@ -236,7 +222,7 @@ function y = opBlockDiag_intrnl(m,n,opList,weights,x,mode)
 kx = 0; ky = 0;
 
 if mode == 1
-   y  = zeros(m,1);
+   y(m,1) = cast(0,class(x));
    for i=1:length(opList)
       op  = opList{i};
       mOp = op.m;
@@ -246,7 +232,7 @@ if mode == 1
       ky = ky + mOp;
    end;
 else   
-   y  = zeros(n,1);
+   y(n,1) = cast(0,class(x));
    for i=1:length(opList)
       op = opList{i};
       mOp = op.m;
@@ -267,7 +253,7 @@ function y = opBlockDiagCol_intrnl(m,n,offset,overlap,opList,weights,x,mode)
 kx = 0; ky = 0;
 
 if mode == 1
-   kx = offset; y  = zeros(m,1);
+   kx = offset; y(m,1) = cast(0,class(x));
    for i=1:length(opList)
       op = opList{i};
       mOp = op.m;
@@ -277,7 +263,7 @@ if mode == 1
       ky = ky + mOp;
    end
 else
-   ky = offset; y  = zeros(n,1);
+   ky = offset; y(n,1) = cast(0,class(x));
    for i=1:length(opList)
       op = opList{i};
       mOp = op.m;
@@ -297,7 +283,7 @@ function y = opBlockDiagRow_intrnl(m,n,offset,overlap,opList,weights,x,mode)
 kx = 0; ky = 0;
 
 if mode == 1
-   ky = offset; y  = zeros(m,1);
+   ky = offset; y(m,1) = cast(0,class(x));
    for i=1:length(opList)
       op = opList{i};
       mOp = op.m;
@@ -307,7 +293,7 @@ if mode == 1
       ky = ky + mOp - overlap;
    end
 else
-   kx = offset; y  = zeros(n,1);
+   kx = offset; y(n,1) = cast(0,class(x));
    for i=1:length(opList)
       op = opList{i};
       mOp = op.m;

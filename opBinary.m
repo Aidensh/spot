@@ -69,7 +69,7 @@ classdef opBinary < opSpot
                
              case 1
                 op.seed = rng;
-                for i=1:m, randn(n,1); end; % Ensure random state is advanced
+                for i=1:m, randn(n,1); end;%Ensure random state is advanced
                 
             otherwise
                 error('Invalid mode.')
@@ -92,65 +92,55 @@ classdef opBinary < opSpot
     end % methods - public
 
     methods ( Access = protected )
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Multiply
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
-          if ~isempty(op.matrix)
-             % Explicit matrix
-             if mode == 1
-                y = op.matrix * x;
-             else
-                y = op.matrix' * x;
-             end
-          else
-              x_n = size(x,2);
-              if isscalar(op)
-                  % special case: allocate result size of x
-                  y = zeros(size(x),class(x));
-              elseif mode == 1
-                  y = zeros(op.m,x_n, class(x));
-              else
-                  y = zeros(op.n,x_n, class(x));
-              end
-              
-              for u = 1:x_n
-                 % Store current random number generator state
-                 seed0 = rng;
-                 rng(op.seed);
-                 m = op.m; n = op.n;
-                 x_tmp = x(:,u);
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Multiply
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function y = multiply(op,x,mode)
+            if ~isempty(op.matrix)
+                % Explicit matrix
+                if mode == 1
+                    y = op.matrix * x;
+                else
+                    y = op.matrix' * x;
+                end
+            else
+                for u = size(x,2):-1:1 % Loop over multivector
+                    % Store current random number generator state
+                    seed0 = rng;
+                    rng(op.seed);
+                    m = op.m; n = op.n;
+                    x_tmp = x(:,u);
 
-                 % Multiply
-                 if mode == 1
-                    y_tmp = zeros(m,1, class(x_tmp));
-                    for i=1:n
-                       v = 1.0 * (randn(m,1) < 0);
-                       y_tmp = y_tmp + v * x_tmp(i);
+                    % Multiply
+                    if mode == 1
+                        y_tmp = zeros(m,1,class(x_tmp));
+                        for i=1:n
+                            v = 1.0 * (randn(m,1) < 0);
+                            y_tmp = y_tmp + v * x_tmp(i);
+                        end
+                    else
+                        y_tmp = zeros(n,1,class(x_tmp));
+                        for i=1:n
+                            v    = 1.0 * (randn(1,m) < 0);
+                            y_tmp(i) = v * x_tmp;
+                        end
                     end
-                 else
-                    y_tmp = zeros(n,1, class(x_tmp));
-                    for i=1:n
-                       v    = 1.0 * (randn(1,m) < 0);
-                       y_tmp(i) = v * x_tmp;
-                    end
-                 end
-                 
-                 y(:,u) = y_tmp;
 
-                 % Restore original rwandom number generator state
-                 rng(seed0);
-              end
-          end
-       end % Multiply
-       
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       % Divide
-       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function x = divide(op,b,mode)
-           % Non-sweepable
-           x = lsqrdivide(op,b,mode);
-       end % divide
+                    y(:,u) = y_tmp;
+
+                    % Restore original rwandom number generator state
+                    rng(seed0);
+                end
+            end
+        end % Multiply
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Divide
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function x = divide(op,b,mode)
+            % Non-sweepable
+            x = lsqrdivide(op,b,mode);
+        end % divide
 
     end % methods - protected
    
