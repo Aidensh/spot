@@ -5,8 +5,10 @@ function x = matldivide(op,b,mode)
 %   except that op is always a Spot operator, and b is always a numeric column
 %   vector.
 
-if mode == 1
-    x = builtin('mldivide',double(op),b);
-else
-    x = builtin('mldivide',double(op'),b);
-end
+% if mode == 1
+%     x = builtin('mldivide',double(op),b);
+% else
+%     x = builtin('mldivide',double(op'),b);
+% end
+
+x = lsqrdivide(op,b,mode);
