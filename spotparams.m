@@ -15,6 +15,8 @@ function p = spotparams(varargin)
    defopts.cgshow    = false;  % show output from CG itns
    defopts.cgdamp    = 0;      % LSQR damping parameter
    defopts.conlim    = 1e8;    % Condition number limit on LSQR solves
+   defopts.uselsmr   = true;   % uses LSMR instead of LSQR, still honoring all parameters
+   defopts.reorthosize = [];   % only for LSMR; specifies the local reorthogonalization size (localSize) param
    
    % This structure saves the default or user-modifed parameters.
    persistent savedopts
