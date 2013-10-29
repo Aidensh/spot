@@ -42,7 +42,7 @@ classdef opDFT2 < opOrthogonal
                 n = m;
             end
             
-            centered = nargin >= 3 && islogical(centered);
+            centered = nargin >= 3 && centered;
             
             if  ~isscalar(m) || m~=round(m) || m <= 0
                 error(['First argument to opDFT2 must be '...

@@ -37,7 +37,7 @@ classdef opDFT < opOrthogonal
                 error('Invalid number of arguments to opDFT.');
             end
             
-            centered = nargin == 2 && islogical(centered);
+            centered = nargin == 2 && centered;
             
             if  ~isscalar(m) || m~=round(m) || m <= 0
                 error(['First argument to opDFT has to be a '...
