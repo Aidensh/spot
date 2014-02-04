@@ -1,9 +1,9 @@
-classdef (HandleCompatible) opSpot
-    %opSpot  Spot operator super class.
+classdef (HandleCompatible) opSpot_2
+    %opSpot_2  Spot operator super class.
     %
-    %   A = opSpot  creates an empty Spot operator.
+    %   A = opSpot_2  creates an empty Spot operator.
     %
-    %   A = opSpot(type,m,n)  creates a Spot operator named TYPE, of size
+    %   A = opSpot_2(type,m,n)  creates a Spot operator named TYPE, of size
     %   M-by-N. CFLAG is set when the operator is
     %   complex. The TYPE and DATA fields provide the type of the operator
     %   (string) and additional data for printing.
@@ -32,7 +32,7 @@ classdef (HandleCompatible) opSpot
         isDirac    = false; % Whether we can skip this operator
         weights;            % weights for meta operators
         
-        activated = true;
+        activated  = true;  % whether the operator is initialized. Assume true
     end
     
     properties( Dependent = true, SetAccess = private )
@@ -48,31 +48,38 @@ classdef (HandleCompatible) opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods
         
-        function op = opSpot(type,m,n)
-            %opSpot  Constructor.
+        function op = opSpot_2(type,m,n)
+            %opSpot_2  Constructor.
             if nargin == 0
                 % Relax -- empty constructor.
-                
             elseif nargin == 3
-                m = max(0,m);
-                n = max(0,n);
-                if round(m) ~= m || round(n) ~= n
-                    warning('SPOT:ambiguousParams',...
-                        'Size parameters are not integer.');
-                    m = floor(m);
-                    n = floor(n);
+                if ~(isnan(m) && isnan(n))
+                    m = max(0,m);
+                    n = max(0,n);
+                    if round(m) ~= m || round(n) ~= n
+                        warning('SPOT:ambiguousParams',...
+                            'Size parameters are not integer.');
+                        m = floor(m);
+                        n = floor(n);
+                    end
+                    op.type = type;
+                    op.m    = m;
+                    op.n    = n;
+                    op.ms   = {m};
+                    op.ns   = {n};
+                    op.counter = spot.counter();
+                elseif isnan(m) && isnan(n) % non-activated operator
+                    op.activated = false;
+                    op.type = type;
+                    op.counter = spot.counter();
+                else
+                    error('Something wrong with m,n in opSpot constructor.')
                 end
-                op.type = type;
-                op.m    = m;
-                op.n    = n;
-                op.ms   = {m};
-                op.ns   = {n};
-                op.counter = spot.counter();
             else
                 error('Unsupported use of Spot constructor.');
             end
             op.ID = char(java.util.UUID.randomUUID);
-        end % function opSpot
+        end % function opSpot_2
         
         function nprods = get.nprods(op)
             %get.nprods  Get a count of the products with the operator.
@@ -88,7 +95,7 @@ classdef (HandleCompatible) opSpot
         
         function y = applyMultiply(op,x,mode)
             if size(x,2) > 1
-%                 warning('opSpot:applyMultiply',['The sweeping function in ',...
+%                 warning('opSpot_2:applyMultiply',['The sweeping function in ',...
 %                     'applyMultiply is being ',...
 %                 'discontinued due to performance issues. Please put all the ',...
 %                 'multivector support in your operators multiply function and recode',...

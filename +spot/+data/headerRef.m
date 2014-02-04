@@ -35,6 +35,7 @@ else % not vec case
     h        = header;
     h.dims   = dims;
     h.size   = sizes(index);
+    h.exsize = [1; index(end) - index(1)+1];
     h.origin = origin(index);
     h.delta  = delta(index);
     h.unit   = unit(index);

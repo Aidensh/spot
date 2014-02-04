@@ -122,180 +122,114 @@ classdef opKron < opSpot
         % headerMod
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function h = headerMod(op,header,mode)
-            
-            imSize = header.size;
-            childrenList = fliplr(op.children); % opKron operates in reverse order
-            
-            startExWith = 1; % exsize start
-            endExWith = 1; % exsize end
-            onOp = 1; % working on which child operator
-            outSize = []; % this goes to h.size, which will be the new implicit size of the vector.
-            onDim = 1; % which output dimension
-            
+            % Extract explicit size indices
+            exsize = header.exsize;
+            href   = @spot.data.headerRef; % Used function handles because
+            hasg   = @spot.data.headerAsgn; % its shorter
+
             if mode == 1
                 
-                while endExWith <= length(imSize)
-                    matchSize = prod(imSize(startExWith:endExWith));
-                    
-                    currentChild = childrenList{onOp};
-                    currentChildOpNs = spot.utils.uncell(currentChild.ns);
-                    
-                    if matchSize == prod(currentChildOpNs) && isscalar(currentChild.ms{1}) && isscalar(currentChild.ns{1}) % if the size matched and has no collasping dimension
-                        for ind = 1 : length(currentChildOpNs)
-                            if ~(currentChild.ns{ind} == imSize(ind + startExWith - 1))
-                                error('implicit dimension do not match')
-                            end
-                            outSize(onDim) = currentChild.ms{ind};
-                            onDim = onDim + 1;
-                        end
-                        if onOp == length(childrenList) && length(imSize) > endExWith % if reached last children operator and there are still more implicit dimensions not operated ...
-                            startExWith = endExWith + 1;
-                            endExWith = length(imSize);
-                            
-                            diracDim = prod(imSize(startExWith:endExWith)); % handle the remaining implicit dimensions by operating with opDirac
-                            outSize(onDim) = diracDim;
-                            onDim = onDim + 1;
-                        end
-                        
-                        % prepare for the next round operator
-                        startExWith = endExWith + 1;
-                        endExWith = startExWith;
-                        onOp = onOp + 1;
-                    elseif matchSize == prod(currentChildOpNs) &&  length(currentChild.ns(1)) < length(currentChild.ns{1})% matched. Collasping dimension
-                        for ind = 1 : length(currentChild.ns{1})
-                            if ~(imSize(onDim + ind - 1) == currentChild.ns{1}(ind))
-                                error('Size of Collasping Dimension do not match')
-                            end
-                        end
-                        
-                        outSize(onDim) = currentChild.ms{:};
-                        onDim = onDim + length(currentChild.ns{1}) -1;
-                        
-                        if onOp == length(childrenList) && length(imSize) > endExWith % if reached last children operator and there are still more implicit dimensions not operated ...
-                            startExWith = endExWith + 1;
-                            endExWith = length(imSize);
-                            
-                            diracDim = prod(imSize(startExWith:endExWith)); % handle the remaining implicit dimensions by operating with opDirac
-                            outSize(onDim) = diracDim;
-                            onDim = onDim + 1;
-                        end
-                        
-                        % prepare for the next round operator
-                        startExWith = endExWith + 1;
-                        endExWith = startExWith;
-                        onOp = onOp + 1;
-                    elseif length(currentChild.ns(1)) == length(currentChild.ns{1}) && currentChild.ns{1}== imSize(startExWith) && length(currentChild.ms(1)) < length(currentChild.ms{1}) % matched. Expanding dimension
-                        for ind = 1 : length(currentChild.ms{:})
-                            outSize(onDim + ind - 1) = currentChild.ms{:}(ind);
-                        end
-                        onDim = onDim + length(currentChild.ms{:}) - 1;
-                        
-                        % prepare for the next round operator
-                        startExWith = endExWith + 1;
-                        endExWith = startExWith;
-                        onOp = onOp + 1;
-                    elseif endExWith == length(imSize) % if size do not match and is now at the end of the exsize list
-                        error('Unable to match data implicit dimension with opKron children size') % give error: the size can never match up
-                    else
-                        % keep trying :)
-                        endExWith = endExWith + 1;
-                        
-                    end
+                % Setup variables
+                opList = fliplr(op.children); % Last op applied first
+                % Number of output dimensions
+                n_out_dims = length(spot.utils.uncell(op.ms)) +...
+                                                        size(exsize,2) - 1;
+                
+                % Preallocate and setup header
+                header_out        = header;
+                header_out.dims   = n_out_dims;
+                header_out.size   = zeros(1,n_out_dims);
+                header_out.origin = zeros(1,n_out_dims);
+                header_out.delta  = zeros(1,n_out_dims);
+                header_out.unit   = zeros(1,n_out_dims);
+                header_out.label  = zeros(1,n_out_dims);
+                
+                % Fill in the non-first-dimension header parts
+                if size(exsize,2) > 1
+                    h_part = href(header,exsize(1,2):exsize(end,end));
+                    header_out = hasg(header_out,h_part,...
+                        length(spot.utils.uncell(op.ms))+1:...
+                        length(header_out.size));
                 end
+                
+                % Replace old first (collapsed) dimensional sizes with
+                % operator sizes.
+                i = 1;
+                x = 1;
+                % Extract collapsed first dims from header.
+                first_header = href(header,exsize(:,1));
+                for u = 1:length(op.children)
+                    % Input header (including collapsed)
+                    y            = length(spot.utils.uncell(op.ns{u}))+x-1;
+                    in_header    = href(first_header,x:y);
+                    in_header.exsize = [1;y-x+1];
+                    % child header
+                    child_header = headerMod(opList{u},in_header,mode);
+                    % Assignment indices
+                    j            = length(spot.utils.uncell(op.ms{u}))+i-1;
+                    % header assignment
+                    oldsize      = length(header_out.size);
+                    header_out   = hasg(header_out,child_header,i:j);
+                    newsize      = length(header_out.size);
+                    i            = j + 1 + newsize - oldsize;
+                    x            = y + 1;
+                end
+                exsize_out = 1:length(header_out.size);
+                exsize_out = [exsize_out;exsize_out];
+                h          = header_out;
+                h.exsize   = exsize_out;
             else
+                % Setup variables
+                opList = fliplr(op.children); % Last op applied first
+                % Number of output dimensions
+                n_out_dims = length(spot.utils.uncell(op.ns)) +...
+                                                        size(exsize,2) - 1;
                 
-                while endExWith <= length(imSize)
-                    matchSize = prod(imSize(startExWith:endExWith));
-                    
-                    currentChild = childrenList{onOp};
-                    currentChildOpMs = spot.utils.uncell(currentChild.ms);
-                    
-                    if matchSize == prod(currentChildOpMs) && isscalar(currentChild.ms{1}) && isscalar(currentChild.ns{1}) % if the size matched and has no collasping dimension
-                        for ind = 1 : length(currentChildOpMs)
-                            if ~(currentChild.ms{ind} == imSize(ind + startExWith - 1))
-                                error('implicit dimension do not match')
-                            end
-                            outSize(onDim) = currentChild.ns{ind};
-                            onDim = onDim + 1;
-                        end
-                        if onOp == length(childrenList) && length(imSize) > endExWith % if reached last children operator and there are still more implicit dimensions not operated ...
-                            startExWith = endExWith + 1;
-                            endExWith = length(imSize);
-                            
-                            diracDim = prod(imSize(startExWith:endExWith)); % handle the remaining implicit dimensions by operating with opDirac
-                            outSize(onDim) = diracDim;
-                            onDim = onDim + 1;
-                        end
-                        
-                        % prepare for the next round operator
-                        startExWith = endExWith + 1;
-                        endExWith = startExWith;
-                        onOp = onOp + 1;
-                    elseif matchSize == prod(currentChildOpMs) &&  length(currentChild.ms(1)) < length(currentChild.ms{1})% matched. Collasping dimension
-                        for ind = 1 : length(currentChild.ms{1})
-                            if ~(imSize(onDim + ind - 1) == currentChild.ms{1}(ind))
-                                error('Size of Collasping Dimension do not match')
-                            end
-                        end
-                        
-                        outSize(onDim) = currentChild.ns{:};
-                        onDim = onDim + length(currentChild.ms{1}) -1;
-                        
-                        if onOp == length(childrenList) && length(imSize) > endExWith % if reached last children operator and there are still more implicit dimensions not operated ...
-                            startExWith = endExWith + 1;
-                            endExWith = length(imSize);
-                            
-                            diracDim = prod(imSize(startExWith:endExWith)); % handle the remaining implicit dimensions by operating with opDirac
-                            outSize(onDim) = diracDim;
-                            onDim = onDim + 1;
-                        end
-
-                        % prepare for the next round operator
-                        startExWith = endExWith + 1;
-                        endExWith = startExWith;
-                        onOp = onOp + 1;
-                    elseif length(currentChild.ms(1)) == length(currentChild.ms{1}) && currentChild.ms{1}== imSize(startExWith) && length(currentChild.ns(1)) < length(currentChild.ns{1}) % matched. Expanding dimension
-                        for ind = 1 : length(currentChild.ns{:})
-                            outSize(onDim + ind - 1) = currentChild.ns{:}(ind);
-                        end
-                        onDim = onDim + length(currentChild.ns{:}) - 1;
-                        
-                        % prepare for the next round operator
-                        startExWith = endExWith + 1;
-                        endExWith = startExWith;
-                        onOp = onOp + 1;
-                    elseif endExWith == length(imSize) % if size do not match and is now at the end of the exsize list
-                        error('Unable to match data implicit dimension with opKron children size') % give error: the size can never match up
-                    else
-                        % keep trying :)
-                        endExWith = endExWith + 1;
-                        
-                    end
+                % Preallocate and setup header
+                header_out        = header;
+                header_out.dims   = n_out_dims;
+                header_out.size   = zeros(1,n_out_dims);
+                header_out.origin = zeros(1,n_out_dims);
+                header_out.delta  = zeros(1,n_out_dims);
+                header_out.unit   = zeros(1,n_out_dims);
+                header_out.label  = zeros(1,n_out_dims);
+                
+                % Fill in the non-first-dimension header parts
+                if size(exsize,2) > 1
+                    h_part = href(header,exsize(1,2):exsize(end,end));
+                    header_out = hasg(header_out,h_part,...
+                        length(spot.utils.uncell(op.ms))+1:...
+                        length(header_out.size));
                 end
                 
+                % Replace old first (collapsed) dimensional sizes with 
+                % operator sizes.
+                i = 1;
+                x = 1;
+                % Extract collapsed first dims from header.
+                first_header = href(header,exsize(:,1));
+                for u = 1:length(op.children)
+                    % Input header (including collapsed)
+                    y            = length(spot.utils.uncell(op.ms{u}))+x-1;
+                    in_header    = href(first_header,x:y);
+                    in_header.exsize = [1;y-x+1];
+                    % child header
+                    child_header = headerMod(opList{u},in_header,mode);
+                    % Assignment indices
+                    j            = length(spot.utils.uncell(op.ns{u}))+i-1;
+                    % header assignment
+                    oldsize      = length(header_out.size);
+                    header_out   = hasg(header_out,child_header,i:j);
+                    newsize      = length(header_out.size);
+                    i            = j + 1 + newsize - oldsize;
+                    x            = y + 1;
+                end
+                exsize_out = 1:length(header_out.size);
+                exsize_out = [exsize_out;exsize_out];
+                h          = header_out;
+                h.exsize   = exsize_out;
             end
             
-            
-            n_out_dims = length(outSize);
-            % Preallocate and setup header
-            header_out        = header;
-            header_out.dims   = n_out_dims;
-            header_out.size   = zeros(1,n_out_dims);
-            header_out.origin = zeros(1,n_out_dims);
-            header_out.delta  = zeros(1,n_out_dims);
-            header_out.unit   = zeros(1,n_out_dims);
-            header_out.label  = zeros(1,n_out_dims);
-            
-            
-            exsize_out = 1:n_out_dims;
-            exsize_out = [exsize_out;exsize_out];
-            h = header_out;
-            h.size = outSize;
-            h.origin = header.origin; % will have to deal with this
-            h.delta = header.delta; % will have to deal with this
-            h.unit = header.unit; % will have to deal with this
-            h.label = header.label; % will have to deal with this
-            h.exsize = exsize_out;
         end % headerMod
     end % Methods
     

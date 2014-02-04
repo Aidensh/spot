@@ -19,23 +19,7 @@ classdef opDirac < opOrthogonal
         % Constructor
         function op = opDirac(n)
             if nargin < 1, n = 1; end
-            
-            if isscalar(n)
-                n_out = n;
-                mns = {n};
-            else
-                n_out = prod(n);
-                
-                mns = cell(1,length(n));
-                for ind = 1 : length(n)
-                    mns{ind} = n(ind);
-                end
-            end
-            op = op@opOrthogonal('Dirac',n_out,n_out);
-            
-            op.ms = mns;
-            op.ns = mns;
-            
+            op = op@opOrthogonal('Dirac',n,n);
             op.isDirac   = true;
             op.sweepflag = true;
         end % constructor
