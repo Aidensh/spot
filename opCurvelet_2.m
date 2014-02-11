@@ -91,6 +91,11 @@ classdef opCurvelet_2 < opSpot_2
                 cn = nan;
                 varargin(1) = [];
                 activated = false;
+            elseif isscalar(varargin{1}) %opCurvelet_2(NBSCALES,NBANGLES,FINEST,TTYPE,IS_REAL)
+                m = nan;
+                n = nan;
+                cn = nan;
+                activated = false; % needs activation
             else
                 error('invalid first or second argument')
             end

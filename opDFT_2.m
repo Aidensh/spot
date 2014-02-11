@@ -137,8 +137,7 @@ classdef opDFT_2 < opOrthogonal_2
             tempContainer = iCon(header);
             
             [unitOut, ~] = opDFT_2.unitGet(tempContainer,mode);
-            h.unit = {unitOut};
-            h.varUnits = unitOut;
+            h.unit = unitOut;
             
             [deltaOut,~] = opDFT_2.deltaGet(tempContainer,mode);
             h.delta = deltaOut;
@@ -282,8 +281,8 @@ classdef opDFT_2 < opOrthogonal_2
             % mode = 1 for regular fft; mode = 2 for inverse fft
             
             % unit : get
-            theUnit = unit(C);
-            
+            theUnits = unit(C);
+            theUnit = theUnits{1};
             % varUnit : get
             theVarUnit = varUnits(C);
             if ~(ischar(theVarUnit))
@@ -327,33 +326,36 @@ classdef opDFT_2 < opOrthogonal_2
             
             if mode == 1
                 if spLength.existUnit(unitIn)
-                    unitOut = '1/m';
+                    outUnit = '1/m';
                 elseif spTime.existUnit(unitIn)
-                    unitOut = 'Hz';
+                    outUnit = 'Hz';
                 else
-                    unitOut = '(someUnit)';
+                    outUnit = '(someUnit)';
                 end
             else
                 if spLengthInv.existUnit(unitIn)
-                    unitOut = 'm';
+                    outUnit = 'm';
                 elseif spFrequency.existUnit(unitIn)
-                    unitOut = 's';
+                    outUnit = 's';
                 else
-                    unitOut = '(someUnit)';
+                    outUnit = '(someUnit)';
                 end
             end
             
-            
+            unitOut = theUnits;
+            unitOut{1} = outUnit;
         end
         
         function [originOut, originIn] = originGet(C,~)
-            originIn = origin(C,1);
-            originOut = zeros(1,length(origin(C,1)));
+            originIn = origin(C);
+            originOut = zeros(1,length(origin(C)));
         end
         
         function [deltaOut, deltaIn] = deltaGet(C,~)
-            deltaIn = delta(C,1);
-            deltaOut = 1/((length(C) - 1) * delta(C,1));
+            deltaIn = delta(C);
+            
+            deltaOut = deltaIn;
+            deltaOut(1) = 1/((length(C) - 1) * delta(C,1));
         end
     end
 end % opDFT_2

@@ -155,23 +155,27 @@ classdef opFoG_2 < opSpot_2
             
             
             if mode == 1
+                numHistory_Pre = length(header.IDHistory.data);
                 g = headerMod(op.children{2},header,mode);
                 h = headerMod(op.children{1},g,mode);
+                numHistory_Post = length(header.IDHistory.data);
                 
                 if ~usedHistory
-                    childrenOpHistory = cell(1,2);
-                    childrenOpHistory{2} = peek(h.IDHistory);
-                    h.IDHistory = remove(h.IDHistory,1);
-                    childrenOpHistory{1} = peek(h.IDHistory);
-                    h.IDHistory = remove(h.IDHistory,1);
-                    
-                    h.IDHistory = push(h.IDHistory,{...
-                        {'ID',op.ID},...
-                        {'ClassName',class(op)},...
-                        {'mode',mode},...
-                        {'opM',op.m},...
-                        {'opN',op.n},...
-                        {'children',childrenOpHistory}});
+                    if numHistory_Pre ~= numHistory_Post
+                        childrenOpHistory = cell(1,2);
+                        childrenOpHistory{2} = peek(h.IDHistory);
+                        h.IDHistory = remove(h.IDHistory,1);
+                        childrenOpHistory{1} = peek(h.IDHistory);
+                        h.IDHistory = remove(h.IDHistory,1);
+                        
+                        h.IDHistory = push(h.IDHistory,{...
+                            {'ID',op.ID},...
+                            {'ClassName',class(op)},...
+                            {'mode',mode},...
+                            {'opM',op.m},...
+                            {'opN',op.n},...
+                            {'children',childrenOpHistory}});
+                    end
                 else % if used history; in other words, if cancel out
                     topHistory = peek(h.IDHistory);
                     
@@ -183,26 +187,30 @@ classdef opFoG_2 < opSpot_2
                 end
                 
             else
+                numHistory_Pre = length(header.IDHistory.data);
                 g = headerMod(op.children{1},header,mode);
                 h = headerMod(op.children{2},g,mode);
+                numHistory_Post = length(header.IDHistory.data);
                 
                 if ~usedHistory
-                    childrenOpHistory = cell(1,2);
-                    childrenOpHistory{1} = peek(h.IDHistory);
-                    h.IDHistory = remove(h.IDHistory,1);
-                    childrenOpHistory{2} = peek(h.IDHistory);
-                    h.IDHistory = remove(h.IDHistory,1);
-                    
-                    
-                    childrenOpHistory = fliplr(childrenOpHistory);
-                    
-                    h.IDHistory = push(h.IDHistory,{...
-                        {'ID',op.ID},...
-                        {'ClassName',class(op)},...
-                        {'mode',mode},...
-                        {'opM',op.m},...
-                        {'opN',op.n},...
-                        {'children',childrenOpHistory}});
+                    if numHistory_Pre ~= numHistory_Post
+                        childrenOpHistory = cell(1,2);
+                        childrenOpHistory{1} = peek(h.IDHistory);
+                        h.IDHistory = remove(h.IDHistory,1);
+                        childrenOpHistory{2} = peek(h.IDHistory);
+                        h.IDHistory = remove(h.IDHistory,1);
+                        
+                        
+                        childrenOpHistory = fliplr(childrenOpHistory);
+                        
+                        h.IDHistory = push(h.IDHistory,{...
+                            {'ID',op.ID},...
+                            {'ClassName',class(op)},...
+                            {'mode',mode},...
+                            {'opM',op.m},...
+                            {'opN',op.n},...
+                            {'children',childrenOpHistory}});
+                    end
                 else % if used history; in other words, if cancel out
                     topHistory = peek(h.IDHistory);
                     

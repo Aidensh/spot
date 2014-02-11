@@ -80,6 +80,11 @@ classdef opWavelet_2 < opWavelet2_2
                 p = nan;
                 varargin(1) = [];
                 activated = false;
+            elseif ischar(varargin{1}) %opWavelet_2(FAMILY,FILTER,LEVELS,REDUNDANT,TYPE)
+                % dynamic operator
+                n = nan;
+                p = nan;
+                activated = false;
             else
                 error('Invalid input type of the first arguement for opWavelet_2');
             end
