@@ -71,7 +71,7 @@ classdef (HandleCompatible) opSpot
             else
                 error('Unsupported use of Spot constructor.');
             end
-            op.ID = num2str(rand * 1000000);
+            op.ID = num2str(rand);
         end % function opSpot
         
         function nprods = get.nprods(op)

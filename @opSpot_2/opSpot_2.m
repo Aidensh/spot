@@ -78,7 +78,7 @@ classdef (HandleCompatible) opSpot_2
             else
                 error('Unsupported use of Spot constructor.');
             end
-            op.ID = char(java.util.UUID.randomUUID);
+            op.ID = num2str(rand);
         end % function opSpot_2
         
         function nprods = get.nprods(op)

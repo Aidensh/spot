@@ -375,7 +375,7 @@ classdef opWavelet2_2 < opSpot_2
          if issparse(x), x = full(x); end
 
          % apply matvec operation
-         R = opExtend(p,q,pext,qext);
+         R = opExtend_2(p,q,pext,qext);
 
          if mode == 1
 
