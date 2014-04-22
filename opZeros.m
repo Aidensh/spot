@@ -60,11 +60,13 @@ classdef opZeros < opSpot
            else
               s = op.n;
            end
+           
+           nCol = size(x,2);
    
            if any(isinf(x) | isnan(x))
-              y = ones(s,1, class(x)) * NaN;
+              y = ones(s,nCol, class(x)) * NaN;
            else
-              y = zeros(s,1, class(x));
+              y = zeros(s,nCol, class(x));
            end
         end % function multiply
         
