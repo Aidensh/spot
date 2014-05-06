@@ -85,7 +85,7 @@ elseif ~isa(B,'opSpot') % A is spot, B isnt
         
         else % Perform operator*matrix
         % Unsupported data types warning
-        if ~isnumeric(B) && ~isa(A,'oppSpot')
+        if ~isnumeric(B) && ~isa(A,'oppSpot') && ~islogical(B)
             warning(['Data type "' class(B)...
             '" is not officially supported by spot, proceed at own risk']);
         end
