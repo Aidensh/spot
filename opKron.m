@@ -1,5 +1,5 @@
 classdef opKron < opSpot
-%OPKRON   Kronecker tensor product.
+%opKron   Kronecker tensor product.
 %
 %   opKron(OP1,OP2,...OPn) creates an operator that is the Kronecker
 %   tensor product of OP1, OP2, ..., OPn.
@@ -245,7 +245,6 @@ classdef opKron < opSpot
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function y = multiply(op,x,mode)
-            
             % The Kronecker product (KP) is applied to the righthand matrix
             % taking in account the best order to apply the operators.
             % That necessitates to decompose the KP in successive matrix
@@ -262,7 +261,7 @@ classdef opKron < opSpot
             for i=1:nbr_children
                 sizes(i,:) = size(opList{i});
             end
-            
+            y=x;
             %%%%%%%%%%%%%%%%%%%%%%Multiplication%%%%%%%%%%%%%%%%%%%%%%%%%%%
             if mode == 1 % Classic mode
                 perm = op.permutation; % Permutation to take in account.
@@ -307,10 +306,12 @@ classdef opKron < opSpot
                     c = sizes(index,2);
                     
                     % (I(a) kron A kron I(b)) * x;
-                    t = reshape(reshape(x,b,a*c).',c,a*b);
-                    x = reshape(applyMultiply(opList{index},t,1)',a,r*b)';
+                    y = reshape(reshape(y,b,a*c).',c,a*b);
+                    y = applyMultiply(opList{index},y,1);
+                    
+                    y = reshape(y,a*size(opList{index},1),b).';
                 end
-                y = reshape(x,m,ncol);
+                y = reshape(y,m,ncol);
                 
             elseif mode == 2 % Transpose mode
                 perm = op.permutation(length(opList):-1:1); % The
@@ -358,10 +359,12 @@ classdef opKron < opSpot
                     c = sizes(index,1);
                     
                     % (I(a) kron A kron I(b)) * x;
-                    t = reshape(reshape(x,b,a*c).',c,a*b);
-                    x = reshape(applyMultiply(opList{index},t,2)',a,r*b)';
+                    y = reshape(reshape(y,b,a*c).',c,a*b);
+                    y = applyMultiply(opList{index},y,2);
+                    
+                    y = reshape(y,a*size(opList{index},2),b).';
                 end
-                y = reshape(x,n,ncol);
+                y = reshape(y,n,ncol);
             end
         end % Multiply
         
