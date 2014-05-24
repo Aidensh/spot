@@ -256,116 +256,205 @@ classdef opKron < opSpot
             ncol         = size(x,2); % Number of columns of 'x'
             nbr_children = length(opList); % Number of children
             
-            % Pre-registering of the sizes of opKron's children
-            sizes = zeros(nbr_children,2);
-            for i=1:nbr_children
-                sizes(i,:) = size(opList{i});
-            end
-            y=x;
             %%%%%%%%%%%%%%%%%%%%%%Multiplication%%%%%%%%%%%%%%%%%%%%%%%%%%%
             if mode == 1 % Classic mode
+                ops = fliplr(opList);
                 perm = op.permutation; % Permutation to take in account.
+                perm = length(perm) - perm + 1;
                 m = op.m; % Height of the resulting matrix
                 
-                for i = 1:nbr_children
-                    % Index of the operator A to consider.
-                    index = perm(i);
-                    
-                    % Calculation of the sizes of the identity matrixs used
-                    % in the Kronecker product I(a) kron A kron I(b)
-                    
-                    % Size of I(a)
-                    a = 1;
-                    for k = 1:(index-1)
-                        if i > find(perm==k)
-                            a = a * sizes(k,1);
-                        else
-                            a = a * sizes(k,2);
-                        end
-                    end
-                    
-                    % If 'x' has several columns. The initial matrix I(a)
-                    % kron A kron I(b) is replicated 'ncol' (number of
-                    % columns of x) times) along the diagonal.
-                    if ncol>1
-                        a=a*ncol;
-                    end
-                    
-                    % Size of I(b)
-                    b = 1;
-                    for k = (index+1):nbr_children
-                        if i > find(perm==k)
-                            b = b * sizes(k,1);
-                        else
-                            b = b * sizes(k,2);
-                        end
-                    end
-                    
-                    % Size of the operator A=opList{index} to apply
-                    r = sizes(index,1);
-                    c = sizes(index,2);
-                    
-                    % (I(a) kron A kron I(b)) * x;
-                    y = reshape(reshape(y,b,a*c).',c,a*b);
-                    y = applyMultiply(opList{index},y,1);
-                    
-                    y = reshape(y,a*size(opList{index},1),b).';
+                dimOrder = 1:nbr_children;
+                dimSize = zeros(1,length(ops));
+                for ind = 1:length(ops)
+                    dimSize(ind) = ops{ind}.n;
                 end
-                y = reshape(y,m,ncol);
                 
+                if ncol > 1
+                    dimOrder = [dimOrder nbr_children+1];
+                    dimSize(end+1) = ncol;
+                end
+                
+                % first operator
+                theOp = ops{perm(1)};
+                % reshape into 2 groups
+                if perm(1) == dimOrder(1) % if the first dim goes first
+                    % x -> group 1: 1 ; group 2: 2:end
+                    x = reshape(x,theOp.n,numel(x)/theOp.n);
+                    dimOrder = {dimOrder(1) dimOrder(2:end)};
+                    dimSize = {dimSize(1) dimSize(2:end)};
+                else % perm(1) ~=dimOrder(1)
+                    fetchIndex = find(dimOrder == perm(1));
+                    % note: fetchIndex should have only one element
+                    
+                    % reshape:
+                    %   group 1: 1:fetchIndex-1
+                    %   group 2: fetchIndex:end
+                    group1n = prod(dimSize(1:fetchIndex-1));
+                    group2n = prod(dimSize(fetchIndex:length(dimOrder)));
+                    
+                    x = reshape(x,group1n,group2n);
+                    
+                    dimOrder = {dimOrder(1:fetchIndex-1) dimOrder(fetchIndex:length(dimOrder))};
+                    dimSize = {dimSize(1:fetchIndex-1) dimSize(fetchIndex:length(dimSize))};
+                    
+                    x = x.';
+                    x = reshape(x,theOp.n,numel(x)/theOp.n);
+                    
+                    dimOrder = {dimOrder{2}(1) [dimOrder{2}(2:end) dimOrder{1}]};
+                    dimSize = {dimSize{2}(1) [dimSize{2}(2:end) dimSize{1}]};
+                end
+                
+                for permInd = 2:length(perm)
+                    if ~theOp.isDirac
+                        x = applyMultiply(theOp, x, 1);
+                        dimSize{1} = theOp.m;
+                    end
+                    theOp = ops{perm(permInd)};
+                    if perm(permInd) == dimOrder{2}(1) % if the dimension is already the first element of the second group
+                        x = x.';
+                        x = reshape(x,theOp.n,numel(x)/theOp.n);
+                        
+                        dimOrder = {dimOrder{2}(1) [dimOrder{2}(2:end) dimOrder{1}]};
+                        dimSize = {dimSize{2}(1) [dimSize{2}(2:end) dimSize{1}]};
+                        
+                    else % if not already the first element of the second group
+                        % reshape:
+                        %   group 1: 1:fetchIndex-1
+                        %   group 2: fetchIndex:end
+                        dimOrder = [dimOrder{1} dimOrder{2}];
+                        dimSize = [dimSize{1} dimSize{2}];
+                        fetchIndex = find(dimOrder == perm(permInd));
+                        
+                        group1n = prod(dimSize(1:fetchIndex-1));
+                        group2n = prod(dimSize(fetchIndex:length(dimOrder)));
+                        
+                        x = reshape(x,group1n,group2n);
+                        
+                        dimOrder = {dimOrder(1:fetchIndex-1) dimOrder(fetchIndex:length(dimOrder))};
+                        dimSize = {dimSize(1:fetchIndex-1) dimSize(fetchIndex:length(dimSize))};
+                        
+                        x = x.';
+                        x = reshape(x,theOp.n,numel(x)/theOp.n);
+                        
+                        dimOrder = {dimOrder{2}(1) [dimOrder{2}(2:end) dimOrder{1}]};
+                        dimSize = {dimSize{2}(1) [dimSize{2}(2:end) dimSize{1}]};
+                    end
+                end
+                
+                x = applyMultiply(theOp, x, 1);
+                dimSize{1} = theOp.m;
+                
+                dimSize = [dimSize{1} dimSize{2}];
+                
+                x = reshape(x,dimSize);
+                
+                dimOrder = [dimOrder{1} dimOrder{2}];
+                
+                lowerInd = find(dimOrder==1):length(dimOrder);
+                higherInd = 1:find(dimOrder==1)-1;
+                
+                x = reshape(x,[prod(dimSize(higherInd)) prod(dimSize(lowerInd))]);
+                x = x.';
+                
+                y = reshape(x,m,ncol);
             elseif mode == 2 % Transpose mode
-                perm = op.permutation(length(opList):-1:1); % The
-                % permutation has to be in the other direction since with
-                % transposition, operators' computational costs will be
-                % inverted.
+                ops = fliplr(opList);
+                perm = op.permutation; % Permutation to take in account.
+                perm = length(perm) - perm + 1;
                 n = op.n; % Height of the resulting matrix
                 
-                for i = 1:nbr_children
-                    %Index of the operator A to consider.
-                    index = perm(i);
-                    
-                    % Calculation of the sizes of the identity matrixs used
-                    % in the Kronecker product I(a) kron A kron I(b)
-                    
-                    %Size of I(a)
-                    a = 1;
-                    for k = 1:(index-1)
-                        if i > find(perm==k)
-                            a = a * size(opList{k},2);
-                        else
-                            a = a * size(opList{k},1);
-                        end
-                    end
-                    
-                    % If 'x' has several columns. The initial matrix I(a)
-                    % kron A kron I(b) is replicated 'ncol' (number of
-                    % columns of x) times) along the diagonal.
-                    if ncol>1
-                        a = a*ncol;
-                    end
-                    
-                    % Size of I(b)
-                    b = 1;
-                    for k = (index+1):length(opList)
-                        if i > find(perm==k)
-                            b = b * size(opList{k},2);
-                        else
-                            b = b * size(opList{k},1);
-                        end
-                    end
-                    
-                    % Size of the operator A=opList{index} to apply
-                    r = sizes(index,2);
-                    c = sizes(index,1);
-                    
-                    % (I(a) kron A kron I(b)) * x;
-                    y = reshape(reshape(y,b,a*c).',c,a*b);
-                    y = applyMultiply(opList{index},y,2);
-                    
-                    y = reshape(y,a*size(opList{index},2),b).';
+                dimOrder = 1:nbr_children;
+                dimSize = zeros(1,length(ops));
+                for ind = 1:length(ops)
+                    dimSize(ind) = ops{ind}.m;
                 end
-                y = reshape(y,n,ncol);
+                
+                if ncol > 1
+                    dimOrder = [dimOrder nbr_children+1];
+                    dimSize(end+1) = ncol;
+                end
+                
+                % first operator
+                theOp = ops{perm(1)};
+                % reshape into 2 groups
+                if perm(1) == dimOrder(1) % if the first dim goes first
+                    % x -> group 1: 1 ; group 2: 2:end
+                    x = reshape(x,theOp.m,numel(x)/theOp.m);
+                    dimOrder = {dimOrder(1) dimOrder(2:end)};
+                    dimSize = {dimSize(1) dimSize(2:end)};
+                else % perm(1) ~=dimOrder(1)
+                    fetchIndex = find(dimOrder == perm(1));
+                    % note: fetchIndex should have only one element
+                    
+                    % reshape:
+                    %   group 1: 1:fetchIndex-1
+                    %   group 2: fetchIndex:end
+                    group1n = prod(dimSize(1:fetchIndex-1));
+                    group2n = prod(dimSize(fetchIndex:length(dimOrder)));
+                    
+                    x = reshape(x,group1n,group2n);
+                    dimOrder = {dimOrder(1:fetchIndex-1) dimOrder(fetchIndex:length(dimOrder))};
+                    dimSize = {dimSize(1:fetchIndex-1) dimSize(fetchIndex:length(dimSize))};
+                    
+                    x = x.';
+                    x = reshape(x,theOp.m,numel(x)/theOp.m);
+                    dimOrder = {dimOrder{2}(1) [dimOrder{2}(2:end) dimOrder{1}]};
+                    dimSize = {dimSize{2}(1) [dimSize{2}(2:end) dimSize{1}]};
+                end
+                
+                for permInd = 2:length(perm)
+                    if ~theOp.isDirac
+                        x = applyMultiply(theOp, x, 2);
+                        dimSize{1} = theOp.n;
+                    end
+                    
+                    theOp = ops{perm(permInd)};
+                    if perm(permInd) == dimOrder{2}(1) % if the dimension is already the first element of the second group
+                        x = x.';
+                        x = reshape(x,theOp.m,numel(x)/theOp.m);
+                        dimOrder = {dimOrder{2}(1) [dimOrder{2}(2:end) dimOrder{1}]};
+                        dimSize = {dimSize{2}(1) [dimSize{2}(2:end) dimSize{1}]};
+                        
+                    else % if not already the first element of the second group
+                        % reshape:
+                        %   group 1: 1:fetchIndex-1
+                        %   group 2: fetchIndex:end
+                        dimOrder = [dimOrder{1} dimOrder{2}];
+                        dimSize = [dimSize{1} dimSize{2}];
+                        fetchIndex = find(dimOrder == perm(permInd));
+                        
+                        group1n = prod(dimSize(1:fetchIndex-1));
+                        group2n = prod(dimSize(fetchIndex:length(dimOrder)));
+                        
+                        x = reshape(x,group1n,group2n);
+                        dimOrder = {dimOrder(1:fetchIndex-1) dimOrder(fetchIndex:length(dimOrder))};
+                        dimSize = {dimSize(1:fetchIndex-1) dimSize(fetchIndex:length(dimSize))};
+                        
+                        x = x.';
+                        x = reshape(x,theOp.m,numel(x)/theOp.m);
+                        dimOrder = {dimOrder{2}(1) [dimOrder{2}(2:end) dimOrder{1}]};
+                        dimSize = {dimSize{2}(1) [dimSize{2}(2:end) dimSize{1}]};
+                    end
+                end
+                
+                x = applyMultiply(theOp, x, 2);
+                dimSize{1} = theOp.n;
+                
+                dimSize = [dimSize{1} dimSize{2}];
+                
+                x = reshape(x,dimSize);
+                
+                dimOrder = [dimOrder{1} dimOrder{2}];
+                
+                lowerInd = find(dimOrder==1):length(dimOrder);
+                higherInd = 1:find(dimOrder==1)-1;
+                
+                x = reshape(x,[prod(dimSize(higherInd)) prod(dimSize(lowerInd))]);
+                x = x.';
+                
+                y = reshape(x,n,ncol);
             end
+            
         end % Multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
