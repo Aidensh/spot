@@ -75,9 +75,9 @@ classdef opMask < opSpot
     methods( Access = protected )
        
         % Multiplication
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             for i=size(x,2):-1:1
-                y(:,i) = op.mask.*x(:,i);
+                x(:,i) = op.mask.*x(:,i);
             end
         end % Multiply
         
