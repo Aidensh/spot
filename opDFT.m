@@ -70,9 +70,9 @@ classdef opDFT < opOrthogonal
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Sweepable
-            x = matldivide(op,b,mode);
+            x = matldivide(op,x,mode);
         end % divide
     end % protected methods
 
@@ -80,7 +80,7 @@ classdef opDFT < opOrthogonal
     % Methods - private
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods( Access = private )
-        function y = opDFT_intrnl(op,x,mode)
+        function x = opDFT_intrnl(op,x,mode)
             % One-dimensional DFT
             n = op.n;
             if mode == 1
@@ -92,9 +92,10 @@ classdef opDFT < opOrthogonal
                 y = ifft(full(x));
                 y = y * sqrt(n);
             end
+            x = y;
         end % opDFT_intrnl
 
-        function y = opDFT_centered_intrnl(op,x,mode)
+        function x = opDFT_centered_intrnl(op,x,mode)
             % One-dimensional DFT - Centered
             n = op.n;
             if mode == 1
@@ -104,6 +105,7 @@ classdef opDFT < opOrthogonal
                 y = ifft(ifftshift(full(x)));
                 y = y * sqrt(n);
             end
+            x = y;
         end % opDFT_centered_intrnl
     end % private methods
 end % opDFT

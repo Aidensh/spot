@@ -244,7 +244,7 @@ classdef opKron < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             % The Kronecker product (KP) is applied to the righthand matrix
             % taking in account the best order to apply the operators.
             % That necessitates to decompose the KP in successive matrix
@@ -356,7 +356,7 @@ classdef opKron < opSpot
                 x = reshape(x,[prod(dimSize(higherInd)) prod(dimSize(lowerInd))]);
                 x = x.';
                 
-                y = reshape(x,m,ncol);
+                x = reshape(x,m,ncol);
             elseif mode == 2 % Transpose mode
                 ops = fliplr(opList);
                 perm = op.permutation; % Permutation to take in account.
@@ -452,7 +452,7 @@ classdef opKron < opSpot
                 x = reshape(x,[prod(dimSize(higherInd)) prod(dimSize(lowerInd))]);
                 x = x.';
                 
-                y = reshape(x,n,ncol);
+                x = reshape(x,n,ncol);
             end
             
         end % Multiply
@@ -460,12 +460,12 @@ classdef opKron < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Depends on sweepflag
             if op.sweepflag
-                x = matldivide(op,b,mode);
+                x = matldivide(op,x,mode);
             else
-                x = lsqrdivide(op,b,mode);
+                x = lsqrdivide(op,x,mode);
             end
         end % divide
         

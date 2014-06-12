@@ -54,7 +54,7 @@ classdef opRomberg < opSpot
     % Protected methods
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods( Access = protected )
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             
             % Setup variables
             dims = op.dimensions;
@@ -75,15 +75,15 @@ classdef opRomberg < opSpot
                     y(:,u) = y_tmp(:);
                 end
             end
-            
+            x = y;
         end % Multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
-            x = lsqrdivide(op,b,mode);
+            x = lsqrdivide(op,x,mode);
         end % divide
         
     end % Protected methods

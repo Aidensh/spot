@@ -80,24 +80,24 @@ classdef opMatrix < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             % multiply  Multiply operator with a vector.
             if mode == 1
-                y = op.matrix * x;
+                x = op.matrix * x;
             else
-                y = op.matrix' * x;
+                x = op.matrix' * x;
             end
         end % function multiply
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % divide  Solve a linear system with the operator.
             if mode == 1
-                x = op.matrix \ b;
+                x = op.matrix \ x;
             else
-                x = op.matrix' \ b;
+                x = op.matrix' \ x;
             end
         end % function divide
 

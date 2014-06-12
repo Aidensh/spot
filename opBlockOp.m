@@ -74,7 +74,7 @@ classdef opBlockOp < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function z = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             m   = op.inputdims(1);
             n   = op.inputdims(2);
             nbr = op.nblocks(1); % Blocks per row
@@ -88,28 +88,28 @@ classdef opBlockOp < opSpot
 
             if mode == 1
                 y = full(reshape(x,m,n));
-                z = zeros(nbr*bsr2,nbc*bsc2, class(x));
+                x = zeros(nbr*bsr2,nbc*bsc2, class(x));
                 for i=1:nbr
                     for j=1:nbc
                         blk = y((i-1)*bsr1+(1:bsr1),(j-1)*bsc1+(1:bsc1));
                         data= multiply(blockOp,blk(:),1);
-                        z((i-1)*bsr2+(1:bsr2),(j-1)*bsc2+(1:bsc2))...
+                        x((i-1)*bsr2+(1:bsr2),(j-1)*bsc2+(1:bsc2))...
                             = reshape(data,bsr2,bsc2);
                     end
                 end             
             else
                 y = full(reshape(x,nbr*bsr2,nbc*bsc2));
-                z = zeros(m,n, class(x));
+                x = zeros(m,n, class(x));
                 for i=1:nbr
                     for j=1:nbc
                         blk = y((i-1)*bsr2+(1:bsr2),(j-1)*bsc2+(1:bsc2));
                         data= multiply(blockOp,blk(:),2);
-                        z((i-1)*bsr1+(1:bsr1),(j-1)*bsc1+(1:bsc1))...
+                        x((i-1)*bsr1+(1:bsr1),(j-1)*bsc1+(1:bsc1))...
                             = reshape(data,bsr1,bsc1);
                     end
                 end             
             end
-            z = z(:);
+            x = x(:);
         end % function multiply
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

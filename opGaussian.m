@@ -144,18 +144,19 @@ classdef opGaussian < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             for u = size(x,2):-1:1 % Loop over multivector
                 y(:,u) = op.funHandle(op,x(:,u),mode);
             end
+            x = y;
         end % Multiply
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
-            x = lsqrdivide(op,b,mode);
+            x = lsqrdivide(op,x,mode);
         end % divide
 
     end % Methods
@@ -164,18 +165,18 @@ classdef opGaussian < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply - Explicit matrix
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiplyExplicit(op,x,mode)
+        function x = multiplyExplicit(op,x,mode)
             if mode == 1
-                y = op.matrix  * x;
+                x = op.matrix  * x;
             else
-                y = op.matrix' * x;
+                x = op.matrix' * x;
             end
         end % Multiply explicit
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply -  Implicit (unscaled)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiplyImplicit(op,x,mode)
+        function x = multiplyImplicit(op,x,mode)
             m = op.m;
             n = op.n;
             % Store current random number generator state
@@ -193,6 +194,7 @@ classdef opGaussian < opSpot
                     y(i) = randn(1,m) * x;
                 end
             end
+            x = y;
 
             % Restore original random number generator state
             rng(seed0);
@@ -201,7 +203,7 @@ classdef opGaussian < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply -  Implicit (scaled)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiplyImplicitScaled(op,x,mode)
+        function x = multiplyImplicitScaled(op,x,mode)
             m = op.m;
             n = op.n;
             % Store current random number generator state
@@ -219,6 +221,7 @@ classdef opGaussian < opSpot
                     y(i) = op.scale(i) * randn(1,m) * x;
                 end
             end
+            x = y;
 
             % Restore original random number generator state
             rng(seed0);

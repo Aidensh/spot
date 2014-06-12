@@ -119,16 +119,16 @@ classdef opExcise < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Multiply
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
-            y = applyMultiply(op.opIntrnl,x,mode);
+       function x = multiply(op,x,mode)
+            x = applyMultiply(op.opIntrnl,x,mode);
        end % Multiply
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Divide
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function x = divide(op,b,mode)
+       function x = divide(op,x,mode)
            % Non-sweepable
-           x = lsqrdivide(op,b,mode);
+           x = lsqrdivide(op,x,mode);
        end % divide
 
     end % Methods

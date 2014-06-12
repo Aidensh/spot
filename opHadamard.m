@@ -50,7 +50,7 @@ classdef opHadamard < opSpot
     methods( Access = protected )
        
         % Multiplication
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             for u = size(x,2):-1:1 % Loop through multivector
                 y_tmp = x(:,u);
                 n = op.n;
@@ -74,16 +74,16 @@ classdef opHadamard < opSpot
                     y_tmp = y_tmp / sqrt(op.n);
                 end
 
-                y(:,u) = y_tmp;
+                x(:,u) = y_tmp;
             end
         end % Multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
-            x = lsqrdivide(op,b,mode);
+            x = lsqrdivide(op,x,mode);
         end % divide
     
     end % Methods

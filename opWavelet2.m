@@ -139,11 +139,11 @@ classdef opWavelet2 < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = mldivide(op,x)
+        function x = mldivide(op,x)
             if isa(x,'SeisDataContainer')
-                y = dataDivide(x,op);
+                x = dataDivide(x,op);
             else
-                y = op.funHandle2(op,x);
+                x = op.funHandle2(op,x);
             end
         end % function mldivide
 
@@ -155,7 +155,7 @@ classdef opWavelet2 < opSpot
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       % matvec.  Application of Wavlet operator.
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function y = multiply_intrnl(op,x,mode)
+      function x = multiply_intrnl(op,x,mode)
          p = op.signal_dims(1);
          q = op.signal_dims(2);
          pext = op.coeff_dims(1);
@@ -197,12 +197,14 @@ classdef opWavelet2 < opSpot
             y = R'*y(:);
 
          end
+         
+         x = y;
       end % function matvec
 
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       % matvec_redundant.  Application of redundant Wavlet operator.
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function y = multiply_redundant_intrnl(op,x,mode)
+      function x = multiply_redundant_intrnl(op,x,mode)
          p = op.signal_dims(1);
          q = op.signal_dims(2);
          pext = op.coeff_dims(1);
@@ -246,13 +248,14 @@ classdef opWavelet2 < opSpot
             y = R'*y(:);
 
          end
+         x = y;
       end % function matvec_redundant
 
 
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       % divide_intrnl.  Application of redundant Wavlet operator.
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function y = divide_intrnl(op,x)
+      function x = divide_intrnl(op,x)
          p = op.signal_dims(1);
          q = op.signal_dims(2);
          pext = op.coeff_dims(1);
@@ -276,12 +279,14 @@ classdef opWavelet2 < opSpot
          y = y(1:p, 1:q);
 
          y = y(:);
+         
+         x = y;
       end % function divide
 
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       % divide_intrnl.  Application of redundant Wavlet operator.
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      function y = divide_redundant_intrnl(op,x)
+      function x = divide_redundant_intrnl(op,x)
          p = op.signal_dims(1);
          q = op.signal_dims(2);
          pext = op.coeff_dims(1);
@@ -307,8 +312,8 @@ classdef opWavelet2 < opSpot
          y = y(1:p, 1:q);
 
          y = y(:);
-
-
+         
+         x = y;
       end % function divide
 
 
@@ -323,10 +328,12 @@ classdef opWavelet2 < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             for u = size(x,2):-1:1
                 y(:,u) = op.funHandle(op,x(:,u),mode);
             end
+            
+            x = y;
         end % function multiply
 
     end % methods - protected

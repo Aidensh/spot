@@ -67,25 +67,25 @@ classdef opPInverse < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             opA = op.children{1};
             if mode == 1
                 A = opA;
             else
                 A = opA';
             end
-            y = A\x;
+            x = A\x;
         end % function multiply
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Depends on sweepflag
             if op.sweepflag
-                x = matldivide(op,b,mode);
+                x = matldivide(op,x,mode);
             else
-                x = lsqrdivide(op,b,mode);
+                x = lsqrdivide(op,x,mode);
             end
         end % divide
 

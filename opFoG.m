@@ -138,25 +138,25 @@ classdef opFoG < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function z = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             if mode == 1
-                y = applyMultiply(op.children{2},x,mode);
-                z = applyMultiply(op.children{1},y,mode);
+                x = applyMultiply(op.children{2},x,mode);
+                x = applyMultiply(op.children{1},x,mode);
             else % mode = 2
-                y = applyMultiply(op.children{1},x,mode);
-                z = applyMultiply(op.children{2},y,mode);
+                x = applyMultiply(op.children{1},x,mode);
+                x = applyMultiply(op.children{2},x,mode);
             end
         end % Multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Needs sweepflag
             if op.sweepflag
-                x = matldivide(op,b,mode);
+                x = matldivide(op,x,mode);
             else
-                x = lsqrdivide(op,b,mode);
+                x = lsqrdivide(op,x,mode);
             end
         end % divide
         

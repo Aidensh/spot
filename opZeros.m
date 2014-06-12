@@ -54,7 +54,7 @@ classdef opZeros < opSpot
     methods( Access = protected )
        
         % Multiplication
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
            if mode == 1
               s = op.m;
            else
@@ -64,18 +64,18 @@ classdef opZeros < opSpot
            nCol = size(x,2);
    
            if any(isinf(x) | isnan(x))
-              y = ones(s,nCol, class(x)) * NaN;
+              x = ones(s,nCol, class(x)) * NaN;
            else
-              y = zeros(s,nCol, class(x));
+              x = zeros(s,nCol, class(x));
            end
         end % function multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Sweepable
-            x = matldivide(op,b,mode);
+            x = matldivide(op,x,mode);
         end % divide
       
     end % methods - protected

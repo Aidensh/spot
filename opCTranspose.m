@@ -122,12 +122,12 @@ classdef opCTranspose < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             A = op.children{1};
             if mode == 1
-                y = applyMultiply(A,x,2);
+                x = applyMultiply(A,x,2);
             else
-                y = applyMultiply(A,x,1);
+                x = applyMultiply(A,x,1);
             end
         end % function multiply
 

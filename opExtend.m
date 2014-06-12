@@ -118,7 +118,7 @@ classdef opExtend < opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods(Access = protected)
 
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
 
             for u = size(x,2):-1:1 % loop over multivector
                 if mode == 1
@@ -132,14 +132,15 @@ classdef opExtend < opSpot
                 end
                 y(:,u) = full(Xmat(:)); % need full because op.Rx is sparse
             end
+            x = y;
         end % multiply
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
-            x = lsqrdivide(op,b,mode);
+            x = lsqrdivide(op,x,mode);
         end % divide
 
     end % methods protected

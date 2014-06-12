@@ -57,20 +57,20 @@ classdef opOnes < opSpot
     methods( Access = protected )
        
         % Multiplication
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
            if mode == 1
-               y = ones(op.m,1) * sum(x);
+               x = ones(op.m,1) * sum(x);
            else
-               y = ones(op.n,1) * sum(x);
+               x = ones(op.n,1) * sum(x);
            end
         end % multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
-            x = lsqrdivide(op,b,mode);
+            x = lsqrdivide(op,x,mode);
         end % divide
       
     end % Methods

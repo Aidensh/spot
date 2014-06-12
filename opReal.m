@@ -58,17 +58,17 @@ classdef opReal < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Multiply
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
+       function x = multiply(op,x,mode)
             opA = op.children{1};
             if isreal(x)
                 % Purely real
-                y = real(applyMultiply(opA,x,mode));
+                x = real(applyMultiply(opA,x,mode));
             elseif isreal(1i*x)
                 % Purely imaginary
-                y = real(applyMultiply(opA,imag(x),mode)) * 1i;
+                x = real(applyMultiply(opA,imag(x),mode)) * 1i;
             else
                 % Mixed
-                y = real(applyMultiply(opA,real(x),mode)) + ...
+                x = real(applyMultiply(opA,real(x),mode)) + ...
                     real(applyMultiply(opA,imag(x),mode)) * 1i;
             end
        end % Multiply
@@ -76,12 +76,12 @@ classdef opReal < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Depends on sweepflag
             if op.sweepflag
-                x = matldivide(op,b,mode);
+                x = matldivide(op,x,mode);
             else
-                x = lsqrdivide(op,b,mode);
+                x = lsqrdivide(op,x,mode);
             end
         end % divide
 

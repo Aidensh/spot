@@ -95,13 +95,13 @@ classdef opBinary < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             if ~isempty(op.matrix)
                 % Explicit matrix
                 if mode == 1
-                    y = op.matrix * x;
+                    x = op.matrix * x;
                 else
-                    y = op.matrix' * x;
+                    x = op.matrix' * x;
                 end
             else
                 for u = size(x,2):-1:1 % Loop over multivector
@@ -131,15 +131,16 @@ classdef opBinary < opSpot
                     % Restore original rwandom number generator state
                     rng(seed0);
                 end
+                x = y;
             end
         end % Multiply
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
-            x = lsqrdivide(op,b,mode);
+            x = lsqrdivide(op,x,mode);
         end % divide
 
     end % methods - protected
