@@ -71,7 +71,6 @@ classdef (HandleCompatible) opSpot
             %get.nprods  Get a count of the products with the operator.
             nprods = [op.counter.mode1, op.counter.mode2];
         end % function get.Nprods
-        
     end % methods - public
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -131,4 +130,13 @@ classdef (HandleCompatible) opSpot
         y = multiply(op,x,mode)
     end % methods - abstract
     
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Static Methods
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods( Static )
+        function op = load(theFileName)
+            op = load(theFileName,'obj');
+            op = op.obj;
+        end
+    end
 end % classdef
