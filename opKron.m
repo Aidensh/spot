@@ -346,8 +346,6 @@ classdef opKron < opSpot
                 
                 dimSize = [dimSize{1} dimSize{2}];
                 
-                x = reshape(x,dimSize);
-                
                 dimOrder = [dimOrder{1} dimOrder{2}];
                 
                 lowerInd = find(dimOrder==1):length(dimOrder);
@@ -360,7 +358,7 @@ classdef opKron < opSpot
             elseif mode == 2 % Transpose mode
                 ops = fliplr(opList);
                 perm = op.permutation; % Permutation to take in account.
-                perm = length(perm) - perm + 1;
+                
                 n = op.n; % Height of the resulting matrix
                 
                 dimOrder = 1:nbr_children;
@@ -441,8 +439,6 @@ classdef opKron < opSpot
                 dimSize{1} = theOp.n;
                 
                 dimSize = [dimSize{1} dimSize{2}];
-                
-                x = reshape(x,dimSize);
                 
                 dimOrder = [dimOrder{1} dimOrder{2}];
                 
