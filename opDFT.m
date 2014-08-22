@@ -92,7 +92,6 @@ classdef opDFT < opOrthogonal
                 x = ifft(full(x));
                 x = x * sqrt(n);
             end
-            x = y;
         end % opDFT_intrnl
 
         function x = opDFT_centered_intrnl(op,x,mode)
@@ -105,7 +104,6 @@ classdef opDFT < opOrthogonal
                 x = ifft(ifftshift(full(x)));
                 x = x * sqrt(n);
             end
-            x = y;
         end % opDFT_centered_intrnl
     end % private methods
 end % opDFT

@@ -79,7 +79,7 @@ classdef opDFT2 < opOrthogonal
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function x = multiply(op,x,mode)
             for u = size(x,2):-1:1
-                x(:,u) = op.funHandle(op,x(:,u),mode);
+                y(:,u) = op.funHandle(op,x(:,u),mode);
             end
             x = y;
         end % function multiply
@@ -107,11 +107,10 @@ classdef opDFT2 < opOrthogonal
             else
                 x = reshape(ifft2(reshape(full(x),m,n)) * sqrt(m*n),m*n,1);
             end
-            x = y;
         end % function opDFT2d_intrnl
 
         % Two-dimensional DFT - Centered
-        function y = opDFT2d_centered_intrnl(op,x,mode)
+        function x = opDFT2d_centered_intrnl(op,x,mode)
             m = op.inputdims(1);
             n = op.inputdims(2);
             if mode == 1
@@ -119,7 +118,6 @@ classdef opDFT2 < opOrthogonal
             else
                 x = reshape(ifft2(ifftshift(reshape(full(x),m,n))) * sqrt(m*n),m*n,1);
             end
-            x = y;
         end % function opDFT2d_centered_intrnl
 
     end % methods - private
