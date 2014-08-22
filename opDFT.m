@@ -63,8 +63,8 @@ classdef opDFT < opOrthogonal
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods( Access = protected )
         % Multiplication
-        function y = multiply(op,x,mode)
-            y = op.funHandle(op,x,mode);
+        function x = multiply(op,x,mode)
+            x = op.funHandle(op,x,mode);
         end % Multiply
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -85,12 +85,12 @@ classdef opDFT < opOrthogonal
             n = op.n;
             if mode == 1
                 % Analysis
-                y = fft(full(x));
-                y = y / sqrt(n);
+                x = fft(full(x));
+                x = x / sqrt(n);
             else
                 % Synthesis
-                y = ifft(full(x));
-                y = y * sqrt(n);
+                x = ifft(full(x));
+                x = x * sqrt(n);
             end
             x = y;
         end % opDFT_intrnl
@@ -99,11 +99,11 @@ classdef opDFT < opOrthogonal
             % One-dimensional DFT - Centered
             n = op.n;
             if mode == 1
-                y = fftshift(fft(full(x)));
-                y = y / sqrt(n);
+                x = fftshift(fft(full(x)));
+                x = x / sqrt(n);
             else
-                y = ifft(ifftshift(full(x)));
-                y = y * sqrt(n);
+                x = ifft(ifftshift(full(x)));
+                x = x * sqrt(n);
             end
             x = y;
         end % opDFT_centered_intrnl

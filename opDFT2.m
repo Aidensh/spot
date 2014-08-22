@@ -79,7 +79,7 @@ classdef opDFT2 < opOrthogonal
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function x = multiply(op,x,mode)
             for u = size(x,2):-1:1
-                y(:,u) = op.funHandle(op,x(:,u),mode);
+                x(:,u) = op.funHandle(op,x(:,u),mode);
             end
             x = y;
         end % function multiply
@@ -103,9 +103,9 @@ classdef opDFT2 < opOrthogonal
             m = op.inputdims(1);
             n = op.inputdims(2);
             if mode == 1
-                y = reshape( fft2(reshape(full(x),m,n)) / sqrt(m*n),m*n,1);
+                x = reshape( fft2(reshape(full(x),m,n)) / sqrt(m*n),m*n,1);
             else
-                y = reshape(ifft2(reshape(full(x),m,n)) * sqrt(m*n),m*n,1);
+                x = reshape(ifft2(reshape(full(x),m,n)) * sqrt(m*n),m*n,1);
             end
             x = y;
         end % function opDFT2d_intrnl
@@ -115,11 +115,9 @@ classdef opDFT2 < opOrthogonal
             m = op.inputdims(1);
             n = op.inputdims(2);
             if mode == 1
-                y = fftshift(fft2(reshape(full(x),m,n))) / sqrt(m*n);
-                y = reshape(y,m*n,1);
+                x = reshape(fftshift(fft2(reshape(full(x),m,n))) / sqrt(m*n),m*n,1);
             else
-                y = ifft2(ifftshift(reshape(full(x),m,n))) * sqrt(m*n);
-                y = reshape(y,m*n,1);
+                x = reshape(ifft2(ifftshift(reshape(full(x),m,n))) * sqrt(m*n),m*n,1);
             end
             x = y;
         end % function opDFT2d_centered_intrnl
