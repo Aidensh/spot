@@ -1,4 +1,4 @@
-function save( obj,fileName,overwrite,theFieldNames )
+function save(obj,fileName,overwrite)
 %SAVE Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -15,19 +15,5 @@ else
 end
 
 save(fileName,'obj')
-% %save(fileName,'-struct','obj');
-% if nargin < 4
-%     theFieldNames = fieldnames(obj);
-% end
-% 
-% for ind = 1:length(theFieldNames)
-%     if ind == 1
-%         eval(strcat(theFieldNames{ind},'=obj.',theFieldNames{ind},';'));
-%         save(fileName,theFieldNames{ind});
-%     else
-%         eval(strcat(theFieldNames{ind},'=obj.',theFieldNames{ind},';'));
-%         save(fileName,'-append',theFieldNames{ind});
-%     end
-% end
 end
 

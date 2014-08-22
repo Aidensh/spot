@@ -45,7 +45,7 @@ classdef opTranspose < opSpot
             op = op@opSpot('Transpose', n, m);
             op.cflag     = A.cflag;
             op.linear    = A.linear;
-            op.sweepflag = true;
+            op.sweepflag = A.sweepflag;
             op.children  = {A};
             op.opIntrnl  = opCTranspose(opConj(A));
             op.ms        = A.ns;
@@ -121,7 +121,6 @@ classdef opTranspose < opSpot
         end % function multiply
 
     end % methods - public
-
 
     methods ( Access = protected )
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
