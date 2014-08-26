@@ -19,7 +19,7 @@ function test_transpose_elementary_ops
     check_1Input('opHaar',m*2^5);
     check_2Input('opHaar2',64,32);
     check_2Input('opHadamard',n,n);
-    check_2Input('opHeaviside',n,n); %TODO: something needs to be fixed
+    check_2Input('opHeaviside',n,n);
     check_2Input('opOnes',m,n);
     check_2Input('opZeros',m,n);
 end
