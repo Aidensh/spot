@@ -42,48 +42,34 @@ classdef opDFT_2 < opOrthogonal_2
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function op = opDFT_2(varargin)
             
-            % work on and check the first input arguement
-            if length(varargin) < 1 % if no input for constructor
-                m = nan;
-            elseif ~SDCpckg.utils.isForContainerInfo(varargin{1}) && isscalar(varargin{1}) % opDFT_2(M) or opDFT_2(M,CENTERED)
-                if nargin > 2
-                    error('Invalid number of arguments to opDFT_2 with first input double.');
-                end
+            if nargin > 0
                 m = varargin{1};
-                if ~(m == round(m) && m > 0)
-                    error('Input M has to be a positive integer')
-                end
-                varargin(1)=[];
-            elseif SDCpckg.utils.isForContainerInfo(varargin{1}) % opDFT_2({C,dim1}) or opDFT_2({C,dim1},CENTERED)
-                if nargin > 2
-                   error('Invalid number of arguments to opDFT_2 with input SeisDataContainer.');
-                end
-                containerDimInfo = varargin{1}; % {C, dim1}
-                
-                C = varargin{1}{1}; % extract the DataContainer
-                
-                % now work with picking dimension. Note opDFT_2 allows
-                % picking only one of the dimensions.
-                if length(containerDimInfo) == 2 && numel(containerDimInfo{2}) == 1 % {C,dim1}
-                    refDim = containerDimInfo{2};
-                    if ~all(refDim <= length(size(containerDimInfo{1}))) % make sure not over select
-                        error('invalid dimension selected for data container')
-                    end
-                    m = size(C,containerDimInfo{2});
-                else
-                    error('invalid dataContainer refrerncing dimension info'); % please make sure exactly 1 dimension of C is selected
-                end
-                varargin(1)=[];
-            elseif isa(varargin{1},'SeisDataContainer')
-                error('Remember to wrap the data container and all the dimension selection arguements together into one cell')
-            elseif iscell(varargin{1}) && isempty(varargin{1})
-                % centered will be handled in the next part
-                m = nan;
-                varargin(1) = [];
             else
-                error('Invalid input type of the first arguement for opDFT_2');
+                m = nan;
             end
+            activated = (nargin > 0) && isnumeric(m);
             
+            if activated
+                if iscell(m)
+                    refDim = m;
+                    refDim(1) = []; % remove the dataContainer
+                    refDim = spot.utils.uncell(refDim);
+                    
+                    if ~isempty(refDim) % make sure there are dimensions selected
+                        if ~all(refDim <= length(size(m{1}))) % incase over-selecting
+                            error('invalid dimension selected for data container')
+                        end
+                        theNs = size(m{1},refDim);
+                    else
+                        error('invalid dataContainer refrerncing dimension info'); % please make sure at least 1 dimension of C is selected
+                    end
+                    varargin(1) = [];
+                else %numeric
+                    varargin(1) = [];
+                end
+            else
+                m = nan;
+            end
             
             % check centered arguement
             centred = false; % set centred to false by default
@@ -109,87 +95,8 @@ classdef opDFT_2 < opOrthogonal_2
             else
                 op.funHandle = @opDFT_2_intrnl;
             end
-            
         end % constructor
         
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % headerMod
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function h = headerMod(op,header,mode)
-            exsize = header.exsize;
-            
-            if mode == 1
-                h = header; % Copy header
-                % Replace old first (collapsed) dimensional sizes with operator sizes.
-                h.size(exsize(1,1):exsize(2,1)) = [];
-                h.size = [op.ms{:} h.size];
-            else
-                h = header;
-                h.size(exsize(1,1):exsize(2,1)) = [];
-                h.size = [op.ns{:} h.size];
-            end
-            
-            exsize_out = 1:length(h.size);
-            exsize_out = [exsize_out;exsize_out];
-            h.exsize   = exsize_out;
-            
-            % modify unit, origin, offset
-            tempContainer = iCon(header);
-            
-            [unitOut, ~] = opDFT_2.unitGet(tempContainer,mode);
-            h.unit = unitOut;
-            
-            [deltaOut,~] = opDFT_2.deltaGet(tempContainer,mode);
-            h.delta = deltaOut;
-            
-            [offsetOut,~] = opDFT_2.originGet(tempContainer,mode);
-            h.origin = offsetOut;
-            
-            if ~isempty(h.IDHistory) % if the operation history is not empty
-                prevHis = peek(h.IDHistory);
-                
-                prevHisID = prevHis.ID;
-                
-                if ~strcmp(prevHisID,op.ID) %if IDs are different
-                    h.IDHistory = push(h.IDHistory,{...
-                        {'ID',op.ID},...
-                        {'ClassName',class(op)},...
-                        {'mode',mode},...
-                        {'opM',op.m},...
-                        {'opN',op.n},...
-                        {'origin',header.origin},...
-                        {'children',2}});
-                else % if IDs are the same
-                    prevHisMode = prevHis.mode;
-                    
-                    if strcmp(prevHisMode,mode) % if modes are the same
-                        h.IDHistory = push(h.IDHistory,{...
-                            {'ID',op.ID},...
-                            {'ClassName',class(op)},...
-                            {'mode',mode},...
-                            {'origin',header.origin}
-                            {'opM',op.m},...
-                            {'opN',op.n},...
-                            {'children',{}}});
-                    else % if modes are opposite
-                        h.IDHistory = remove(h.IDHistory,1); % cancel out
-                        
-                        prevHisOrigin = prevHis.origin;
-                        
-                        h.origin = prevHisOrigin;
-                    end
-                end
-            else % if it is empty ...
-                h.IDHistory = push(h.IDHistory,{...
-                    {'ID',op.ID},...
-                    {'ClassName',class(op)},...
-                    {'mode',mode},...
-                    {'origin',header.origin},...
-                    {'opM',op.m},...
-                    {'opN',op.n},...
-                    {'children',{}}});
-            end
-        end
         function op = activateOp(op,header,~)
             % activate the operator right before it operates on container
             % header : the header of the data container
@@ -221,6 +128,7 @@ classdef opDFT_2 < opOrthogonal_2
             % dataContainer.
             dim = 1;
         end
+        
     end % methods - public
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -258,7 +166,6 @@ classdef opDFT_2 < opOrthogonal_2
                 y = y * sqrt(n);
             end
         end % opDFT_2_intrnl
-
         function y = opDFT_2_centered_intrnl(op,x,mode)
             % One-dimensional DFT - Centered
             n = op.n;
@@ -270,92 +177,134 @@ classdef opDFT_2 < opOrthogonal_2
                 y = y * sqrt(n);
             end
         end % opDFT_2_centered_intrnl
-        
-        
     end % private methods
     
-    methods ( Static )
-        % Unit handling
-        function [unitOut, unitIn] = unitGet(C,mode)
-            % C is the SeisDataContainer
-            % mode = 1 for regular fft; mode = 2 for inverse fft
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - Static
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods( Static )
+        function fh = default_full_handler()
+            fh = @(header,op,mode)default_full_handler_helper(header,op,mode);
             
-            % unit : get
-            theUnits = unit(C);
-            theUnit = theUnits{1};
-            % varUnit : get
-            theVarUnit = varUnits(C);
-            if ~(ischar(theVarUnit))
-                error('something wrong with opDFT_2 varUnit')
-            end
-            
-            % unit : check if it is recognized by opDFT_2
-            if mode == 1
-                unitRecognized = spLength.existUnit(theUnit) || spTime.existUnit(theUnit);
-            else
-                unitRecognized = spLengthInv.existUnit(theUnit) || spFrequency.existUnit(theUnit);
-            end
-            
-            % varUnit : check if it is recognized by opDFT_2
-            if mode == 1
-                varUnitRecognized = spLengthInv.existUnit(theVarUnit) || spFrequency.existUnit(theVarUnit);
-            else
-                varUnitRecognized = spLength.existUnit(theVarUnit) || spTime.existUnit(theVarUnit);
-            end
-            
-            if unitRecognized && varUnitRecognized
-                if strcmp(theUnit, theVarUnit)
-                    % good, do nothing
-                else % if different
-                    % will just use unit field
-                    warning('SeisDataContainer:unit','unit and varUnit are both recognized but different, so assumed unit field as the unit')
-                end
-            elseif unitRecognized && ~varUnitRecognized
-                % will just use unit field
-            elseif ~unitRecognized && varUnitRecognized
-                % recover unit from varUnit
-                theUnit = theVarUnit;
-            else % ~inUnitRecognized && ~outUnitRecognized
-                % opDFT_2 isn't sure what it's doing. Maybe give warning for
-                % this or blow the program up?
-                warning('SeisDataContainer:unit','opDFT_2 detects no recognizable unit from Leave it as "(someUnit)".')
-                theUnit = '(someUnit)';
-            end
-            
-            unitIn = theUnit;
-            
-            if mode == 1
-                if spLength.existUnit(unitIn)
-                    outUnit = '1/m';
-                elseif spTime.existUnit(unitIn)
-                    outUnit = 'Hz';
+            function h = default_full_handler_helper(header,op,mode)
+                exsize = header.exsize;
+                
+                if mode == 1
+                    h = header; % Copy header
+                    % Replace old first (collapsed) dimensional sizes with operator sizes.
+                    h.size(exsize(1,1):exsize(2,1)) = [];
+                    h.size = [op.ms{:} h.size];
                 else
-                    outUnit = '(someUnit)';
+                    h = header;
+                    h.size(exsize(1,1):exsize(2,1)) = [];
+                    h.size = [op.ns{:} h.size];
                 end
-            else
-                if spLengthInv.existUnit(unitIn)
-                    outUnit = 'm';
-                elseif spFrequency.existUnit(unitIn)
-                    outUnit = 's';
-                else
-                    outUnit = '(someUnit)';
+                
+                exsize_out = 1:length(h.size);
+                exsize_out = [exsize_out;exsize_out];
+                h.exsize   = exsize_out;
+                
+                % modify unit, origin, offset, varName, varUnit, etc
+%                 h = SDCpckg.utils.modifyAdditionalMetadata(op,header,mode);
+                
+                % modification based on history
+                if ~isempty(h.IDHistory) % if the operation history is not empty
+                    prevHis = peek(h.IDHistory);
+                    
+                    prevHisID = prevHis.ID;
+                    
+                    if ~strcmp(prevHisID,op.ID) %if IDs are different
+                        h.IDHistory = push(h.IDHistory,{...
+                            {'ID',op.ID},...
+                            {'ClassName',class(op)},...
+                            {'mode',mode},...
+                            {'opM',op.m},...
+                            {'opN',op.n},...
+                            {'origin',header.origin},...
+                            {'children',2}});
+                    else % if IDs are the same
+                        prevHisMode = prevHis.mode;
+                        
+                        if strcmp(prevHisMode,mode) % if modes are the same
+                            h.IDHistory = push(h.IDHistory,{...
+                                {'ID',op.ID},...
+                                {'ClassName',class(op)},...
+                                {'mode',mode},...
+                                {'origin',header.origin}
+                                {'opM',op.m},...
+                                {'opN',op.n},...
+                                {'children',{}}});
+                        else % if modes are opposite
+                            h.IDHistory = remove(h.IDHistory,1); % cancel out
+                            prevHisOrigin = prevHis.origin;
+                            h.origin = prevHisOrigin;
+                        end
+                    end
+                else % if it is empty ...
+                    h.IDHistory = push(h.IDHistory,{...
+                        {'ID',op.ID},...
+                        {'ClassName',class(op)},...
+                        {'mode',mode},...
+                        {'origin',header.origin},...
+                        {'opM',op.m},...
+                        {'opN',op.n},...
+                        {'children',{}}});
                 end
             end
-            
-            unitOut = theUnits;
-            unitOut{1} = outUnit;
         end
         
-        function [originOut, originIn] = originGet(C,~)
-            originIn = origin(C);
-            originOut = zeros(1,length(origin(C)));
-        end
-        
-        function [deltaOut, deltaIn] = deltaGet(C,~)
-            deltaIn = delta(C);
+        function fh = default_unit_handler()
+            fh = @(header,op,mode)default_unit_handler_helper(header,op,mode);
             
-            deltaOut = deltaIn;
-            deltaOut(1) = 1/((length(C) - 1) * delta(C,1));
+            function newUnit = default_unit_handler_helper(header,~,~)
+                unit = header.unit;
+                currentUnit = unit{1};
+                newUnit = unit;
+                
+                if isa(currentUnit,'sUnit')
+                    newUnit{1} = 1/currentUnit;
+                else % if is char unit
+                    if sLength.existsUnit(currentUnit) || sTime.existsUnit(currentUnit)
+                        currentUnit = strcat('1/',currentUnit);
+                        newUnit{1} = currentUnit;
+                    else
+                        warning('could not detect the unit. Unit set to (aUnit)')
+                        newUnit{1} = 'aUnit';
+                    end
+                end
+            end
+        end
+        function fh = default_delta_handler()
+            fh = @(header,op,mode)default_delta_handler_helper(header,op,mode);
+            
+            function deltaOut = default_delta_handler_helper(header,~,~)
+                deltaIn = header.delta;
+                
+                dataSize = header.size;
+                
+                deltaOut = deltaIn;
+                deltaOut(1) = 1/((dataSize(1) - 1) * deltaIn(1));
+            end
+        end
+        function fh = default_size_handler()
+            fh = @(header,op,mode)default_size_handler_helper(header,op,mode);
+            
+            function sizeOut = default_size_handler_helper(header,op,mode)
+                exsize = header.exsize;
+                
+                sizeOut = header.size;
+                if mode == 1
+                    sizeOut(exsize(1,1):exsize(2,1)) = [];
+                    sizeOut = [op.ms{:} sizeOut];
+                else
+                    sizeOut(exsize(1,1):exsize(2,1)) = [];
+                    sizeOut = [op.ns{:} sizeOut];
+                end
+            end
         end
     end
 end % opDFT_2
+
+
+
+

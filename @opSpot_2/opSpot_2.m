@@ -33,6 +33,9 @@ classdef (HandleCompatible) opSpot_2
         weights;            % weights for meta operators
         
         activated  = true;  % whether the operator is initialized. Assume true
+        
+        %metadata handling rule class. Default handler does nothing
+        metadataRule;
     end
     
     properties( Dependent = true, SetAccess = private )
@@ -79,6 +82,7 @@ classdef (HandleCompatible) opSpot_2
                 error('Unsupported use of Spot constructor.');
             end
             op.ID = num2str(rand);
+            op.metadataRule = sRule(strcat('op',type));
         end % function opSpot_2
         
         function nprods = get.nprods(op)
@@ -143,5 +147,27 @@ classdef (HandleCompatible) opSpot_2
     methods( Abstract, Access = protected )
         y = multiply(op,x,mode)
     end % methods - abstract
-    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Methods - Static
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods( Static )
+%         function fh = default_varName_handler()
+%             fh = @(header,mode)header.varName;
+%         end
+%         function fh = default_varUnits_handler()
+%             fh = @(header,mode)header.varUnits;
+%         end
+%         function fh = default_origin_handler()
+%             fh = @(header,mode)header.origin;
+%         end
+%         function fh = default_delta_handler()
+%             fh = @(header,mode)header.delta;
+%         end
+%         function fh = default_label_handler()
+%             fh = @(header,mode)header.label;
+%         end
+%         function fh = default_unit_handler()
+%             fh = @(header,mode)header.unit;
+%         end
+    end
 end % classdef

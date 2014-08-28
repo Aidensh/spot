@@ -84,11 +84,11 @@ elseif ~isa(B,'opSpot') % A is spot, B isnt
             char(A), sizB);
         
         else % Perform operator*matrix
-        % Unsupported data types warning
-        if ~isnumeric(B) && ~isa(A,'oppSpot')
-            warning(['Data type "' class(B)...
-            '" is not officially supported by spot, proceed at own risk']);
-        end
+            % Unsupported data types warning
+            if ~isnumeric(B) && ~isa(A,'oppSpot') && ~islogical(B)
+                warning(['Data type "' class(B)...
+                    '" is not officially supported by spot, proceed at own risk']);
+            end
         
             if isempty(A)
                 y = zeros(A.m,size(B,2), class(B));
