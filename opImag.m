@@ -57,30 +57,30 @@ classdef opImag < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             opA = op.children{1};
             if mode == 1
                 if isreal(x)
                     % Purely real
-                    y = imag(applyMultiply(opA,x,mode));
+                    x = imag(applyMultiply(opA,x,mode));
                 elseif isreal(1i*x)
                     % Purely imaginary
-                    y = imag(applyMultiply(opA,imag(x),mode)) * 1i;
+                    x = imag(applyMultiply(opA,imag(x),mode)) * 1i;
                 else
                     % Mixed
-                    y = imag(applyMultiply(opA,real(x),mode)) + ...
+                    x = imag(applyMultiply(opA,real(x),mode)) + ...
                         imag(applyMultiply(opA,imag(x),mode)) * 1i;
                 end
             else
                 if isreal(x)
                     % Purely real
-                    y = imag(applyMultiply(opA,x,mode)) * -1;
+                    x = imag(applyMultiply(opA,x,mode)) * -1;
                 elseif isreal(1i*x)
                     % Purely imaginary
-                    y = imag(applyMultiply(opA,imag(x),mode)) * 1i * -1;
+                    x = imag(applyMultiply(opA,imag(x),mode)) * 1i * -1;
                 else
                     % Mixed
-                    y = imag(applyMultiply(opA,real(x),mode)) * -1 + ...
+                    x = imag(applyMultiply(opA,real(x),mode)) * -1 + ...
                         imag(applyMultiply(opA,imag(x),mode)) * 1i * -1;
                 end
             end
@@ -89,12 +89,12 @@ classdef opImag < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Depends on sweepflag
             if op.sweepflag
-                x = matldivide(op,b,mode);
+                x = matldivide(op,x,mode);
             else
-                x = lsqrdivide(op,b,mode);
+                x = lsqrdivide(op,x,mode);
             end
         end % divide
 

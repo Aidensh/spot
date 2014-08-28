@@ -22,6 +22,15 @@ if length(s) > 1
             result = newresult;
          end
       else
+          if (i + 1 == length(s)) && strcmp(s(i).type,'.') && strcmp(s(i+1).type,'()')
+              % if it's a function call
+              if strcmp(s(i).subs,'save')
+                  funArgs = s(i+1).subs;
+                  result.save(funArgs{:});
+                  varargout = {};
+                  return;
+              end
+          end
          result = subsref(result,s(i));
       end
    end

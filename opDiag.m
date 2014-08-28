@@ -81,18 +81,18 @@ classdef opDiag < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             for i=size(x,2):-1:1 % loop over multivector
-                y(:,i) = op.diagonal .* x(:,i);
+                x(:,i) = op.diagonal .* x(:,i);
             end
         end % function multiply
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
-            for i=size(b,2):-1:1 % loop over multivector
-                x(:,i) = op.diagonal .\ b(:,i);
+        function x = divide(op,x,mode)
+            for i=size(x,2):-1:1 % loop over multivector
+                x(:,i) = op.diagonal .\ x(:,i);
             end
         end % function divide
     end % methods - protected

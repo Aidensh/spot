@@ -282,18 +282,19 @@ classdef opConvolve < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Multiply
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
+       function x = multiply(op,x,mode)
             for i=size(x,2):-1:1 % Loop over multivectors
                 y(:,i) = op.funHandle(x(:,i),mode);
             end
+            x = y;
        end % Multiply
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Divide
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function x = divide(op,b,mode)
+       function x = divide(op,x,mode)
            % Non-sweepable
-           x = lsqrdivide(op,b,mode);
+           x = lsqrdivide(op,x,mode);
        end % divide
 
     end % Methods

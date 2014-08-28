@@ -120,20 +120,21 @@ classdef opBernoulli < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Multiply
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiply(op,x,mode)
+       function x = multiply(op,x,mode)
            x_n = size(x,2);
            
            for u = x_n:-1:1
                y(:,u) = op.funHandle(op,x(:,u),mode);
            end
+           x = y;
        end % function multiply
        
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Divide
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function x = divide(op,b,mode)
+       function x = divide(op,x,mode)
            % Non-sweepable
-           x = lsqrdivide(op,b,mode);
+           x = lsqrdivide(op,x,mode);
        end % divide
        
     end % methods - protected
@@ -142,18 +143,18 @@ classdef opBernoulli < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Multiply - Explicit matrix
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiplyExplicit(op,x,mode)
+       function x = multiplyExplicit(op,x,mode)
           if mode == 1
-             y = op.matrix * x;
+             x = op.matrix * x;
           else
-             y = op.matrix' * x;
+             x = op.matrix' * x;
           end
        end % function multiplyExplicit
 
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Multiply -  Implicit
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function y = multiplyImplicit(op,x,mode)
+       function x = multiplyImplicit(op,x,mode)
           m = op.m;
           n = op.n;
           % Store current random number generator state
@@ -176,6 +177,8 @@ classdef opBernoulli < opSpot
           
           % Apply scaling
           if op.scale ~= 1, y = y * op.scale; end
+          
+          x = y;
 
           % Restore original random number generator state
           rng(seed0);

@@ -78,7 +78,6 @@ classdef (HandleCompatible) opSpot
             %get.nprods  Get a count of the products with the operator.
             nprods = [op.counter.mode1, op.counter.mode2];
         end % function get.Nprods
-        
     end % methods - public
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -86,7 +85,7 @@ classdef (HandleCompatible) opSpot
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods( Access = protected )
         
-        function y = applyMultiply(op,x,mode)
+        function x = applyMultiply(op,x,mode)
             if size(x,2) > 1
 %                 warning('opSpot:applyMultiply',['The sweeping function in ',...
 %                     'applyMultiply is being ',...
@@ -100,30 +99,31 @@ classdef (HandleCompatible) opSpot
             % For border case: empty x
             if isempty(x)
                 if mode == 1
-                    y = zeros(op.m,0,class(x));
+                    x = zeros(op.m,0,class(x));
                 else
-                    y = zeros(op.n,0,class(x));
+                    x = zeros(op.n,0,class(x));
                 end
                 return
             end
             
             if op.sweepflag
-                y = op.multiply(x,mode);
+                x = op.multiply(x,mode);
             else
                 x_n = size(x,2);
                 
                 if x_n == 1
-                    y = op.multiply(x,mode);
+                    x = op.multiply(x,mode);
                 else
                     for i=x_n:-1:1
                         y(:,i) = op.multiply(x(:,i),mode);
                     end
+                    x = y;
                 end
             end
         end % applyMultiply
         
-        function y = applyDivide(op,x,mode)
-            y = op.divide(x,mode);
+        function x = applyDivide(op,x,mode)
+            x = op.divide(x,mode);
         end
         
         % Signature of external protected functions (In class folder)
@@ -137,4 +137,13 @@ classdef (HandleCompatible) opSpot
         y = multiply(op,x,mode)
     end % methods - abstract
     
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Static Methods
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods( Static )
+        function op = load(theFileName)
+            op = load(theFileName,'obj');
+            op = op.obj;
+        end
+    end
 end % classdef

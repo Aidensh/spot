@@ -71,18 +71,16 @@ classdef opPower < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
-            for i=size(x,2):-1:1 % Loop through multivector
-                y = op.funHandle(op,x,mode);
-            end
+        function x = multiply(op,x,mode)
+            x = op.funHandle(op,x,mode);
         end % function multiply
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
-            x = lsqrdivide(op,b,mode);
+            x = lsqrdivide(op,x,mode);
         end % divide
 
     end % methods - protected
@@ -91,12 +89,11 @@ classdef opPower < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % opPower_intrnl
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = opPower_intrnl(op,x,mode)
+        function x = opPower_intrnl(op,x,mode)
             p = op.exponent;
             A = op.children{1};
-            y = x;
-            for i=1:p
-                y = applyMultiply(A,y,mode);
+            for ind=1:p
+                x = applyMultiply(A,x,mode);
             end
         end % function opPower_intrnl
 

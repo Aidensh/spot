@@ -77,22 +77,22 @@ classdef opSparseBinary < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             if mode == 1
-                y = op.matrix * x;
+                x = op.matrix * x;
             else
-                y = op.matrix'* x;
+                x = op.matrix'* x;
             end
         end % Multiply
        
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             if mode == 1
-                x = op.matrix \ b;
+                x = op.matrix \ x;
             else
-                x = op.matrix'\ b;
+                x = op.matrix'\ x;
             end
         end % divide
 

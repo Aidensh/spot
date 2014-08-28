@@ -56,11 +56,11 @@ classdef opDCT < opOrthogonal
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % multiply.
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             if mode == 1
-                y = spot.utils.dct(full(x));
+                x = spot.utils.dct(full(x));
             else
-                y = spot.utils.idct(full(x));
+                x = spot.utils.idct(full(x));
             end
         end % multiply
 

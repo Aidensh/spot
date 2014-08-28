@@ -180,9 +180,9 @@ classdef opCurvelet3d < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        % Divide
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-       function x = divide(op,b,mode)
+       function x = divide(op,x,mode)
            % Non-sweepable
-           x = lsqrdivide(op,b,mode);
+           x = lsqrdivide(op,x,mode);
        end % divide
     end % Methods
 end % Classdef

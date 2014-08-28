@@ -44,23 +44,23 @@ classdef opHeaviside < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             if mode == 1
                 % Scale if normalized columns requested
                 if op.normalized
                     x = (1./sqrt(op.n:-1:1))'.*x(:);
                 end
 
-                y = cumsum(x);
+                x = cumsum(x);
             else
-                y        = cumsum(x);
-                ym       = y(end);
-                y(2:end) = ym - y(1:end-1);
-                y(1)     = ym;
+                x        = cumsum(x);
+                ym       = x(end);
+                x(2:end) = ym - x(1:end-1);
+                x(1)     = ym;
 
                 % Scale if normalized columns requested
                 if op.normalized,
-                    y = (1./sqrt(op.n:-1:1))'.*y(:);
+                    x = (1./sqrt(op.n:-1:1))'.*x(:);
                 end
             end
         end % Multipy

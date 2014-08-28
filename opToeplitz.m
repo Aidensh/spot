@@ -161,18 +161,19 @@ classdef opToeplitz < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             for u = size(x,2):-1:1 % Loop over multivectors
                 y(:,u) = op.funHandle(x(:,u),mode);
             end
+            x = y;
         end % function multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
-            x = lsqrdivide(op,b,mode);
+            x = lsqrdivide(op,x,mode);
         end % divide
 
     end % protected Methods

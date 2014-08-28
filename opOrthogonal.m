@@ -21,9 +21,9 @@ classdef (HandleCompatible) opOrthogonal < opSpot
             op = op@opSpot(type,m,n);
         end         
 
-        function x = mldivide(op,b)
+        function x = mldivide(op,x)
             % \ (backslash)  x = op\b
-            x = op'*b;
+            x = op'*x;
         end
 
    end % methods

@@ -71,25 +71,25 @@ classdef opInverse < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             opA = op.children{1};
             if mode == 1
                 A = opA;
             else
                 A = opA';
             end
-            y = A\x;
+            x = A\x;
         end % function multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
             if mode == 1
-                x = op.children{1}*b;
+                x = op.children{1}*x;
             else
-                x = op.children{1}'*b;
+                x = op.children{1}'*x;
             end
         end % divide
 

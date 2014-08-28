@@ -55,19 +55,19 @@ classdef opEye < opSpot
     methods( Access = protected )
        
         % Multiplication
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             [m,n] = size(op);
             if mode == 1
                 if m <= n
-                    y = x(1:m);
+                    x = x(1:m);
                 else
-                    y = [x; zeros(m-n,1, class(x))];
+                    x = [x; zeros(m-n,1, class(x))];
                 end   
             else
                 if n <= m
-                    y = x(1:n);
+                    x = x(1:n);
                 else
-                    y = [x; zeros(n-m,1, class(x))];
+                    x = [x; zeros(n-m,1, class(x))];
                 end
             end
         end % multiply
@@ -75,9 +75,9 @@ classdef opEye < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
-            x = lsqrdivide(op,b,mode);
+            x = lsqrdivide(op,x,mode);
         end % divide
       
     end % Methods

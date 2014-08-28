@@ -46,20 +46,20 @@ classdef opEmpty < opSpot
     methods( Access = protected )
        
         % Multiplication
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             if mode == 1
-                y = zeros(op.m,0, class(x));
+                x = zeros(op.m,0, class(x));
             else
-                y = zeros(op.n,0, class(x));
+                x = zeros(op.n,0, class(x));
             end
         end % Multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
-            x = lsqrdivide(op,b,mode);
+            x = lsqrdivide(op,x,mode);
         end % divide
     end % protected Methods
 end % opEmpty

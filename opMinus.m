@@ -83,17 +83,16 @@ classdef opMinus < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
-            y =     applyMultiply(op.children{1},x,mode);
-            y = y - applyMultiply(op.children{2},x,mode);
+        function x = multiply(op,x,mode)
+            x = applyMultiply(op.children{1},x,mode) - applyMultiply(op.children{2},x,mode);
         end % Multiply
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Sweepable
-            x = matldivide(op,b,mode);
+            x = matldivide(op,x,mode);
         end % divide
        
     end % protected Methods

@@ -127,7 +127,7 @@ classdef opStack < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             x_n = size(x,2);
             if mode == 1
                 for u = x_n:-1:1 % Loop through multivector
@@ -158,14 +158,15 @@ classdef opStack < opSpot
                     end
                 end
             end
+            x = y;
         end % Multiply
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Non-sweepable
-            x = lsqrdivide(op,b,mode);
+            x = lsqrdivide(op,x,mode);
         end % divide
        
     end % Methods

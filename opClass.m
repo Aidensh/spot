@@ -66,20 +66,20 @@ classdef opClass < opSpot
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
+        function x = multiply(op,x,mode)
             if mode == 1
-                y = op.obj * x;
+                x = op.obj * x;
             else
-                y = op.obj' * x;
+                x = op.obj' * x;
             end
         end
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
              % Non-sweepable
-             x = lsqrdivide(op,b,mode);
+             x = lsqrdivide(op,x,mode);
         end % divide
     end % methods
 end % opClass

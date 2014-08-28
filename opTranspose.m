@@ -45,7 +45,7 @@ classdef opTranspose < opSpot
             op = op@opSpot('Transpose', n, m);
             op.cflag     = A.cflag;
             op.linear    = A.linear;
-            op.sweepflag = true;
+            op.sweepflag = A.sweepflag;
             op.children  = {A};
             op.opIntrnl  = opCTranspose(opConj(A));
             op.ms        = A.ns;
@@ -122,21 +122,20 @@ classdef opTranspose < opSpot
 
     end % methods - public
 
-
     methods ( Access = protected )
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Multiply
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function y = multiply(op,x,mode)
-            y = applyMultiply(op.opIntrnl,x,mode);
+        function x = multiply(op,x,mode)
+            x = applyMultiply(op.opIntrnl,x,mode);
         end % function multiply
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Divide
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function x = divide(op,b,mode)
+        function x = divide(op,x,mode)
             % Sweepable
-            x = matldivide(op,b,mode);
+            x = matldivide(op,x,mode);
         end % divide
 
     end % methods - protected
