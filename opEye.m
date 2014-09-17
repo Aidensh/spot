@@ -59,15 +59,15 @@ classdef opEye < opSpot
             [m,n] = size(op);
             if mode == 1
                 if m <= n
-                    x = x(1:m);
+                    x = x(1:m,:);
                 else
-                    x = [x; zeros(m-n,1, class(x))];
+                    x = [x; zeros(m-n,size(x,2), class(x))];
                 end   
             else
                 if n <= m
-                    x = x(1:n);
+                    x = x(1:n,:);
                 else
-                    x = [x; zeros(n-m,1, class(x))];
+                    x = [x; zeros(n-m,size(x,2), class(x))];
                 end
             end
         end % multiply
