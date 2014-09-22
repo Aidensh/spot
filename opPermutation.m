@@ -66,10 +66,11 @@ classdef opPermutation < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function y = multiply(op,x,mode)
           if mode == 1
-             y = x(op.p);
+             y = x(op.p,:);
           else
-             y(op.p) = x;
+             y(op.p,:) = x;
           end
+          y=reshape(y,size(x));
         end % function multiply
 
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
