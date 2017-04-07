@@ -1,6 +1,6 @@
 function test_suite = test_opWavelet
 %test_opWavelet  Unit tests for the Wavelet operator
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

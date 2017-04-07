@@ -1,6 +1,6 @@
 function test_suite = test_opQR
 %test_opQR  Unit tests for opQR.
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_opQR_multiply_under

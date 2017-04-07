@@ -1,5 +1,5 @@
 function test_suite = test_opRomberg
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_opRomberg_builtin

@@ -1,6 +1,6 @@
 function test_suite = test_mvopBlockDiag
 %test_opBlockDiag  Unit tests for the opBlockDiag operator
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

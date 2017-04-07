@@ -1,5 +1,5 @@
 function test_suite = test_mvopBlockOp
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

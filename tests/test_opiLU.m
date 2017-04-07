@@ -1,6 +1,6 @@
 function test_suite = test_opiLU
 %test_opiLU  Unit tests for opiLU.
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_opiLU_multiply

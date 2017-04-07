@@ -1,6 +1,6 @@
 function test_suite = test_image_example
 %test_image_example  Unit tests for the DFT operator.
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,6 +1,6 @@
 function test_suite = test_mvopOrthogonal
 %test_opOrthogonal  Unit tests for opOrthogonal and derivative operators
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_mvopOrthogonal_divide

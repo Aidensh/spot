@@ -1,6 +1,6 @@
 function test_suite = test_mvopMatrix
 %test_opMatrix  Unit tests for opMatrix.
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_mvopMatrix_multiply

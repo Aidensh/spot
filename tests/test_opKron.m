@@ -1,6 +1,6 @@
 function test_suite = test_opKron
 %test_opKron  Unit tests for Kronecker products
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_opKron_Mat

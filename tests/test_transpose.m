@@ -1,5 +1,5 @@
 function test_suite = test_transpose
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_transpose_elementary_ops

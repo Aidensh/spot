@@ -1,6 +1,6 @@
 function test_suite = test_eigs
 %test_eigs  Unit tests for eigs/svds
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_eigs_explicit

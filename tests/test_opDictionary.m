@@ -1,6 +1,6 @@
 function test_suite = test_opDictionary
 %test_opDictionary  Unit tests for the Dictionary meta operator
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  

@@ -1,6 +1,6 @@
 function test_suite = test_spotCounter
 %test_indexing  Unit tests for indexing
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_spotCounter_forward_adjoint

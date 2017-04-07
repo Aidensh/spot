@@ -1,6 +1,6 @@
 function test_suite = test_opPermutation
 %test_opPermutation  Unit tests for opPermutation.
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_opPermutation_multiply

@@ -1,6 +1,6 @@
 function test_suite = test_opChol
 %test_opChol  Unit tests for opChol.
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_opChol_multiply

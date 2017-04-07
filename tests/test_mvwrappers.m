@@ -1,5 +1,5 @@
 function test_suite = test_mvwrappers
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 
 function test_mvwrappers_opConj
 %% Test for opConj

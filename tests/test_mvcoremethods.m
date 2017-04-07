@@ -1,6 +1,6 @@
 function test_suite = test_mvcoremethods
 %test_coremethods  Unit tests for opSpot's core methods
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

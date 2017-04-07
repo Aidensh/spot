@@ -1,6 +1,6 @@
 function test_suite = test_mvtree
 %test_tree  Unit test for tree generation and optimization.
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function d = setup

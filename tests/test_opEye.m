@@ -1,6 +1,6 @@
 function test_suite = test_opEye
 %test_opDiag  Unit tests for the opDiag operator
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

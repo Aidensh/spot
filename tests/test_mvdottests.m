@@ -1,7 +1,7 @@
 function test_suite = test_mvdottests
 %test_dottests  Unit tests on operator-(sparse)matrix products.
 % All linear operators should pass the "dottest".
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function seed = setup

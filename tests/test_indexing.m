@@ -1,6 +1,6 @@
 function test_suite = test_indexing
 %test_indexing  Unit tests for indexing
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function setup

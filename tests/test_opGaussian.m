@@ -1,6 +1,6 @@
 function test_suite = test_opGaussian
 %test_opGaussian  Unit tests for the Gaussian operator
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

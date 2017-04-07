@@ -1,6 +1,6 @@
 function test_suite = test_opMask
 %test_opMatrix  Unit tests for opMatrix.
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_opMask_multiply

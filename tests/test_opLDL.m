@@ -1,6 +1,6 @@
 function test_suite = test_opLDL
 %test_opLDL  Unit tests for opLDL.
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_opLDL_multiply

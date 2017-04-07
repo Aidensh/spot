@@ -1,6 +1,6 @@
 function test_suite = test_iterative
 %test_iterative  Unit tests for iterative methods
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_iterative_pcg

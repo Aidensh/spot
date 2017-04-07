@@ -1,6 +1,6 @@
 function test_suite = test_mvsolves
 %test_solves  Unit tests for opInverse and friends.
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_mvsolves_mrdivide

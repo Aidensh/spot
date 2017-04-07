@@ -1,6 +1,6 @@
 function test_suite = test_opHermitian
 %test_opHermitian  Unit tests for opHermitian.
-initTestSuite;
+test_suite=buildFunctionHandleTestSuite(localfunctions);
 end
 
 function test_opHermitian_multiply
