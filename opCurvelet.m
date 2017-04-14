@@ -177,7 +177,7 @@ classdef opCurvelet < opSpot
             
             if mode == 1
                 for u = x_n:-1:1 % Loop over multivectors
-                    x_tmp = x(:,u);
+                    x_tmp = full(x(:,u));
                     % Analysis mode
                     if strcmp(op.ttype,'ME')
                         x_tmp = mefcv2(reshape(x_tmp,op.dims(1),...
@@ -198,10 +198,10 @@ classdef opCurvelet < opSpot
                 x = y;
             else
                 for u = x_n:-1:1 % Loop over multivectors
-                    x_tmp = x(:,u);
+                    x_tmp = full(x(:,u));
                     % Synthesis mode  
                     if strcmp(op.ttype,'ME')
-                        x_tmp = spot.utils.mefdct_v2c(full(x_tmp),...
+                        x_tmp = spot.utils.mefdct_v2c(x_tmp,...
                             op.header,op.nbangles);
                         x_tmp = meicv2(x_tmp,op.dims(1),op.dims(2),...
                             op.nbscales,op.nbangles);

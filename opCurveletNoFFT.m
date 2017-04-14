@@ -168,7 +168,7 @@ classdef opCurveletNoFFT < opSpot
             
             if mode == 1
                 for u = x_n:-1:1 % Loop over multivectors
-                    x_tmp = x(:,u);
+                    x_tmp = full(x(:,u));
                     % Analysis mode
                     x_tmp = fdct_wrapping_nofft_mex(op.dims(1),op.dims(2),...
                             op.nbscales,op.nbangles,...
@@ -183,7 +183,7 @@ classdef opCurveletNoFFT < opSpot
                 x = y;
             else
                 for u = x_n:-1:1 % Loop over multivectors
-                    x_tmp = x(:,u);
+                    x_tmp = full(x(:,u));
                     % Synthesis mode  
                     x_tmp = spot.utils.fdct_v2c(x_tmp,op.header);
                     if op.finest == 2, zero_finest_scale; end

@@ -144,6 +144,9 @@ classdef opCurvelet3d < opSpot
        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
        function x = multiply(op,x,mode)
          
+            if issparse(x)
+                error('Sparse input to opCurvelet3d is not allowed')
+            end
             if mode == 1
                 % Analysis mode
                 x = fdct3d_forward_mex(op.dims(1),op.dims(2),op.dims(3),...
