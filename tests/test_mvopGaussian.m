@@ -21,12 +21,12 @@ function test_mvopGaussian_mode01_against_rand(seed)
    x = randn(n,2);
    y = A1*x;
 
-   assertEqual( y, A2*x );
-   assertEqual( y, A3*x );
-   assertEqual( y, A4*x );
-   assertEqual( A1, double(A2) );
-   assertEqual( A1, double(A3) );
-   assertEqual( A1, double(A4) );
+   assertElementsAlmostEqual( y, A2*x );
+   assertElementsAlmostEqual( y, A3*x );
+   assertElementsAlmostEqual( y, A4*x );
+   assertElementsAlmostEqual( A1, double(A2) );
+   assertElementsAlmostEqual( A1, double(A3) );
+   assertElementsAlmostEqual( A1, double(A4) );
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
